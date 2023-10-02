@@ -1,0 +1,58 @@
+"use client";
+import { useState, useEffect, useRef } from "react";
+import { useDebounce } from 'use-debounce';
+import { useRouter } from "next/navigation";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+
+const Searchbar = ({ search, type }: { search?: string, type?: string }) => {
+  const router = useRouter()
+  const initialRender = useRef(true)
+
+  const [text, setText] = useState(search)
+  const [query] = useDebounce(text, 750)
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false
+      return
+    }
+
+    if (!query) {
+      if (type === 'users') {
+        router.push(`/utilisateurs`)
+      } else if (type === 'hobbies') {
+        router.push(`/hobbies`)
+      } else if (type === 'setup') {
+        router.push(`/setup/hobbies`)
+      }
+    } else {
+      if (type === 'users') {
+        router.push(`/utilisateurs?search=${query}`)
+      } else if (type === 'hobbies') {
+        router.push(`/hobbies?search=${query}`)
+      } else if (type === 'setup') {
+        router.push(`/setup/hobbies?search=${query}`)
+      }
+    }
+
+  }, [query, router, type])
+
+  return (
+    <div className='relative rounded-md shadow-sm'>
+      <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
+        <MagnifyingGlassIcon
+          className='h-5 w-5 text-gray-400'
+          aria-hidden='true'
+        />
+      </div>
+      <input
+        value={text}
+        placeholder='Recherche...'
+        onChange={e => setText(e.target.value)}
+        className='block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6 dark:text-white'
+      />
+    </div>
+  )
+};
+
+export default Searchbar;
