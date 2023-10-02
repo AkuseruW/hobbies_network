@@ -10,3 +10,17 @@ export const getNotifications = async () => {
     throw error;
   }
 };
+
+export const getNotificationsAdmin = async ({
+  page = "1",
+  search,
+}: {
+  page?: string;
+  search?: string;
+}) => {
+  try {
+    return await fetcher(apiUrl(`/api/admin_notifications`), "GET");
+  } catch (error) {
+    throw error;
+  }
+};

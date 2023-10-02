@@ -88,3 +88,51 @@ export const follow_or_unfollow_user = async ({
     throw error;
   }
 };
+
+export const getUsersAdmin = async ({
+  page = "1",
+  search,
+}: {
+  page?: string;
+  search?: string;
+}) => {
+  try {
+    const searchParam = search ? `&search=${search}` : "";
+    return await fetcher(
+      apiUrl(`/api/all-users?page=${parseInt(page)}${searchParam}`),
+      "GET"
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const banUser = async ({
+  user_id,
+  duration,
+  reason,
+}: {
+  user_id: number;
+  duration: number;
+  reason: string;
+}) => {
+  try {
+    console.log(user_id, duration);
+    return await fetcher(
+      apiUrl(`/api/ban_user/${user_id}/${duration}`),
+      "POST",
+      {},
+      JSON.stringify({ reason })
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unbanUser = async ({ user_id }: { user_id: number }) => {
+  try {
+    return await fetcher(apiUrl(`/api/unban_user/${user_id}`), "DELETE");
+  } catch (error) {
+    throw error;
+  }
+};
