@@ -34,8 +34,8 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
 
   const loadMoreHobbies = useCallback(async () => {
     const next = page + 1;
-    const newHobbies = await getHobbies({ search, page: next });
-
+    const { hobbies: newHobbies } = await getHobbies({ search, page: next });
+    console.log(newHobbies)
     if (newHobbies?.length) {
       setPage(next);
       setHobbies((prev) => [
@@ -58,7 +58,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   };
 
   useEffect(() => {
-    if (inView && hobbies.length > 10) {
+    if (inView && hobbies.length >= 10) {
       loadMoreHobbies();
     }
   }, [inView, loadMoreHobbies, hobbies.length]);
@@ -87,10 +87,10 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
       {hobbies.map(({ id, name, description, slug, icone_black, icone_white }) => (
         <div
           key={id}
-          className="col-span-1 bg-white p-4 relative w-full h-full overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
+          className="col-span-1 bg-white p-4 relative w-full h-64 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
         >
-          <div className=" space-y-4 lg:space-y-0 h-full">
-            <div key={name} className="group relative h-full">
+          <div className="h-full flex flex-col justify-between">
+            <div key={name} className="group relative">
               <div className="flex items-center gap-2">
                 <svg id="hexa" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650.83 572" className="svg h-10 w-10" fill="none" stroke={isDarkTheme ? `white` : `black`} strokeWidth="10">
                   <path className="cls-1"
@@ -113,25 +113,32 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
                 <Button
                   type="button"
                   onClick={(e) => { addHobbyOrRemove(id) }}
-                  className={`h-[24px] relative bg-transparent p-0 border ${addedHobbies[id] ? 'border-primary dark:border-white' : 'border-secondary dark:border-gray-500'
+                  className={`h-[24px] relative bg-transparent p-0 border ${addedHobbies[id]
+                    ? 'border-primary dark:border-white'
+                    : 'border-secondary dark:border-gray-500'
                     } hover:bg-transparent hover:border-primary dark:hover:border-white`}
                 >
-                  <Icons.add className="w-[24px] h-[12px] p-0 text-black dark:text-white" style={{ transform: addedHobbies[id] ? 'rotate(45deg)' : 'rotate(0)' }} />
+                  <Icons.add
+                    className="w-[24px] h-[12px] p-0 text-black dark:text-white"
+                    style={{ transform: addedHobbies[id] ? 'rotate(45deg)' : 'rotate(0)' }}
+                  />
                 </Button>
               </div>
-              <p className="mt-5 text-sm text-gray-600 dark:text-gray-400">{description.slice(0, 100)}</p>
+              <p className="mt-5 text-sm text-gray-600 dark:text-gray-400">
+                {description.slice(0, 100)}
+              </p>
             </div>
           </div>
         </div>
       ))}
 
       {/* loading spinner */}
-      {hobbies.length > 10 && (
+      {hobbies.length >= 10 && (
         <div
           ref={ref}
           className='col-span-1 mt-16 flex items-center justify-center sm:col-span-2 md:col-span-3 lg:col-span-4'
         >
-          <Icons.spinner />
+          <Icons.spinner className='w-10 h-10 animate-spin' />
           <span className='sr-only'>Loading...</span>
         </div>
       )}

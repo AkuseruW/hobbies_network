@@ -95,11 +95,9 @@ async def get_post_by_id(post_id: str, db: Session = Depends(get_session), curre
     }
 
 
-@router.post('/post/{post_id}/like/')
+@router.post('/post_like/{post_id}', response_model=None)
 async def like_or_dislike_post(post_id: str, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     post = db.query(Post).filter_by(id=post_id).first()
-    if not post:
-        raise HTTPException(status_code=404, detail='Post not found')
 
     existing_like = next(
         (like for like in post.likes if like.id == current_user.id), None)

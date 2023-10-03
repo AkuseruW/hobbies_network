@@ -2,21 +2,30 @@
 import React, { createContext, useContext, useState } from 'react';
 
 interface LikeContextType {
-  likedPosts: string[];
+  likedPosts: Set<string>;
   toggleLike: (postId: string) => void;
 }
 
-const LikeContext = createContext<LikeContextType | undefined>(undefined);
+const initialContext: LikeContextType = {
+  likedPosts: new Set<string>(),
+  toggleLike: () => { },
+};
+
+const LikeContext = createContext<LikeContextType>(initialContext);
 
 export function LikeProvider({ children }: { children: React.ReactNode }) {
-  const [likedPosts, setLikedPosts] = useState<string[]>([]);
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(initialContext.likedPosts);
 
   const toggleLike = (postId: string) => {
-    if (likedPosts.includes(postId)) {
-      setLikedPosts(likedPosts.filter((id) => id !== postId));
-    } else {
-      setLikedPosts([...likedPosts, postId]);
-    }
+    setLikedPosts((prevLikedPosts) => {
+      const newLikedPosts = new Set(prevLikedPosts);
+      if (newLikedPosts.has(postId)) {
+        newLikedPosts.delete(postId);
+      } else {
+        newLikedPosts.add(postId);
+      }
+      return newLikedPosts;
+    });
   };
 
   return (
@@ -27,9 +36,5 @@ export function LikeProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useLike() {
-  const context = useContext(LikeContext);
-  if (context === undefined) {
-    throw new Error('useLike must be used within a LikeProvider');
-  }
-  return context;
+  return useContext(LikeContext);
 }

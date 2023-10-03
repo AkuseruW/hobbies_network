@@ -77,7 +77,7 @@ export const reportPost = async ({
 
 export const likePost = async ({ postId }: { postId: string }) => {
   try {
-    const data = await fetcher(apiUrl(`/api/post/${postId}/like`), "POST");
+    const data = await fetcher(apiUrl(`/api/post_like/${postId}`), "POST");
     return { data };
   } catch (error) {
     console.error("Error liking post:", error);
