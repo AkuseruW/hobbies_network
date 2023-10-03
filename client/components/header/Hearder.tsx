@@ -33,7 +33,7 @@ const Header = async ({ currentUser }: { currentUser: Session }) => {
     <div className="flex bg-white dark:bg-gray-800 items-center py-4 px-4 shadow-md sticky top-0 z-20 justify-between rounded">
       <Link href="/" className="">
         <strong className="text-2xl text-accent-color hidden md:flex lg:flex">Hobbies</strong>
-        <Image src="/octagon.svg" width={30} height={30} alt="Logo" />
+        <Image className="flex md:hidden lg:hidden" src="/octagon.svg" width={30} height={30} alt="Logo" />
       </Link>
 
       <div className="flex items-center space-x-2 md:space-x-4 lg:space-x-4 justify-center ">
