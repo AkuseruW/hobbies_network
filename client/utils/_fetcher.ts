@@ -11,6 +11,7 @@ export const fetcher = async (
   try {
     const response = await fetch(url, {
       method,
+      cache: 'no-store',
       headers: {
         Authorization: "Bearer " + getAccessToken(),
         ...headers,

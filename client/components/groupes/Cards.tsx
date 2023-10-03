@@ -1,60 +1,72 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useInView } from 'react-intersection-observer';
 import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { useTheme } from 'next-themes';
-import { useRouter } from "next/navigation";
-import { Hobby } from '@/types/hobby_types';
-import { useInView } from 'react-intersection-observer'
 import { getHobbies } from '@/utils/requests/_hobbies_requests';
 import { add_or_delete_hobby } from '@/utils/requests/_users_requests';
-import { useHobbiesStore } from '@/lib/store/hobbies_store';
-import { useHobbiesStore as pageStore } from '@/lib/store/page_store';
+import { Hobby } from '@/types/hobby_types';
+import { useRouter } from 'next/navigation';
 
-const CardGroupe = ({ search, initialHobbies }: { search?: string | undefined, initialHobbies: Hobby[] }) => {
-  const { hobbies, setHobbies, addOrRemoveHobby, setNewHobbies } = useHobbiesStore();
-  const { currentPage, setCurrentPage } = pageStore();
-  const [ref, inView] = useInView()
-  const { resolvedTheme } = useTheme()
+interface CardGroupeProps {
+  search?: string;
+  initialHobbies: Hobby[];
+}
+
+const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
+  const [hobbies, setHobbies] = useState<Hobby[]>(initialHobbies);
+
+  const initialAddedHobbies: Record<number, boolean> = initialHobbies.reduce((acc, hobby) => {
+    // @ts-ignore
+    acc[hobby.id] = hobby.added || false;
+    return acc;
+  }, {});
+  const [addedHobbies, setAddedHobbies] = useState<Record<number, boolean>>(initialAddedHobbies);
+
+  const [page, setPage] = useState(1);
+  const [ref, inView] = useInView();
+  const { resolvedTheme } = useTheme();
   const isDarkTheme = resolvedTheme === "dark";
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (hobbies.length === 0) {
-      setHobbies(initialHobbies);
-    }
-  }, [initialHobbies, setHobbies, hobbies.length]);
-
   const loadMoreHobbies = useCallback(async () => {
-    const next = currentPage + 1
-    const newHobbies = await getHobbies({ search, page: next })
+    const next = page + 1;
+    const newHobbies = await getHobbies({ search, page: next });
 
     if (newHobbies?.length) {
-      setCurrentPage(next);
-      setNewHobbies(newHobbies)
+      setPage(next);
+      setHobbies((prev) => [
+        ...(prev?.length ? prev : []),
+        ...newHobbies
+      ]);
     }
-
-  }, [currentPage, setCurrentPage, search, setNewHobbies]);
+  }, [page, search]);
 
   const addHobbyOrRemove = async (id: number) => {
-    const res = await add_or_delete_hobby({ id });
-    if (res.success) {
-      addOrRemoveHobby(id)
+    if (addedHobbies[id]) {
+      await add_or_delete_hobby({ id });
+      const updatedAddedHobbies = { ...addedHobbies };
+      delete updatedAddedHobbies[id];
+      setAddedHobbies(updatedAddedHobbies);
+    } else {
+      await add_or_delete_hobby({ id });
+      setAddedHobbies({ ...addedHobbies, [id]: true });
     }
   };
 
   useEffect(() => {
     if (inView && hobbies.length > 10) {
-      loadMoreHobbies()
+      loadMoreHobbies();
     }
-  }, [inView, loadMoreHobbies, hobbies.length])
+  }, [inView, loadMoreHobbies, hobbies.length]);
 
-  useEffect(() => setMounted(true), [])
+  useEffect(() => setMounted(true), []);
 
   if (!mounted) {
-    return null
+    return null;
   }
 
   return (
@@ -72,14 +84,13 @@ const CardGroupe = ({ search, initialHobbies }: { search?: string | undefined, i
           </div>
         </div>
       </div>
-
-      {hobbies.map((hobby) => (
+      {hobbies.map(({ id, name, description, slug, icone_black, icone_white }) => (
         <div
-          key={hobby.id}
+          key={id}
           className="col-span-1 bg-white p-4 relative w-full h-full overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
         >
           <div className=" space-y-4 lg:space-y-0 h-full">
-            <div key={hobby.name} className="group relative h-full">
+            <div key={name} className="group relative h-full">
               <div className="flex items-center gap-2">
                 <svg id="hexa" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650.83 572" className="svg h-10 w-10" fill="none" stroke={isDarkTheme ? `white` : `black`} strokeWidth="10">
                   <path className="cls-1"
@@ -92,26 +103,23 @@ const CardGroupe = ({ search, initialHobbies }: { search?: string | undefined, i
                     y="186"
                     width="200"
                     height="200"
-                    xlinkHref={isDarkTheme ? hobby.icone_white : hobby.icone_black}
+                    xlinkHref={isDarkTheme ? icone_white : icone_black}
                   />
                 </svg>
 
-                {/* {hobby.url} */}
-                <Link href={`hobby/${hobby.slug}`} className="ml-4 flex-grow">
-                  <h2 className="text-lg font-medium dark:text-white">{hobby.name}</h2>
+                <Link href={`hobby/${slug}`} className="ml-4 flex-grow">
+                  <h2 className="text-lg font-medium dark:text-white">{name}</h2>
                 </Link>
-
                 <Button
                   type="button"
-                  onClick={(e) => { addHobbyOrRemove(hobby.id) }}
-                  className={`h-[24px] relative bg-transparent p-0 border ${hobby.added ? 'border-primary dark:border-white' : 'border-secondary dark:border-gray-500'} hover:bg-transparent hover:border-primary dark:hover:border-white`}
+                  onClick={(e) => { addHobbyOrRemove(id) }}
+                  className={`h-[24px] relative bg-transparent p-0 border ${addedHobbies[id] ? 'border-primary dark:border-white' : 'border-secondary dark:border-gray-500'
+                    } hover:bg-transparent hover:border-primary dark:hover:border-white`}
                 >
-                  <Icons.add className="w-[24px] h-[12px] p-0 text-black dark:text-white" style={{ transform: hobby.added ? 'rotate(45deg)' : 'rotate(0)' }} />
+                  <Icons.add className="w-[24px] h-[12px] p-0 text-black dark:text-white" style={{ transform: addedHobbies[id] ? 'rotate(45deg)' : 'rotate(0)' }} />
                 </Button>
-
               </div>
-              <p className="mt-5 text-sm text-gray-600 dark:text-gray-400">{hobby.description.slice(0, 100)}</p>
-
+              <p className="mt-5 text-sm text-gray-600 dark:text-gray-400">{description.slice(0, 100)}</p>
             </div>
           </div>
         </div>

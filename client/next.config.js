@@ -6,7 +6,6 @@ const nextConfig = {
     images: {
         domains: ["localhost", "res.cloudinary.com", "via.placeholder.com"],
     },
-    reactStrictMode: false,
 }
 
 module.exports = nextConfig

@@ -4,12 +4,16 @@ import CardGroupe from '@/components/groupes/Cards';
 import Searchbar from '@/components/Searchbar';
 import { getHobbies } from '@/utils/requests/_hobbies_requests';
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const GroupePage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
   const search = typeof searchParams.search === 'string' ? searchParams.search : undefined
   const { hobbies } = await getHobbies({ search });
 
+
   return (
-    <section className="container min-h-screen">
+    <section className="container min-h-screen" >
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <Searchbar search={search} type='hobbies' />
       </div>

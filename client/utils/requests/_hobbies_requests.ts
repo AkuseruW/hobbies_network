@@ -14,7 +14,7 @@ export const getHobbies = async ({
     const searchParam = search ? `&search=${search}` : "";
     return await fetcher(
       apiUrl(`/api/all_hobbies?page=${page}${searchParam}`),
-      "GET"
+      "GET",
     );
   } catch (error) {
     throw error;

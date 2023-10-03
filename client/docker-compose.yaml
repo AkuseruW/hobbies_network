@@ -3,7 +3,7 @@ version: "3.8"
 services:
   hobbies:
     build: .
-    command: pnpm run dev
+    command: pnpm run start
     ports:
       - "3000:3000"
     volumes:

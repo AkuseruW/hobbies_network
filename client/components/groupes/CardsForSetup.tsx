@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
 import { Hobby } from '@/types/hobby_types';
 import { getHobbies } from '@/utils/requests/_hobbies_requests';
+import { UserHobbies } from '@/utils/_setupProfileCookies';
 // import { UserHobbies } from '@/utils/_setupProfileCookies';
 
 type Props = {
@@ -56,12 +57,12 @@ const CardGroupeSetup: React.FC<Props> = ({ search, initialHobbies, hobbiesCooki
         }
     };
 
-    // const saveSelectedHobbiesToCookie = async () => {
-    //     const selectedHobbyIds = selectedHobbies.map((hobby) => hobby.id);
-    //     await UserHobbies({ hobbies: selectedHobbies });
-    //     router.refresh();
-    //     router.push('/setup/confirmation');
-    // };
+    const saveSelectedHobbiesToCookie = async () => {
+        const selectedHobbyIds = selectedHobbies.map((hobby) => hobby.id);
+        await UserHobbies({ hobbies: selectedHobbies });
+        router.refresh();
+        router.push('/setup/confirmation');
+    };
 
     useEffect(() => {
         if (inView && hobbies.length > 10) {
@@ -140,7 +141,7 @@ const CardGroupeSetup: React.FC<Props> = ({ search, initialHobbies, hobbiesCooki
                     </div>
                 )}
             </ScrollArea>
-            {/* <Button className="self-end mt-4" onClick={saveSelectedHobbiesToCookie} >Valider</Button> */}
+            <Button className="self-end mt-4" onClick={saveSelectedHobbiesToCookie} >Valider</Button>
         </div>
     );
 };
