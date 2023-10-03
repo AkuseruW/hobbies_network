@@ -1,5 +1,5 @@
+import CallbackPage from '@/components/auth/callback'
 import React, { Suspense } from 'react'
-import CallbackPage from './callback'
 
 const page = () => {
     return (

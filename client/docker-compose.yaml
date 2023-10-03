@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  hobbies:
+    build: .
+    command: pnpm run dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    networks:
+      - hobbies
+
+networks:
+  hobbies:
+    external: true
