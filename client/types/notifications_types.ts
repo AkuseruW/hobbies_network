@@ -9,6 +9,7 @@ export interface Notifications {
 export interface Notification {
   id: number;
   sender_id: number;
+  title: string;
   content: string;
   is_read: boolean;
   timestamp: string;

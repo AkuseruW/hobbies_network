@@ -9,6 +9,7 @@ class Notification(Base):
     __tablename__ = "notifications"
     
     id = Column(Integer, primary_key=True, index=True)
+    title = Column(String)
     sender_id = Column(Integer, ForeignKey("users.id"))
     receiver_id = Column(Integer, ForeignKey("users.id"))
     content = Column(Text)
@@ -17,6 +18,10 @@ class Notification(Base):
 
     receiver = relationship("User", back_populates="received_notifications", foreign_keys=[receiver_id])
     sender = relationship("User", back_populates="sent_notifications", foreign_keys=[sender_id])
+    
+    __table_args__ = (
+        CheckConstraint(title.in_(['Follow', 'Like', 'Comment'])),
+    )
 
     @property
     def sender_full_name(self):

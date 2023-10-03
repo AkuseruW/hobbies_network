@@ -8,17 +8,20 @@ import TextAreaInput from "./Textarea";
 import ImageInput from "./ImageInput";
 import EmojiPicker from "@/components/EmojiPicker";
 import { createPost } from "@/utils/requests/_posts_requests";
+import { Button } from "@/components/ui/button";
 
 const FormNewPost = ({
     session: currentUser,
     postContent,
     setPostContent,
     hobbies,
+    close
 }: {
     session: Session;
     postContent: string;
     setPostContent: (content: string) => void;
     hobbies: Hobby[];
+    close: () => void;
 }) => {
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -26,11 +29,14 @@ const FormNewPost = ({
     const [isLoading, setIsLoading] = useState(false);
 
     const handlePostContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        // Update the post content state with the new value from the input field
         setPostContent(e.target.value);
     };
 
     const handleHobbyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        // Parse the selected hobby ID as an integer
         const selectedHobbyId = parseInt(e.target.value);
+        // Update the selected hobby state with the new ID
         setSelectedHobby(selectedHobbyId);
     };
 
@@ -47,35 +53,50 @@ const FormNewPost = ({
     const handleRemoveImage = (index: number) => {
         // Remove the temporary URL for the image
         URL.revokeObjectURL(imagePreviews[index]);
+        // Create a copy of the image previews array
         const updatedPreviews = [...imagePreviews];
+        // Remove the image preview at the specified index
         updatedPreviews.splice(index, 1);
+        // Update the state with the updated image previews
         setImagePreviews(updatedPreviews);
 
+        // Create a copy of the selected images array
         const updatedSelectedImages = [...selectedImages];
+        // Remove the selected image at the specified index
         updatedSelectedImages.splice(index, 1);
+        // Update the state with the updated selected images
         setSelectedImages(updatedSelectedImages);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
+        setIsLoading(true); // Set loading state to true
 
+        // Create a FormData object to send form data
         const formData = new FormData();
-        formData.append("content", postContent);
-        formData.append("hobby_id", selectedHobby !== null ? selectedHobby.toString() : "");
+        formData.append("content", postContent); // Add 'content' field to the form data
+        formData.append("hobby_id", selectedHobby !== null ? selectedHobby.toString() : ""); // Add 'hobby_id' field to the form data
+        // Add selected images to the form data
         selectedImages.forEach((image) => formData.append("images", image));
 
         try {
+            // Send a request to create a new post with the form data
             const res = await createPost({ formData });
             if (res) {
+                // Reset form fields and selected images
                 setPostContent("");
                 setSelectedImages([]);
                 setSelectedHobby(null);
+                setImagePreviews([]);
+
+                // Set loading state to false and close the modal after a delay
+                setTimeout(() => {
+                    setIsLoading(false);
+                    close();
+                }, 2000);
             }
         } catch (error) {
             console.error("Erreur lors de l'envoi du formulaire : ", error);
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -117,18 +138,20 @@ const FormNewPost = ({
                 </select>
 
                 <div className="text-center">
-                    <button
+                    <Button
                         type="submit"
                         className={`bg-black w-full text-white px-4 py-2 rounded font-semibold ${isLoading ? 'cursor-not-allowed' : 'hover:bg-gray-900 dark:hover:bg-gray-700'
                             } transition-colors`}
                         disabled={isLoading}
                     >
                         {isLoading ? (
-                            <Icons.spinner />
+                            <div className="flex items-center mx-auto">
+                                <Icons.spinner className="w-6 h-6 animate-spin mr-2" /> En cours...
+                            </div>
                         ) : (
                             'Publier'
                         )}
-                    </button>
+                    </Button>
                 </div>
             </form>
 

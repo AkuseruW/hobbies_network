@@ -46,8 +46,7 @@ const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
         </div>
       </div>
 
-      {/* Section des messages */}
-      <section className="md:w-[60%] lg:w-[50%]">
+      <section className="w-full md:w-[60%] lg:w-[50%]">
         <div className="max-w-xl mx-auto">
           <div key={uuid()} className="sm:col-span-2 lg:col-span-3 xl:col-span-4 mt-5">
             <PostsSection initialPosts={posts} />

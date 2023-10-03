@@ -12,14 +12,18 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ content, setContent }) => {
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
 
+  // Function to handle emoji selection.
   const handleEmojiSelect = (emoji: string) => {
+    // Append the selected emoji to the current content.
     setContent(content + emoji);
   };
 
+  // Function to toggle the visibility of the emoji picker.
   const handleToggleEmojiPicker = () => {
     setEmojiPickerVisible((prevVisibility) => !prevVisibility);
   };
 
+  // Function to handle clicks outside of the emoji picker.
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
       if (
@@ -27,15 +31,17 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ content, setContent }) => {
         emojiPickerRef.current &&
         !emojiPickerRef.current.contains(e.target as Node)
       ) {
+        // If the emoji picker is visible and a click occurs outside, hide it.
         setEmojiPickerVisible(false);
       }
     },
     [emojiPickerVisible]
   );
 
+  // Add a click event listener to the document to handle outside clicks.
   useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
-
+    // Clean up the event listener when the component unmounts.
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };

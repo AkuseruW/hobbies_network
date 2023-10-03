@@ -24,6 +24,7 @@ async def read_posts(page: int = 1, db: Session = Depends(get_session), current_
 @router.get("/posts/{hobby_slug}")
 async def read_hobby_posts(hobby_slug: str, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     hobby = db.query(Hobby).filter(Hobby.slug == hobby_slug).first()
+    print(hobby.name)
     if not hobby:
         raise HTTPException(status_code=404, detail="Hobby not found")
     posts = await get_post_by_hobby(current_user, hobby.id, db)
@@ -48,6 +49,7 @@ async def create_post(request: Request, db: Session = Depends(get_session), curr
             'content': new_post.content,
             'post_images_urls': [image.url for image in new_post.post_images],
             'total_comments': new_post.total_comments(),
+            'total_likes': new_post.total_likes(),
             'created_at': new_post.created_at.strftime("%Y-%m-%d %H:%M:%S"),
             'hobby': {
                 'hobby_id': new_post.hobby.id,

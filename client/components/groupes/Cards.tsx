@@ -9,6 +9,8 @@ import { getHobbies } from '@/utils/requests/_hobbies_requests';
 import { add_or_delete_hobby } from '@/utils/requests/_users_requests';
 import { Hobby } from '@/types/hobby_types';
 import { useRouter } from 'next/navigation';
+import Modal from '../Modal';
+import ProposeHobby from './ProposeHobby';
 
 interface CardGroupeProps {
   search?: string;
@@ -30,6 +32,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   const { resolvedTheme } = useTheme();
   const isDarkTheme = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const loadMoreHobbies = useCallback(async () => {
@@ -71,9 +74,15 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
 
   return (
     <>
+      {isOpen && (
+        <Modal title='Ajouter un hobby' size="lg:h-[35%] md:h-[35%] sm:h-[35%] lg:w-[50%] md:w-[50%] sm:w-full" close={() => setIsOpen(false)}>
+          <ProposeHobby />
+        </Modal>
+      )}
+
       <div
         className="cursor-pointer col-span-1 flex items-center justify-center bg-white p-4 relative w-full h-full overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
-        onClick={() => router.push('/')}
+        onClick={() => setIsOpen(true)}
       >
         <div className="space-y-4 lg:space-y-0">
           <div className="group relative">

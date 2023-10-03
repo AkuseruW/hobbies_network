@@ -1,5 +1,5 @@
 from .User import User, Role
-from .Hobby import Hobby, UserToHobby
+from .Hobby import Hobby, UserToHobby, ProposedHobby
 from .Post import Post, PostImage
 from .Comment import Comment
 from .Follower import Follower

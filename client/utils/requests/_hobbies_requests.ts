@@ -70,3 +70,12 @@ export const deleteHobby = async ({ id }: { id: number }) => {
     throw error;
   }
 };
+
+export const proposeHobby = async ({ values }: { values: { name: string, description: string } }) => {
+  console.log(values);
+  try {
+    return await fetcher(apiUrl(`/api/propose_hobby`), "POST", {}, JSON.stringify(values));
+  } catch (error) {
+    throw error;
+  }
+};

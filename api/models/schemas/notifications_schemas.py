@@ -17,6 +17,9 @@ class NotificationSchema(BaseModel):
 
     class Config:
         orm_mode = True
+        
+class UserNotificationSchema(NotificationSchema):
+    title: str
 
 
 class AdminNotificationSchema(NotificationSchema):

@@ -17,12 +17,17 @@ const InputNewPost = ({ session, hobbies }: { session: Session, hobbies: Hobby[]
     };
 
     useEffect(() => {
+        // Define a function to handle clicks outside the modal
         const handleOutsideClick = (event: MouseEvent) => {
+            // Check if the modalRef exists and if the click target is outside the modal
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                // Close the modal by setting its open state to false
                 setIsModalOpen(false);
             }
         };
+        // Add a mousedown event listener to the document to detect outside clicks
         document.addEventListener('mousedown', handleOutsideClick);
+        // Cleanup: Remove the event listener when the component unmounts
         return () => {
             document.removeEventListener('mousedown', handleOutsideClick);
         };
@@ -54,9 +59,9 @@ const InputNewPost = ({ session, hobbies }: { session: Session, hobbies: Hobby[]
             </div>
 
             {isModalOpen && (
-                <Modal size="w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
+                <Modal size="w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]" title='Nouveau post'>
                     <div className='p-4' ref={modalRef}>
-                        <FormNewPost session={session} postContent={inputValue} setPostContent={setInputValue} hobbies={hobbies} />
+                        <FormNewPost session={session} postContent={inputValue} setPostContent={setInputValue} hobbies={hobbies} close={() => setIsModalOpen(false)} />
                     </div>
                 </Modal>
             )}

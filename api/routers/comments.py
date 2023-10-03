@@ -28,9 +28,9 @@ async def create_comment(
             "post_id": str(new_comment.post_id),
             "content": new_comment.content,
             "user": {
-                "user_id": new_comment.user_id,
-                "user_name": new_comment.user_name,
-                "user_profile_picture": new_comment.user_profile_picture,
+                "id": new_comment.user_id,
+                "username": new_comment.user_name,
+                "profile_picture": new_comment.user_profile_picture,
             }
         }
     }
@@ -45,8 +45,7 @@ def get_comments_for_post(
         limit: int = 10,
         db: Session = Depends(get_session)
 ):
-    comments = db.query(Comment).filter(Comment.post_id ==
-                                        post_id).offset(offset).limit(limit).all()
+    comments = db.query(Comment).filter(Comment.post_id == post_id).offset(offset).limit(limit).all()
 
     comment_list = []
     for comment in comments:

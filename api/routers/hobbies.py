@@ -1,6 +1,7 @@
+import json
 from fastapi import APIRouter, Depends, Request, Query, HTTPException
 from slugify import slugify
-from models import Hobby, User
+from models import Hobby, User, ProposedHobby
 from dependencies.auth import get_current_active_user
 from models.schemas.hobbyScheamas import NewHobby
 from settings.database import get_session
@@ -166,3 +167,20 @@ async def get_hobby(hobby_slug: str, db: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Hobby not found")
 
     return hobby
+
+
+@router.post("/propose_hobby")
+async def propose_hobby(request: Request, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
+    data = await request.body()
+    json_data = json.loads(data)
+    
+    propose_hobby = ProposedHobby(
+        user_id=current_user.id,
+        name=json_data["name"],
+        description=json_data["description"] if "description" in json_data else "",
+    )
+
+    db.add(propose_hobby)
+    db.commit()
+    
+    return {"message": "Le Hobby a été proposé avec succès"}

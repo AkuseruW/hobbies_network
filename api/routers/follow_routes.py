@@ -33,9 +33,10 @@ async def follow_or_unfollow_user(user_id: int, db: Session = Depends(get_sessio
             follower = Follower(follower_id=current_user.id, following_id=user_id)
             
             notification = Notification(
+                title='Follow',
                 sender_id=current_user.id,
                 receiver_id=user_to_follow.id,
-                content=f'You are now following {user_to_follow.user_name}',                
+                content=f'{current_user.user_name} vous a follow',                
             )
             
             db.add_all([follower, notification])

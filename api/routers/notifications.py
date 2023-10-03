@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Depends, Request, Query
 from sqlalchemy.orm import Session
 from models import Notification
 from models.Notification import AdminNotification
-from models.schemas.notifications_schemas import AdminNotificationSchema, NotificationSchema
+from models.schemas.notifications_schemas import AdminNotificationSchema, NotificationSchema, UserNotificationSchema
 from settings.database import get_session
 from models import User, Report
 from dependencies.auth import get_current_active_user
@@ -63,7 +63,7 @@ def read_admin_notifications(params: ReportsQueryParams = Depends(), db: Session
     return {"notifications": admin_notifications_data, "count_new_notifications": count_new_notifications, "totalPages": total_pages}
 
 
-@router.get("/notifications", response_model=Dict[str, Union[List[NotificationSchema], int]])
+@router.get("/notifications", response_model=Dict[str, Union[List[UserNotificationSchema], int]])
 def read_notifications(params: ReportsQueryParams = Depends(), db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     
     offset = (params.page - 1) * params.per_page
@@ -85,10 +85,10 @@ def read_notifications(params: ReportsQueryParams = Depends(), db: Session = Dep
     for notification in notifications:
         admin_notification_data = {
             "id": notification.id,
+            "title": notification.title,
             "content": notification.content,
             "is_read": notification.is_read,
             "timestamp": notification.timestamp,
-            "notification_type": notification.notification_type,
             "user": {
                 "id": notification.sender.id,
                 "first_name": notification.sender.firstname,

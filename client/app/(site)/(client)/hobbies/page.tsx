@@ -4,8 +4,6 @@ import CardGroupe from '@/components/groupes/Cards';
 import Searchbar from '@/components/Searchbar';
 import { getHobbies } from '@/utils/requests/_hobbies_requests';
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 const GroupePage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
   const search = typeof searchParams.search === 'string' ? searchParams.search : undefined

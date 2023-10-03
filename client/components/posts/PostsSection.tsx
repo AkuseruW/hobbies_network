@@ -4,22 +4,26 @@ import { useInView } from 'react-intersection-observer';
 import { Icons } from "../icons";
 import { PostData } from "@/types/post_types";
 import { useHomeStore } from "@/lib/store/page_store";
-import { usePostsStore } from "@/lib/store/posts_store";
+import { v4 as uuid } from 'uuid'
 import { getPosts } from "@/utils/requests/_posts_requests";
 import PostCard from "./PostCard";
 import Loading from "../Loading";
+import { getTimeSincePublication, updatePostsWithTime } from "@/utils/_date";
+import { useWebSocket } from "@/providers/ws_provider";
+import { setupWebSocketHandler } from "@/utils/_ws_messages";
 
 const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
-  const { posts, initializePosts, updatePostTimes, addNewPosts } = usePostsStore();
+  const [posts, setPosts] = useState(initialPosts);
+  const socket = useWebSocket();
   const { currentPage, setCurrentPage } = useHomeStore();
   const [isEndOfList, setIsEndOfList] = useState(false);
   const [ref, inView] = useInView();
 
   useEffect(() => {
     if (posts.length === 0) {
-      initializePosts(initialPosts);
+      setPosts(initialPosts);
     }
-  }, [initializePosts, initialPosts, posts]);
+  }, [initialPosts, posts]);
 
   const loadMorePosts = useCallback(async () => {
     if (isEndOfList) {
@@ -31,21 +35,45 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
 
     if (newPosts?.length) {
       setCurrentPage(next);
-      addNewPosts(newPosts);
+      // Append the new posts with updated timestamps to the existing posts
+      setPosts((prev) => [...(prev?.length ? prev : []), ...updatePostsWithTime(newPosts)]);
       if (is_end_of_list) {
         setIsEndOfList(true);
       }
     }
 
-  }, [currentPage, setCurrentPage, addNewPosts, isEndOfList]);
+  }, [currentPage, isEndOfList, setCurrentPage]);
 
+  /**
+  * Load more posts when the user scrolls into view
+  */
   useEffect(() => {
     if (inView && posts.length >= 10) {
       loadMorePosts();
     }
   }, [inView, loadMorePosts, posts.length]);
 
+  /**
+  * Set up WebSocket event handling for posts
+  */
   useEffect(() => {
+    setupWebSocketHandler(socket, posts, setPosts);
+  }, [socket, posts, setPosts]);
+
+  /**
+  * Set up WebSocket event handling for posts
+  */
+  const updatePostTimes = useCallback(() => {
+    // Update the timestamps of all posts
+    const updatedPosts = posts.map((post) => ({
+      ...post,
+      time_of_publication: getTimeSincePublication(post.created_at),
+    }));
+    setPosts(updatedPosts);
+  }, [posts]);
+
+  useEffect(() => {
+    // Update post timestamps every 60 seconds
     const intervalId = setInterval(updatePostTimes, 60000);
     return () => clearInterval(intervalId);
   }, [updatePostTimes]);

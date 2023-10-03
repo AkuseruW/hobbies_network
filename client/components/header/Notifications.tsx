@@ -36,7 +36,7 @@ const Notifications = ({ notifications }: { notifications: NotificationResponse 
                                     />
                                 </Avatar>
                                 <p className="flex flex-col pl-2">
-                                    <span className="text-sm">{notification.notification_type} :</span>
+                                    <span className="text-sm">{notification.title} :</span>
                                     <span className="text-[12px] text-muted-foreground">{notification.content}</span>
                                 </p>
                             </div>

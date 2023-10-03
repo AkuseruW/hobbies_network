@@ -11,7 +11,7 @@ import { getNotifications } from "@/utils/requests/_notifications_requests";
 
 const Header = async ({ currentUser }: { currentUser: Session }) => {
   const notifications = await getNotifications();
-  const hearderLinks = [
+  const headerLinks = [
     {
       icon: <HomeIcon className="w-6 h-6 text-accent-color" />,
       text: "Accueil",
@@ -31,25 +31,25 @@ const Header = async ({ currentUser }: { currentUser: Session }) => {
 
   return (
     <div className="flex bg-white dark:bg-gray-800 items-center py-4 px-4 shadow-md sticky top-0 z-20 justify-between rounded">
-
-      <Link href="/" className="hidden md:flex lg:flex  ">
-        <strong className="text-2xl text-accent-color">Hobbies</strong>
+      <Link href="/" className="">
+        <strong className="text-2xl text-accent-color hidden md:flex lg:flex">Hobbies</strong>
+        <Image src="/octagon.svg" width={30} height={30} alt="Logo" />
       </Link>
 
-      <div className="flex items-center space-x-4 justify-center w-full">
-        {hearderLinks.map((link, index) => (
+      <div className="flex items-center space-x-2 md:space-x-4 lg:space-x-4 justify-center ">
+        {headerLinks.map((link, index) => (
           <HeaderLinksIcons key={index} link={link} />
         ))}
       </div>
 
-      <div className="hidden md:flex lg:flex  items-center space-x-2">
-        {/* <Alert notifications={notifications}/> */}
-        <ToggleTheme />
-        <Notifications notifications={notifications} />
+      <div className="flex items-center space-x-2">
+        <div className="hidden md:flex lg:flex">
+          <ToggleTheme />
+          <Notifications notifications={notifications} />
+        </div>
         <BtnProfile currentUser={currentUser} />
       </div>
     </div>
-
   );
 };
 
