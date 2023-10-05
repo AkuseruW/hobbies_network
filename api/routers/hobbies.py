@@ -100,7 +100,7 @@ async def create_hobby(request: Request, db: Session = Depends(get_session)):
 
 
 # Define a route to update an existing hobby
-@router.patch("/hobby/{hobby_slug}")
+@router.patch("/hobby_update/{hobby_slug}")
 async def update_hobby(hobby_slug: str, request: Request, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
 
     if current_user.user_role != "ROLE_ADMIN":
@@ -133,8 +133,8 @@ async def update_hobby(hobby_slug: str, request: Request, db: Session = Depends(
     # Update hobby fields
     update_hobby_fields(hobby, name, description, slug)
 
-    with db.begin():
-        db.commit()
+    db.commit()
+    db.refresh(hobby)
 
     return {"message": "Hobby updated successfully"}
 

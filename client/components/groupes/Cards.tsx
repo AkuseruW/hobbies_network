@@ -133,8 +133,8 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
                   />
                 </Button>
               </div>
-              <p className="mt-5 text-sm text-gray-600 dark:text-gray-400">
-                {description.slice(0, 100)}
+              <p className="mt-5 text-gray-600 dark:text-gray-400">
+                {description ? description.slice(0, 100) + ' ...' : 'Aucune description'}
               </p>
             </div>
           </div>

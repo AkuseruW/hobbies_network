@@ -194,11 +194,14 @@ async def get_user_by_id(user_id: int, page: int = 1, db: Session = Depends(get_
         offset, offset + per_page).all()
         
     liked_post_ids = {post.id for post in user.liked_posts}
+    
+    hobbies = [hobby.hobby for hobby in user.hobbies]
 
     user_with_posts = {
         "user": UserRead(**jsonable_encoder(user)),
         "is_following": is_following,
         "total_posts": total_posts,
+        "hobbies": hobbies,
         "posts": [] if not posts else [create_post_info_dict(post, liked_post_ids) for post in posts]
     }
 

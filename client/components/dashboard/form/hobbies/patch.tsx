@@ -1,6 +1,6 @@
 'use client'
 import { Hobby } from '@/types/hobby_types';
-import { getHobbyBySlug } from '@/utils/requests/_hobbies_requests';
+import { getHobbyBySlug, updateHobby } from '@/utils/requests/_hobbies_requests';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -30,6 +30,7 @@ const HobbyFormUpdate = ({ hobby }: { hobby: Hobby }) => {
     };
 
     const onSubmit: SubmitHandler<Hobby> = async (data) => {
+        setIsLoading(true);
         const formData = new FormData();
         formData.append('name', data.name);
         formData.append('slug', data.slug);
@@ -47,8 +48,7 @@ const HobbyFormUpdate = ({ hobby }: { hobby: Hobby }) => {
             }
         };
 
-        setIsLoading(true);
-        const updatedCategory = await getHobbyBySlug({ slug: hobby.slug });
+        const updatedCategory = await updateHobby({ slug: hobby.slug, formData });
 
 
         if (updatedCategory) {

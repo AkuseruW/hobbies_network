@@ -72,10 +72,18 @@ export const deleteHobby = async ({ id }: { id: number }) => {
 };
 
 export const proposeHobby = async ({ values }: { values: { name: string, description: string } }) => {
-  console.log(values);
   try {
     return await fetcher(apiUrl(`/api/propose_hobby`), "POST", {}, JSON.stringify(values));
   } catch (error) {
     throw error;
   }
 };
+
+
+export const updateHobby = async ({ slug, formData }: { slug: string, formData: FormData }) => {
+  try {
+    return await fetcher(apiUrl(`/api/hobby_update/${slug}`), "POST", {}, formData);
+  } catch (error) {
+    throw error;
+  }
+}

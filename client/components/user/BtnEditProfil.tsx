@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import FormEditUserInfo from './FormEditUserInfo';
 import FormEditUserPassword from './FromEditPassword';
+import { Button } from '../ui/button';
 
 
 const BtnEditProfil = ({ currentUser }: { currentUser: any }) => {
@@ -29,9 +30,9 @@ const BtnEditProfil = ({ currentUser }: { currentUser: any }) => {
 
     return (
         <>
-            <button className="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md" onClick={openModal} >
+            <Button onClick={openModal} variant="outline" size="lg" className='mt-4' >
                 Modifier le profil
-            </button>
+            </Button>
             {isModalOpen && (
                 <Modal size="sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
                     <div className='p-4' ref={modalRef}>

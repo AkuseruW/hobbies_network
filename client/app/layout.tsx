@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="fr" className='min-h-screen' suppressHydrationWarning>
-      <body className='min-h-screen bg-[#f0f2f5] dark:bg-gray-900'>
+      <body className='min-h-screen bg-[#f0f2f5] dark:bg-gray-900 p-0 m-0'>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Toaster />

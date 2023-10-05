@@ -7,6 +7,8 @@ import BtnEditProfil from '@/components/user/BtnEditProfil';
 import { currentUser } from '@/utils/_auth_informations';
 import { getUserProfil } from '@/utils/requests/_users_requests';
 import BtnFollowProfil from '@/components/user/BtnFollowProfil';
+import IconColor from '../iconColor';
+import { Hobby } from '@/types/hobby_types';
 
 const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
   const { user, hobbies, is_following, posts } = await getUserProfil({ user_id: params.user_id });
@@ -14,21 +16,33 @@ const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
   const parsedUserID = parseInt(params.user_id, 10);
   const isCurrentUser = currentUserID === parsedUserID;
 
+  console.log(hobbies)
+
   return (
     <div className="flex flex-col items-center w-full">
       {/* Conteneur de la bannière */}
-      <div className="w-full relative h-[30vh] overflow-hidden rounded-lg bg-white dark:bg-gray-800 mx-10">
+      <div className="w-full md:w-[70%] relative h-auto md:h-[30vh] overflow-hidden rounded-lg bg-white dark:bg-gray-800">
+        <div className="text-slate-800 dark:text-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-[80%] container mx-auto p-6">
+          {["Hobbies", "Follows", "Suivis"].map((title, index) => (
+            <div
+              key={index}
+              className="card border hover:border-gray-500 hover:shadow-lg transition-all text-center mb-4 bg-[#f0f2f5] dark:bg-gray-900 rounded-lg"
+            >
+              <p className="text-lg font-semibold">{title}</p>
+              <p className="text-gray-800 dark:text-gray-200 text-xl">1000</p>
+            </div>
+          ))}
+        </div>
 
-        {/* Contenu de la bannière */}
-        <div className="absolute bottom-0 left-0 right-0 py-6 px-4 text-white dark:bg-gray-800 ">
-          <Avatar className='w-20 h-20' >
+        <div className="flex flex-col md:flex-row w-full md:w-[70%] items-center overflow-x-auto">
+          <Avatar className='w-[15%] h-[15%] md:mr-6  md:mb-0'>
             <AvatarImage
               src={user.profile_picture}
               alt={user.username}
-              className="border rounded-full "
+              className="border rounded-full h-90 w-90"
             />
           </Avatar>
-          <div className="flex justify-between items-center">
+          <div className='flex flex-col md:flex-row py-6 '>
             <div className='flex'>
               <h2 className="text-3xl text-black font-semibold dark:text-white">{`${user.firstname} ${user.lastname}`}</h2>
               {user.is_certified && (
@@ -45,6 +59,26 @@ const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
           </div>
         </div>
       </div>
+
+
+      <section className="w-full md:w-[70%] lg:w-[70%] my-10">
+        <h2 className='text-2xl font-semibold mb-3'>  Mes hobbies</h2>
+        <div className="flex space-x-8">
+          {hobbies.map((hobby: Hobby) => (
+            <div
+              key={hobby.id}
+              className="
+              flex flex-col items-center gap-2
+              bg-white p-4 relative w-28 h-26 overflow-hidden 
+              rounded-xl border border-gray-300 dark:border-gray-700
+              hover:border-gray-500 hover:shadow-lg transition-all
+              duration-300 ease-in-out dark:bg-gray-800 dark:text-white">
+              <IconColor icone_black={hobby.icone_black} icone_white={hobby.icone_white} />
+              <p>{hobby.name}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section className="w-full md:w-[60%] lg:w-[50%]">
         <div className="max-w-xl mx-auto">

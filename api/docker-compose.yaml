@@ -3,6 +3,9 @@ version: "3.8"
 services:
   db_hobbies:
     image: postgres:latest
+    mem_limit: 512m
+    mem_reservation: 128M
+    cpus: 0.5
     environment:
       POSTGRES_DB: hobbies
       POSTGRES_USER: postgres
@@ -17,6 +20,9 @@ services:
     command: sh -c "uvicorn main:app --reload --port=8000 --host=0.0.0.0"
     volumes:
       - .:/app
+    mem_limit: 512m
+    mem_reservation: 128M
+    cpus: 0.5
     ports:
       - "8000:8000"
     depends_on:
