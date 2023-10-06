@@ -67,7 +67,7 @@ const Header = async ({ currentUser }: { currentUser: Session }) => {
         <div className="flex items-center space-x-2">
           <div className="hidden md:flex lg:flex space-x-2 ">
             <ToggleTheme />
-            <Notifications notifications={notifications} />
+            <Notifications notifications={notifications} client={true} />
           </div>
           {/* <DropDownComponent menuItems={dropMenuItems} trigger={trigger} /> */}
           <BtnProfile currentUser={currentUser} />

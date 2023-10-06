@@ -6,8 +6,10 @@ import Link from 'next/link'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { NotificationResponse } from '@/types/notifications_types'
 import { Notification } from '../../types/notifications_types';
+import { notification_is_read } from '@/utils/requests/_notifications_requests'
+import { useRouter } from 'next/navigation'
 
-const Notifications = ({ notifications }: { notifications: NotificationResponse }) => {
+const Notifications = ({ notifications, client }: { notifications: NotificationResponse, client?: boolean }) => {
 
     return (
         <DropdownMenu>
@@ -25,7 +27,7 @@ const Notifications = ({ notifications }: { notifications: NotificationResponse 
                 {notifications.notifications.map((notification) => (
                     <DropdownMenuItem key={notification.id}>
                         <Link
-                            href={`/dashboard/${notification.notification_type}/${notification.report_id}`}
+                            href={client ? `/profil/${notification.user.id}` : `/dashboard/${notification.notification_type}/${notification.report_id}`}
                             className="cursor-pointer h-full w-full p-0 m-0"
                         >
                             <div className="flex items-center">
@@ -55,6 +57,13 @@ const Notifications = ({ notifications }: { notifications: NotificationResponse 
 export default Notifications;
 
 export const NotificationMobile = ({ notifications }: { notifications: NotificationResponse }) => {
+    const router = useRouter();
+
+    const onclick = async (id: number) => {
+        await notification_is_read({ notification_id: id });
+        router.refresh();
+    }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -70,12 +79,13 @@ export const NotificationMobile = ({ notifications }: { notifications: Notificat
                     )}
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className=''>
+            <DropdownMenuContent className='absolute bottom-14 -right-5'>
                 {notifications.notifications.map((notification) => (
                     <DropdownMenuItem key={notification.id}>
                         <Link
-                            href={`/dashboard/${notification.notification_type}/${notification.report_id}`}
+                            href={`/profil/${notification.user.id}`}
                             className="cursor-pointer h-full w-full p-0 m-0"
+                            onClick={() => onclick(notification.id)}
                         >
                             <div className="flex items-center">
                                 <Avatar className="w-6 h-6 mr-2">

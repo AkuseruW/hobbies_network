@@ -24,3 +24,12 @@ export const getNotificationsAdmin = async ({
     throw error;
   }
 };
+
+
+export const notification_is_read = async ({ notification_id }: { notification_id: number }) => {
+  try {
+    return await fetcher(apiUrl(`/api/notification_is_read/${notification_id}`), "DELETE");
+  } catch (error) {
+    throw error;
+  }
+}

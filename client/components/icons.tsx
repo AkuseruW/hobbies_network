@@ -31,6 +31,7 @@ import {
     Pin,
     PinOff,
     AlertOctagonIcon,
+    Facebook,
     // @ts-ignore
     type Icon as LucideIcon,
 } from "lucide-react"
@@ -85,6 +86,7 @@ export const Icons = {
     help: HelpCircle,
     pizza: Pizza,
     twitter: Twitter,
+    facebook: Facebook,
     check: Check,
     copy: Copy,
     copyDone: ClipboardCheck,
