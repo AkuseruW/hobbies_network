@@ -6,14 +6,8 @@ import { PostData } from "@/types/post_types";
 import { likePost } from "@/utils/requests/_posts_requests";
 import { useLike } from "@/providers/like_provider";
 import Modal from "@/components/Modal";
-import {
-    FacebookShareButton,
-    TwitterShareButton,
-    LinkedinShareButton,
-    FacebookIcon,
-    TwitterIcon,
-    LinkedinIcon,
-} from "react-share";
+import { revalidatePath } from 'next/cache'
+
 
 const BtnAction = ({ data, handleToggleInput }: { data: PostData; handleToggleInput?: () => void }) => {
     const { toggleLike } = useLike();
@@ -23,10 +17,10 @@ const BtnAction = ({ data, handleToggleInput }: { data: PostData; handleToggleIn
     const handleLikePost = async () => {
         try {
             const response = await likePost({ postId: data.id });
-
             if (response) {
                 toggleLike(data.id);
                 setIsLiked(!isLiked);
+                revalidatePath('/')
             }
         } catch (error) {
             console.error("An error occurred:", error);
@@ -43,19 +37,7 @@ const BtnAction = ({ data, handleToggleInput }: { data: PostData; handleToggleIn
                 <Modal title="Partager" size="lg:h-[50%] md:h-[50%] sm:h-[50%] w-full" close={handleCloseModal}>
                     <div className=" pt-2 container h-full">
                         <p className="text-sm ">Voulez-vous partager cette publication ?</p>
-                        <div className="flex items-center justify-center gap-4 pt-2">
-                            <FacebookShareButton url={`${process.env.NEXT_PUBLIC_URL}/posts/${data.id}`}>
-                                <FacebookIcon />
-                            </FacebookShareButton>
 
-                            <TwitterShareButton url={`${process.env.NEXT_PUBLIC_URL}/posts/${data.id}`}>
-                                <TwitterIcon />
-                            </TwitterShareButton>
-
-                            <LinkedinShareButton url={`${process.env.NEXT_PUBLIC_URL}/posts/${data.id}`}>
-                                <LinkedinIcon />
-                            </LinkedinShareButton>
-                        </div>
                     </div>
                 </Modal>
             )}

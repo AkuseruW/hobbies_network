@@ -1,4 +1,4 @@
-from .User import User, Role
+from .User import User, Role, LikesTable
 from .Hobby import Hobby, UserToHobby, ProposedHobby
 from .Post import Post, PostImage
 from .Comment import Comment

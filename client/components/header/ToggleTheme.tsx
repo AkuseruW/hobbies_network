@@ -48,19 +48,13 @@ export const ToggleThemeMobile = () => {
   return (
     <button
       aria-label='Toggle Dark Mode'
-      className="rounded-full flex items-center justify-center"
-      style={{
-        aspectRatio: "32/32",
-        objectFit: "cover",
-        height: "32px",
-        width: "32px"
-      }}
+      className="rounded-full px-3 py-2"
       onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
     >
       {resolvedTheme === 'dark' ? (
-        <Sun className='h-5 w-5 text-orange-300' onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')} />
+        <Sun className='w-6 h-6 text-orange-300' onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')} />
       ) : (
-        <Moon className='h-5 w-5 text-white' onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')} />
+        <Moon className='w-6 h-6 text-white' onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')} />
       )}
     </button>
   )

@@ -22,6 +22,7 @@ const Modal = ({ children, title, size = '', close }: ModalProps) => {
       document.body.classList.remove('no-scroll-body');
       document.documentElement.style.overflow = 'auto';
       router.back();
+      router.refresh();
     }
   }, [close, router]);
 

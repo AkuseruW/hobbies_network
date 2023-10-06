@@ -136,3 +136,12 @@ export const unbanUser = async ({ user_id }: { user_id: number }) => {
     throw error;
   }
 };
+
+
+export const deleteAccount = async () => {
+  try {
+    return await fetcher(apiUrl(`/api/delete_account`), "DELETE");
+  } catch (error) {
+    throw error;
+  }
+}

@@ -6,7 +6,7 @@ import UserCard from '@/components/user/UserCard';
 
 const FriendsPage = async ({ searchParams, }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
   const search = typeof searchParams.search === 'string' ? searchParams.search : undefined
-  const { users } = await getUsersPaginated({ search });
+  const users  = await getUsersPaginated({ search });
 
   return (
     <section className="container min-h-screen">

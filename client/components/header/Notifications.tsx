@@ -58,13 +58,11 @@ export const NotificationMobile = ({ notifications }: { notifications: Notificat
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button className='rounded-full flex items-center justify-center text-white' style={{
-                    aspectRatio: "32/32",
-                    objectFit: "cover",
-                    height: "32px",
-                    width: "32px"
-                }}>
-                    <Icons.bell className="w-4 h-4 text-white dark:text-black" />
+                <button className='rounded-full 
+                flex items-center border-1
+                justify-center w-6 h-6
+                text-white'>
+                    <Icons.bell className="w-6 h-6 text-white dark:text-black" />
                     {notifications.count_new_notifications > 0 && (
                         <span className="rounded text-[12px] relative top-[-5px] text-white dark:text-white">
                             {notifications.count_new_notifications}

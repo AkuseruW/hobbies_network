@@ -11,12 +11,10 @@ import IconColor from '../iconColor';
 import { Hobby } from '@/types/hobby_types';
 
 const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
-  const { user, hobbies, is_following, posts } = await getUserProfil({ user_id: params.user_id });
+  const { user, hobbies, is_following, posts, count_hobbies, count_followers, count_following } = await getUserProfil({ user_id: params.user_id });
   const currentUserID = await currentUser().id;
   const parsedUserID = parseInt(params.user_id, 10);
   const isCurrentUser = currentUserID === parsedUserID;
-
-  console.log(hobbies)
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -29,7 +27,9 @@ const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
               className="card border hover:border-gray-500 hover:shadow-lg transition-all text-center mb-4 bg-[#f0f2f5] dark:bg-gray-900 rounded-lg"
             >
               <p className="text-lg font-semibold">{title}</p>
-              <p className="text-gray-800 dark:text-gray-200 text-xl">1000</p>
+              <p className="text-gray-800 dark:text-gray-200 text-xl">
+                {title === "Hobbies" ? count_hobbies : title === "Follows" ? count_followers : count_following}
+              </p>
             </div>
           ))}
         </div>

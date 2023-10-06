@@ -110,16 +110,16 @@ export const BtnMobileProfil = ({ currentUser }: { currentUser: Session }) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button>
+                <button className='w-6 h-6'>
                     <Image
                         alt="profile_picture"
-                        className="rounded-full border-2 border-green-500 bg-gray-500"
-                        height="32"
+                        className="rounded-full"
                         src={`${currentUser?.profile_picture}`}
                         style={{
                             aspectRatio: "32/32",
                             objectFit: "cover",
                         }}
+                        height="32"
                         width="32"
                     />
                 </button>

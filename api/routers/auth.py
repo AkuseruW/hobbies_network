@@ -14,9 +14,15 @@ from dependencies.auth import (
     create_access_token,
     get_password_hash,
 )
-from models import User, Role
+from models import Post, User, Role, LikesTable
 from dependencies.mailer import send_mail
-from models.schemas.userSchemas import SignInRequest, Token, GetSession, UserIn, UserCreated
+from models.schemas.userSchemas import (
+    SignInRequest,
+    Token,
+    GetSession,
+    UserIn,
+    UserCreated,
+)
 from models.schemas.authSchemas import UserUpdatePassword
 from starlette.responses import RedirectResponse
 from dotenv import load_dotenv
@@ -24,10 +30,10 @@ import os
 
 load_dotenv()
 
-github_client = os.getenv('GITHUB_CLIENT')
-github_secret = os.getenv('GITHUB_SECRET')
-google_client = os.getenv('GOOGLE_CLIENT')
-google_secret = os.getenv('GOOGLE_SECRET')
+github_client = os.getenv("GITHUB_CLIENT")
+github_secret = os.getenv("GITHUB_SECRET")
+google_client = os.getenv("GOOGLE_CLIENT")
+google_secret = os.getenv("GOOGLE_SECRET")
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -35,14 +41,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 43200
 access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 github_client_id = github_client
 github_client_secret = github_secret
-SCOPE = 'https://www.googleapis.com/auth/userinfo.email'
-REDIRECT_URI = 'http://localhost:3000/connexion/callback'
+SCOPE = "https://www.googleapis.com/auth/userinfo.email"
+REDIRECT_URI = "http://localhost:3000/connexion/callback"
 
 
 @router.post("/token", response_model=Token)
-def login_for_access_token(
-        form_data: OAuth2PasswordRequestForm = Depends()
-):
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -58,9 +62,7 @@ def login_for_access_token(
 
 
 @router.post("/signin", response_model=None)
-def login_for_access_token(
-        signin_request: SignInRequest
-):
+def login_for_access_token(signin_request: SignInRequest):
     user = authenticate_user(signin_request.email, signin_request.password)
     if not user:
         raise HTTPException(
@@ -82,7 +84,8 @@ def read_users_me(current_user: User = Depends(get_current_active_user)):
         id=current_user.id,
         firstname=current_user.firstname,
         lastname=current_user.lastname,
-        profile_picture=current_user.profile_picture)
+        profile_picture=current_user.profile_picture,
+    )
     return user
 
 
@@ -92,8 +95,7 @@ def sign_up(user_data: UserIn, session: Session = Depends(get_session)):
     password = user_data.password
 
     if not email or not password:
-        raise HTTPException(
-            status_code=400, detail="Email and password are required.")
+        raise HTTPException(status_code=400, detail="Email and password are required.")
 
     # Check if the email already exists
     existing_user = session.query(User).filter(User.email == email).first()
@@ -108,27 +110,22 @@ def sign_up(user_data: UserIn, session: Session = Depends(get_session)):
     session.add(new_user)
     session.commit()
     session.refresh(new_user)
-    
-    send_mail(email=new_user.email, subject='Bienvenu sur hobbies', message='Bonjour !')
 
-    return UserCreated(
-        id=new_user.id,
-        email=new_user.email,
-        role=new_user.role.value
-    )
+    send_mail(email=new_user.email, subject="Bienvenu sur hobbies", message="Bonjour !")
+
+    return UserCreated(id=new_user.id, email=new_user.email, role=new_user.role.value)
 
 
 @router.patch("/update-password", response_model=None)
 async def update_password(
     password_data: UserUpdatePassword,
     current_user: User = Depends(get_current_active_user),
-    db: Session = Depends(get_session)
+    db: Session = Depends(get_session),
 ):
     user = db.query(User).get(current_user.id)
     # Check if the current password is correct
     if not verify_password(password_data.current_password, user.password):
-        raise HTTPException(
-            status_code=400, detail="Current password is incorrect")
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
 
     # Update the user's password
     hashed_password = get_password_hash(password_data.new_password)
@@ -140,7 +137,9 @@ async def update_password(
 
 @router.get("/login/github")
 async def login_github():
-    authorize_url = f"https://github.com/login/oauth/authorize?client_id={github_client_id}"
+    authorize_url = (
+        f"https://github.com/login/oauth/authorize?client_id={github_client_id}"
+    )
     return RedirectResponse(authorize_url, status_code=302)
 
 
@@ -173,11 +172,11 @@ async def login_github_callback(code: str, db: Session = Depends(get_session)):
 @router.get("/callback_google")
 async def login_google_callback(code: str, db: Session = Depends(get_session)):
     data = {
-        'code': code,
-        'client_id': google_client,
-        'client_secret': google_secret,
-        'redirect_uri': REDIRECT_URI,
-        'grant_type': 'authorization_code'
+        "code": code,
+        "client_id": google_client,
+        "client_secret": google_secret,
+        "redirect_uri": REDIRECT_URI,
+        "grant_type": "authorization_code",
     }
 
     user = await google_callback(data, db)
@@ -187,3 +186,23 @@ async def login_google_callback(code: str, db: Session = Depends(get_session)):
 
     user_info = create_user_info(user, access_token)
     return user_info
+
+
+@router.delete("/delete_account", response_model=None)
+def delete_user_with_posts_and_likes(
+    db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_active_user),
+):
+        # Supprimer les likes associés aux posts de l'utilisateur
+        user_id_to_delete = current_user.id
+        db.query(LikesTable).filter(LikesTable.user_id == user_id_to_delete).delete(synchronize_session=False)
+
+        # Supprimer les posts de l'utilisateur
+        db.query(Post).filter(Post.user_id == user_id_to_delete).delete(synchronize_session=False)
+
+        # Supprimer l'utilisateur
+        db.delete(current_user)
+        db.commit()
+
+        return {"message": "Utilisateur supprimé avec succès."}
+

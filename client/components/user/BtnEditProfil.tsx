@@ -2,9 +2,10 @@
 import Modal from '@/components/Modal';
 import React, { useEffect, useRef, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '../ui/button';
 import FormEditUserInfo from './FormEditUserInfo';
 import FormEditUserPassword from './FromEditPassword';
-import { Button } from '../ui/button';
+import SettingsProfile from './SettingsProfile';
 
 
 const BtnEditProfil = ({ currentUser }: { currentUser: any }) => {
@@ -36,17 +37,26 @@ const BtnEditProfil = ({ currentUser }: { currentUser: any }) => {
             {isModalOpen && (
                 <Modal size="sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
                     <div className='p-4' ref={modalRef}>
-                        <Tabs defaultValue="account" className="">
+                        <Tabs defaultValue="account">
+
                             <TabsList>
                                 <TabsTrigger value="account">Account</TabsTrigger>
                                 <TabsTrigger value="password">Password</TabsTrigger>
+                                <TabsTrigger value="test">Setting</TabsTrigger>
                             </TabsList>
+
                             <TabsContent value="account">
                                 <FormEditUserInfo currentUser={currentUser} />
                             </TabsContent>
+
                             <TabsContent value="password">
                                 <FormEditUserPassword />
                             </TabsContent>
+
+                            <TabsContent value="test">
+                                <Button type='submit' >Delete account</Button>
+                            </TabsContent>
+
                         </Tabs>
 
                     </div>

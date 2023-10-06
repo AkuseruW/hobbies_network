@@ -36,25 +36,25 @@ class User(Base):
     role = Column(Enum(Role), default=Role.ROLE_USER)
     is_certified = Column(Boolean, default=False)
     
-    bans = relationship("Ban", back_populates="user")
+    bans = relationship("Ban", back_populates="user", cascade="all, delete-orphan")
     hobbies = relationship("UserToHobby", back_populates="user", cascade="all, delete-orphan")
-    posts = relationship("Post", back_populates="user")
-    comments = relationship("Comment", back_populates="user")
-    reports = relationship("Report", back_populates="user")
+    posts = relationship("Post", back_populates="user", cascade="all, delete-orphan")
+    comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
+    reports = relationship("Report", back_populates="user", cascade="all, delete-orphan")
     
-    sent_notifications = relationship("Notification", back_populates="sender", foreign_keys="Notification.sender_id")
-    received_notifications = relationship("Notification", back_populates="receiver", foreign_keys="Notification.receiver_id")
-    sent_admin_notifications = relationship("AdminNotification", back_populates="sender", foreign_keys="AdminNotification.sender_id")
-    liked_posts = relationship("Post", secondary=LikesTable.__table__, viewonly=True)
+    sent_notifications = relationship("Notification", back_populates="sender", foreign_keys="Notification.sender_id", cascade="all, delete-orphan")
+    received_notifications = relationship("Notification", back_populates="receiver", foreign_keys="Notification.receiver_id", cascade="all, delete-orphan")
+    sent_admin_notifications = relationship("AdminNotification", back_populates="sender", foreign_keys="AdminNotification.sender_id", cascade="all, delete-orphan")
+    liked_posts = relationship("Post", secondary=LikesTable.__table__, viewonly=True, cascade="all, delete-orphan")
     
     sent_messages = relationship("ChatRoom", back_populates="user_a", foreign_keys='ChatRoom.user_a_id')
     received_messages = relationship("ChatRoom", back_populates="user_b", foreign_keys='ChatRoom.user_b_id')
     messages=relationship("MessageHistory", back_populates="user", foreign_keys="MessageHistory.user_id")
     
-    followers = relationship("Follower", foreign_keys=[Follower.following_id], back_populates="following", lazy="dynamic")
-    following = relationship("Follower", foreign_keys=[Follower.follower_id], back_populates="follower", lazy="dynamic")
+    followers = relationship("Follower", foreign_keys=[Follower.following_id], back_populates="following", lazy="dynamic", cascade="all, delete-orphan")
+    following = relationship("Follower", foreign_keys=[Follower.follower_id], back_populates="follower", lazy="dynamic", cascade="all, delete-orphan")
     
-    proposed_hobbies = relationship("ProposedHobby", back_populates="user")
+    proposed_hobbies = relationship("ProposedHobby", back_populates="user", cascade="all, delete-orphan")
 
 
     @property

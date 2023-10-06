@@ -27,17 +27,16 @@ export const MobileNav = async ({ currentUser }: { currentUser: any }) => {
   ];
 
   return (
-    <div className="flex items-center rounded-full w-full bg-gray-800 m-0 p-2 max-w-max fixed bottom-2">
-      <div className="flex flex-1 border-r border-zinc-600 pr-1 w-3/5">
-        <div className="relative flex justify-between text-white space-x-1">
+    <div className="flex items-center rounded-full w-full bg-[#616469] m-0 p-2 max-w-max fixed bottom-2">
+      <div className="flex flex-1 border-r border-zinc-600 pr-1 w-[77%]">
+        <div className="relative flex justify-between text-white w-full mx-4">
           {headerLinks.map((link, index) => (
             <MobileLinksIcons key={index} link={link} />
           ))}
         </div>
       </div>
 
-      <div className="text-white space-x-3 mx-4 flex items-center justify-center w-2/5">
-        <ToggleThemeMobile />
+      <div className="text-white justify-between mx-4 flex items-center w-[22%]">
         <NotificationMobile notifications={notifications} />
         <BtnMobileProfil currentUser={currentUser} />
       </div>
