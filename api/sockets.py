@@ -1,5 +1,7 @@
 from typing import Set
-from fastapi import WebSocket
+from fastapi import WebSocket, WebSocketDisconnect
+import json  # Import the json module for message parsing
+
 class WebSocketManager:
     def __init__(self):
         self.active_connections: Set[WebSocket] = set()
@@ -39,5 +41,24 @@ class WebSocketManager:
         if websocket in self.active_connections:
             await websocket.close()
             self.active_connections.remove(websocket)
+            
+    async def handle_client_message(self, websocket: WebSocket, message: str):
+        try:
+            message_dict = json.loads(message)
+            message_type = message_dict.get('type')
+
+            if message_type == 'get_online_users':
+                online_users = [connection.user for connection in self.active_connections]
+                response_message = {'type': 'online_users', 'users': online_users}
+
+                try:
+                    await websocket.send_json(response_message)
+                except WebSocketDisconnect:
+                    pass
+        except json.JSONDecodeError:
+            pass
+
+
+
             
 ws_manager = WebSocketManager()

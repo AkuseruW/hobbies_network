@@ -100,3 +100,12 @@ def read_notifications(params: ReportsQueryParams = Depends(), db: Session = Dep
     
     return {"notifications": notifications_data, "count_new_notifications": count_new_notifications, "totalPages": total_pages}
 
+
+@router.delete("/notification_is_read/{notification_id}")
+def delete_notifications(notification_id: int, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
+    notification = db.query(Notification).filter(Notification.id == notification_id).first()
+    if notification:
+        db.delete(notification)
+        db.commit()
+        
+        
