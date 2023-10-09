@@ -1,4 +1,5 @@
 'use client';
+import { getAccessTokenFromClient } from '@/utils/_auth_client_info';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 export const WebSocketContext = createContext<WebSocket | null>(null);
@@ -8,10 +9,10 @@ export const useWebSocket = (): WebSocket | null => {
 };
 
 export const WebSocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [socket, setSocket] = useState<WebSocket | null>(null);  
 
   useEffect(() => {
-    const newSocket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/ws/`);
+    const newSocket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/ws/?token=${getAccessTokenFromClient()}`);
     setSocket(newSocket);
 
     return () => {

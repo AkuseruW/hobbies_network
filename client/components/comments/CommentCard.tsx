@@ -24,7 +24,6 @@ const CommentCard = ({ data }: { data: PostComment[] }) => {
     }
   }, [socket]);
 
-  console.log(comments)
   return (
     <div>
       {comments.map((comment, index) => (

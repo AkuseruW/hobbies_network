@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from settings.database import Base
 from sqlalchemy.dialects.postgresql import UUID
 from models.Follower import Follower
+from sqlalchemy.orm import Session
 
 
 class LikesTable(Base):
@@ -35,27 +36,32 @@ class User(Base):
     public_id = Column(String, unique=True, nullable=True)
     role = Column(Enum(Role), default=Role.ROLE_USER)
     is_certified = Column(Boolean, default=False)
-    
+    banner_picture = Column(String, nullable=True)
+
     bans = relationship("Ban", back_populates="user", cascade="all, delete-orphan")
     hobbies = relationship("UserToHobby", back_populates="user", cascade="all, delete-orphan")
     posts = relationship("Post", back_populates="user", cascade="all, delete-orphan")
     comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
     reports = relationship("Report", back_populates="user", cascade="all, delete-orphan")
-    
-    sent_notifications = relationship("Notification", back_populates="sender", foreign_keys="Notification.sender_id", cascade="all, delete-orphan")
-    received_notifications = relationship("Notification", back_populates="receiver", foreign_keys="Notification.receiver_id", cascade="all, delete-orphan")
-    sent_admin_notifications = relationship("AdminNotification", back_populates="sender", foreign_keys="AdminNotification.sender_id", cascade="all, delete-orphan")
+
+    sent_notifications = relationship("Notification", back_populates="sender", foreign_keys="Notification.sender_id",
+                                      cascade="all, delete-orphan")
+    received_notifications = relationship("Notification", back_populates="receiver",
+                                          foreign_keys="Notification.receiver_id", cascade="all, delete-orphan")
+    sent_admin_notifications = relationship("AdminNotification", back_populates="sender",
+                                            foreign_keys="AdminNotification.sender_id", cascade="all, delete-orphan")
     liked_posts = relationship("Post", secondary=LikesTable.__table__, viewonly=True, cascade="all, delete-orphan")
-    
+
     sent_messages = relationship("ChatRoom", back_populates="user_a", foreign_keys='ChatRoom.user_a_id')
     received_messages = relationship("ChatRoom", back_populates="user_b", foreign_keys='ChatRoom.user_b_id')
-    messages=relationship("MessageHistory", back_populates="user", foreign_keys="MessageHistory.user_id")
-    
-    followers = relationship("Follower", foreign_keys=[Follower.following_id], back_populates="following", lazy="dynamic", cascade="all, delete-orphan")
-    following = relationship("Follower", foreign_keys=[Follower.follower_id], back_populates="follower", lazy="dynamic", cascade="all, delete-orphan")
-    
-    proposed_hobbies = relationship("ProposedHobby", back_populates="user", cascade="all, delete-orphan")
+    messages = relationship("MessageHistory", back_populates="user", foreign_keys="MessageHistory.user_id")
 
+    followers = relationship("Follower", foreign_keys=[Follower.following_id], back_populates="following",
+                             lazy="dynamic", cascade="all, delete-orphan")
+    following = relationship("Follower", foreign_keys=[Follower.follower_id], back_populates="follower", lazy="dynamic",
+                             cascade="all, delete-orphan")
+
+    proposed_hobbies = relationship("ProposedHobby", back_populates="user", cascade="all, delete-orphan")
 
     @property
     def user_name(self):
@@ -85,4 +91,15 @@ class User(Base):
     def is_banned(self):
         return bool(self.bans)
 
+    @classmethod
+    def get_user_by_id(cls, user_id: int, db: Session):
+        # Retrieve a user by their ID from the database
+        return db.query(cls).filter_by(id=user_id).first()
 
+    @classmethod
+    def are_users_mutually_following(cls, user1, user2, db: Session):
+        # Check if user1 is following user2 and if user2 is following user1
+        user1_follows_user2 = db.query(Follower).filter_by(follower_id=user1.id, following_id=user2.id).first()
+        user2_follows_user1 = db.query(Follower).filter_by(follower_id=user2.id, following_id=user1.id).first()
+
+        return user1_follows_user2 is not None and user2_follows_user1 is not None

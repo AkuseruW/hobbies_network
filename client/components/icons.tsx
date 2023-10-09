@@ -32,6 +32,7 @@ import {
     PinOff,
     AlertOctagonIcon,
     Facebook,
+    MessageCircle,
     // @ts-ignore
     type Icon as LucideIcon,
 } from "lucide-react"
@@ -98,6 +99,7 @@ export const Icons = {
     archive: Archive,
     pin: Pin,
     unpin: PinOff,
+    message_circle: MessageCircle,
     gitHub: (props: LucideProps) => (
         <svg viewBox="0 0 438.549 438.549" {...props}>
             <path

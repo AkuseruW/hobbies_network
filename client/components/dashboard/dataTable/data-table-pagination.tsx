@@ -18,8 +18,6 @@ export function DataTablePagination<TData>({ table, url, pageSize, initialPage }
         return null
     }
 
-    console.log(pageSize)
-
     const onPageChange = (page: number) => {
         setCurrentPage(page)
         const url = new URL(window.location.href);

@@ -38,7 +38,6 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   const loadMoreHobbies = useCallback(async () => {
     const next = page + 1;
     const { hobbies: newHobbies } = await getHobbies({ search, page: next });
-    console.log(newHobbies)
     if (newHobbies?.length) {
       setPage(next);
       setHobbies((prev) => [

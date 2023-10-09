@@ -35,7 +35,6 @@ const ConnectionForm = () => {
 
         try {
             const response = await signin(values);
-            console.log(response);
             if (response.success) {
                 const { token, lastname, firstname, profile_picture, id, role } = response.data;
                 await setAuthCookies(token, lastname, firstname, profile_picture, id, role);

@@ -2,6 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { ThemeProvider } from '@/providers/theme_provider';
 import { Toaster } from '@/components/ui/toaster';
+import { CookieSettings } from '@/components/CookieSettings';
+import { cookies } from 'next/headers'
 
 
 export const metadata: Metadata = {
@@ -14,11 +16,14 @@ export const metadata: Metadata = {
 }
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
+  const isApprovedCokkie = cookies().get('_cookie_settings')
   return (
     <html lang="fr" className='min-h-screen' suppressHydrationWarning>
       <body className='min-h-screen bg-[#f0f2f5] dark:bg-gray-900 p-0 m-0'>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
+
+          {!isApprovedCokkie && <CookieSettings />}
           <Toaster />
         </ThemeProvider>
       </body>

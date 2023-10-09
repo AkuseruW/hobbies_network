@@ -42,7 +42,7 @@ const ImageUpload = forwardRef<HTMLInputElement, ImageUploadProps>(
                             </Avatar>
                             <div
                                 onClick={handleImageDelete}
-                                className="absolute right-0 w-[25px] h-[25px] bg-blue-500 top-[10%] rounded-full flex items-center justify-center bg-white outline-zinc-200 outline outline-1 bg-white"
+                                className="absolute right-0 w-[25px] h-[25px] top-[10%] rounded-full flex items-center justify-center outline-zinc-200 outline outline-1 bg-white"
                             >
                                 <Icons.close className="w-4 h-4 text-black" />
                             </div>

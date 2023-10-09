@@ -49,7 +49,11 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ content, setContent }) => {
 
   return (
     <div className="text-center relative z-1">
-      <FaceSmileIcon className="w-6 h-6 text text-accent-color dark:text-accent-color-alt" onClick={handleToggleEmojiPicker} />
+      <svg onClick={handleToggleEmojiPicker}  className="text-yellow-600 h-9 p-1.5 rounded-full bg-yellow-100 w-9 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="9" cy="10" r="1" fill="currentColor"></circle>
+        <circle cx="15" cy="10" r="1" fill="currentColor"></circle>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3-6h6"></path>
+      </svg>
       {emojiPickerVisible && (
         <div className="absolute bottom-5 right-0 mb-4 z-10" ref={emojiPickerRef}>
           <div className="py-4 rounded-[20px] shadow-lg bg-zinc-200/[.5] dark:bg-gray-800 border border-zinc-200 dark:border-gray-700 w-[190px]">

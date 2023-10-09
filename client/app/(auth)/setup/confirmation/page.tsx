@@ -19,8 +19,6 @@ const page = () => {
     data.hobbyIds = hobbyIds;
   }
 
-  console.log(data)
-
   return <ConfirmUserInfo data={data} />
 }
 

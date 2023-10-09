@@ -11,11 +11,11 @@ const GroupePage = async ({ searchParams }: { searchParams: { [key: string]: str
 
 
   return (
-    <section className="container min-h-screen" >
+    <section className=" min-h-screen mt-5" >
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <Searchbar search={search} type='hobbies' />
       </div>
-      <div key={uuid()} className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div key={uuid()} className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
         <Suspense fallback={<></>}>
           <CardGroupe search={search} initialHobbies={hobbies} />
         </Suspense>

@@ -5,6 +5,7 @@ import PostsSection from '@/components/posts/PostsSection';
 import StoriesSection from '@/components/stories/StoriesSection';
 import { currentUser } from '@/utils/_auth_informations';
 import { getPosts } from '@/utils/requests/_posts_requests';
+import CurrentUserOnline from '@/components/home/CurrentUserOnline';
 
 export const fetchCache = 'force-no-store'
 export const dynamic = 'force-dynamic'
@@ -15,7 +16,7 @@ const HomePage = async () => {
     const { posts } = await getPosts({});
 
     return (
-        <section className=" md:w-[60%] lg:w-[50%]">
+        <section className=" md:w-[60%] lg:w-[100%] flex">
             <div className="max-w-xl mx-auto">
                 {/* Create Post Section */}
                 <CreatePost session={user} />
@@ -32,6 +33,7 @@ const HomePage = async () => {
                     </div>
                 </div>
             </div>
+
         </section>
     )
 }
