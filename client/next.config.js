@@ -4,7 +4,7 @@ const nextConfig = {
         serverActions: true,
     },
     images: {
-        domains: ["localhost", "res.cloudinary.com", "via.placeholder.com"],
+        domains: ["localhost","flowbite.s3.amazonaws.com", "res.cloudinary.com", "via.placeholder.com"],
     },
     reactStrictMode: false,
 

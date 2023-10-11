@@ -33,7 +33,6 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   const isDarkTheme = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
 
   const loadMoreHobbies = useCallback(async () => {
     const next = page + 1;
@@ -80,7 +79,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
       )}
 
       <div
-        className="cursor-pointer col-span-1 flex items-center justify-center bg-white p-4 relative w-full h-full overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
+        className="cursor-pointer col-span-1 flex items-center justify-center bg-white p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
         onClick={() => setIsOpen(true)}
       >
         <div className="space-y-4 lg:space-y-0">
@@ -95,7 +94,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
       {hobbies.map(({ id, name, description, slug, icone_black, icone_white }) => (
         <div
           key={id}
-          className="col-span-1 bg-white p-4 relative w-full h-64 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
+          className="col-span-1 bg-white p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
         >
           <div className="h-full flex flex-col justify-between">
             <div key={name} className="group relative">

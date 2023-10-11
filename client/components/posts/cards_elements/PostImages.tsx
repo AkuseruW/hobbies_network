@@ -1,56 +1,33 @@
-'use client'
 import Image from 'next/image';
 import React, { useState } from 'react';
 
 const PostImagesCarousel = ({ images }: { images: string[] }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [showGallery, setShowGallery] = useState(images.length > 1);
 
-    const goToPreviousImage = () => {
-        if (currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1);
-        }
-    };
-
-    const goToNextImage = () => {
-        if (currentIndex < images.length - 1) {
-            setCurrentIndex(currentIndex + 1);
-        }
-    };
+    const maxImagesToShow = 6;
+    const visibleImages = showGallery ? images.slice(0, maxImagesToShow) : images;
+    const remainingImagesCount = Math.max(images.length - maxImagesToShow, 0);
 
     return (
         <div className="relative w-full">
             <div className="h-full w-full flex items-center justify-center my-auto">
-                <Image
-                    className="object-contain h-full w-full"
-                    src={images[currentIndex]}
-                    alt=""
-                    height={500}
-                    width={500}
-                />
+                {showGallery ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {visibleImages.map((imageUrl, index) => (
+                            <div key={index} className={index === images.length - 1 ? "relative" : ""}>
+                                <Image className="max-w-full rounded-lg h-full object-cover" src={imageUrl} alt="" width={300} height={300} />
+                                {index === images.length - 1 && remainingImagesCount > 0 && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg h-full w-full">
+                                        <span className="text-white z-50 h-full w-full">{remainingImagesCount} autre{remainingImagesCount > 1 ? 's' : ''}</span>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <Image className="h-auto max-w-full rounded-lg" src={images[0]} alt="" width={515} height={500} />
+                )}
             </div>
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {images.map((_, index) => (
-                    <span
-                        key={index}
-                        className={`h-4 w-4 rounded-full cursor-pointer ${currentIndex === index ? 'bg-white' : 'bg-gray-700'
-                            }`}
-                    ></span>
-                ))}
-            </div>
-            <button
-                onClick={goToPreviousImage}
-                className="bg-transparent hover:bg-gray-500 text-white absolute h-full top-1/2 transform -translate-y-1/2 rounded px-2 py-1 left-0"
-                disabled={currentIndex === 0}
-            >
-                Précédent
-            </button>
-            <button
-                onClick={goToNextImage}
-                className="bg-transparent hover:bg-gray-500 text-white h-full absolute top-1/2 transform -translate-y-1/2 rounded px-2 py-1 right-0"
-                disabled={currentIndex === images.length - 1}
-            >
-                Suivant
-            </button>
         </div>
     );
 };

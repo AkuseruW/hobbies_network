@@ -42,11 +42,19 @@ const FormEditUserInfo = ({ currentUser }: { currentUser: User }) => {
                 lastname: values.lastname,
                 bio: values.bio,
             });
-            updateAuthCookies(res.firstname, res.lastname, res.profile_picture, res.id, res.role);
-            router.refresh();
-            toast({
-                description: "Profil mis à jour avec succès.",
-            })
+            if(res.success === true) {
+                const {firstname, lastname, profile_picture, id, role} = res.user_info
+                updateAuthCookies(firstname, lastname, profile_picture, id, role);
+                router.refresh();
+                toast({
+                    description: "Profil mis à jour avec succès.",
+                })
+            }else{
+                toast({
+                    description: res.detail,
+                    variant:"destructive"
+                })
+            }
         } catch (error) {
             toast({
                 description: "Erreur lors de la mise à jour du profil.",

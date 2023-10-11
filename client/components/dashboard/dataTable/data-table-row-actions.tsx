@@ -6,6 +6,7 @@ import { MoreHorizontal, Pen, Trash, Eye, Ban } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import ModalValidation from "../ModalValidation";
 import { deleteHobby } from "@/utils/requests/_hobbies_requests";
+import { useToast } from "@/components/ui/use-toast";
 
 
 export function DataTableRowActionsProducts({ row }: any) {
@@ -87,16 +88,20 @@ export const DataTableRowActionsReports = ({ row }: any) => {
 export const DataTableRowActionsHobbies = ({ row }: any) => {
     const router = useRouter();
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const { toast } = useToast()
 
 
     const handleDelete = async () => {
         const id = row.original.slug
         const req = await deleteHobby({ id })
 
-        // if (req.status === 200) {
-        //     setModalIsOpen(false);
-        //     router.refresh();
-        // }
+        if (req.success === true) {
+            setModalIsOpen(false);
+            toast({
+                description: req.message,
+            })
+            router.refresh();
+        }
     }
 
     return (
@@ -151,12 +156,15 @@ export const DataTableRowActionsCustomers = ({ row }: any) => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={`reports/${row.original.id}`} prefetch={false}>
-                        <DropdownMenuItem>
+                    <DropdownMenuItem className="hover:bg-muted">
+                        <Link href={`/profil/${row.original.id}`} prefetch={false} className="w-full flex items-center">
                             <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                             View
-                        </DropdownMenuItem>
-                    </Link>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="hover:bg-muted">
+
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

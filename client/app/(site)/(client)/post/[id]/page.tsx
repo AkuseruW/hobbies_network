@@ -7,6 +7,7 @@ import UserInfo from "@/components/posts/cards_elements/UserInfoCard";
 import BtnAction from "@/components/posts/cards_elements/ButtonCardAction";
 import PostImagesCarousel from "@/components/posts/cards_elements/PostImages";
 import CommentCard from "@/components/comments/CommentCard";
+import { ImagePostPage } from "@/components/posts/ImagePostPage";
 
 const PostPage = async ({ params }: { params: { id: string } }) => {
   const postId = typeof params.id === 'string' ? params.id : '';
@@ -19,7 +20,8 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
       {/* Left Section */}
       {hasImages && (
         <div className="w-full sm:w-[75%] flex h-full border-r-2 border-gray">
-          <PostImagesCarousel images={post.post_images_urls} />
+          {/* <PostImagesCarousel images={post.post_images_urls} /> */}
+          <ImagePostPage images={post.post_images_urls}/>
         </div>
       )}
 

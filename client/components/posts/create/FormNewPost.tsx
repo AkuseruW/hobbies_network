@@ -9,8 +9,9 @@ import ImageInput from "./ImageInput";
 import EmojiPicker from "@/components/EmojiPicker";
 import { createPost } from "@/utils/requests/_posts_requests";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { HobbiesSelect } from "./DialogHobby";
+import { useToast } from '@/components/ui/use-toast';
+
 
 const FormNewPost = ({
     session: currentUser,
@@ -27,8 +28,11 @@ const FormNewPost = ({
 }) => {
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
+    const [isValid, setIsValid] = useState(false);
+    const [error, setError] = useState(false);
     const [selectedHobby, setSelectedHobby] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast()
 
     const handlePostContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         // Update the post content state with the new value from the input field
@@ -81,10 +85,31 @@ const FormNewPost = ({
         // Add selected images to the form data
         selectedImages.forEach((image) => formData.append("images", image));
 
+        if (!isValid) {
+            setError(true);
+            toast({
+                description: "Veuillez remplir tous les champs obligatoires.",
+                variant: "destructive"
+            })
+            setIsLoading(false);
+            return;
+        }
+
         try {
             // Send a request to create a new post with the form data
             const res = await createPost({ formData });
+            console.log(res)
             if (res) {
+                if (res.detail) {
+                    setError(true);
+                    toast({
+                        description: res.detail,
+                        variant: "destructive"
+                    })
+                    setIsLoading(false);
+                    return;
+                }
+                
                 // Reset form fields and selected images
                 setPostContent("");
                 setSelectedImages([]);
@@ -98,6 +123,7 @@ const FormNewPost = ({
                 }, 2000);
             }
         } catch (error) {
+            setIsLoading(false);
             console.error("Erreur lors de l'envoi du formulaire : ", error);
         }
     };
@@ -106,7 +132,7 @@ const FormNewPost = ({
         <>
             <div className="flex justify-between">
                 <UserInformation currentUser={currentUser} />
-                <HobbiesSelect hobbies={hobbies} selectedHobby={selectedHobby} handleHobbyChange={handleHobbyChange} />
+                <HobbiesSelect hobbies={hobbies} selectedHobby={selectedHobby} handleHobbyChange={handleHobbyChange} setIsValid={setIsValid} error={error} />
             </div>
 
             <form onSubmit={handleSubmit} className="dark:text-white">
@@ -120,7 +146,7 @@ const FormNewPost = ({
                     handleRemoveImage={handleRemoveImage}
                 />
                 <div className="bsolute bottom-0 p-4 w-full">
-                    <div className="flex bg-gray-50 border border-purple-100 rounded-2xl p-2 shadow-sm items-center">
+                    <div className="flex bg-gray-50 dark:bg-gray-800 border border-purple-100 dark:border-gray-400 rounded-2xl p-2 shadow-sm items-center">
                         <div className="lg:block hidden ml-1"> Ajouter a votre post</div>
                         <div className="flex flex-1 items-center lg:justify-end justify-center space-x-2">
                             <EmojiPicker content={postContent} setContent={setPostContent} />
@@ -153,9 +179,7 @@ const FormNewPost = ({
                         </Button>
                     </div>
                 </div>
-
             </form >
-
         </>
     );
 };

@@ -40,6 +40,9 @@ async def create_post(request: Request, db: Session = Depends(get_session), curr
     images = form_data.getlist('images')
     hobby_id = form_data.get('hobby_id')
     vsisibility = form_data.get('visibility')
+    
+    if not content or not hobby_id:
+        raise HTTPException(status_code=400, detail="Tous les champs requis doivent être remplis.")
 
     new_post = await post_to_database(db, content, user_id, images, hobby_id, vsisibility)
 

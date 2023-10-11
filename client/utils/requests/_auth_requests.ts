@@ -53,7 +53,6 @@ export const signup = async (values: FormValues) => {
 };
 
 export const setUpProfil = async ({ formData }: { formData: FormData }) => {
-  console.log(formData);
   try {
     const response = await fetch(apiUrl("/api/users/setup"), {
       method: "PATCH",

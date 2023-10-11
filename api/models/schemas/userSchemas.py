@@ -82,9 +82,9 @@ class PrivateUserData(PublicUserData):
 
 
 class UpdateProfile(BaseModel):
+    bio: Optional[str]
     firstname: str
     lastname: str
-    bio: Optional[str]
 
 
 class UserListResponse(BaseModel):

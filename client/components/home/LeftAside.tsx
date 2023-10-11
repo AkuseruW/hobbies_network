@@ -23,7 +23,7 @@ const LeftAside = () => {
         
     ];
     return (
-        <div className="media max-sm:hidden max-md:hidden lg:block w-64 h-[80%] bg-white dark:bg-gray-800 rounded-lg fixed z-11 overflow-hidden border-r border-t border-b border-gray-300 dark:border-gray-800 transition-all duration-300 ease-in-out mt-5">
+        <div className=" shadow-md w-64 h-[80%] bg-white dark:bg-gray-800 rounded-lg fixed z-11  dark:border-gray-800 mt-5">
             <div className="p-3 h-full">
                 <div className="flex flex-col mt-5">
                     {headerLinks.map((link, index) => (

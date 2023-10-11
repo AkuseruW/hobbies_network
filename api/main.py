@@ -1,7 +1,7 @@
 import json
 from typing import Annotated
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -18,6 +18,9 @@ from routers import (auth, chat, comments, content, follow_routes, hobbies, post
 from settings.database import engine, get_session
 from sockets import ws_manager
 from sqlalchemy.orm import Session
+
+from fastapi import (Cookie, Depends, Query, WebSocket, status)
+from starlette.exceptions import WebSocketException
 
 app = FastAPI()
 
@@ -49,19 +52,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from fastapi import (
-    Cookie,
-    Depends,
-    FastAPI,
-    Query,
-    WebSocket,
-    status,
-)
-from starlette.exceptions import WebSocketException
-
 
 async def get_cookie_or_token(
-        websocket: WebSocket,
         session: Annotated[str | None, Cookie()] = None,
         token: Annotated[str | None, Query()] = None,
 ):
@@ -71,7 +63,8 @@ async def get_cookie_or_token(
 
 
 @app.websocket("/ws/")
-async def websocket_endpoint(websocket: WebSocket, cookie_or_token: Annotated[str, Depends(get_cookie_or_token)], db: Session = Depends(get_session)):
+async def websocket_endpoint(websocket: WebSocket, cookie_or_token: Annotated[str, Depends(get_cookie_or_token)],
+                             db: Session = Depends(get_session)):
     current_user = get_current_user(cookie_or_token)
     await ws_manager.connect(websocket, current_user)
 
@@ -80,9 +73,8 @@ async def websocket_endpoint(websocket: WebSocket, cookie_or_token: Annotated[st
             data = await websocket.receive_text()
             message = json.loads(data)
             if message.get("action") == "get_online_users":
-                users = ws_manager.get_active_user_info(current_user.id, db)
-                await websocket.send_json(users)
+                online_users = ws_manager.get_active_user_info(current_user.id, db)
+                await websocket.send_json(online_users)
 
     except WebSocketDisconnect:
         ws_manager.disconnect(websocket)
-

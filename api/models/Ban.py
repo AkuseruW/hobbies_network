@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, Text, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, Text, DateTime
 from sqlalchemy.orm import relationship
 from settings.database import Base
-from sqlalchemy.dialects.postgresql import UUID
+
 
 class Ban(Base):
     __tablename__ = "bans"

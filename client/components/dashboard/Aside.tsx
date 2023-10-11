@@ -11,7 +11,7 @@ import {
 import { Icons } from "@/components/icons";
 
 const NavItem = ({ href, icon, text }: { href: string, icon: any, text: string }) => (
-    <li className="pl-4 py-2">
+    <li className="pl-4 py-2 list-none">
         <Link href={href} className="flex items-center text-gray-900 dark:text-white hover:text-gray-600 font-medium">
             {icon}
             <span className="text-lg">{text}</span>
@@ -35,8 +35,6 @@ const Aside = () => {
                     <NavItem href="/dashboard/hobbies" icon={<RectangleStackIcon className="h-6 w-6 mr-3" />} text="Hobbies" />
                     <NavItem href="/dashboard/reports" icon={<ExclamationCircleIcon className="h-6 w-6 mr-3" />} text="Reports" />
                     <NavItem href="/dashboard/notifications" icon={<Icons.bell className="h-6 w-6 mr-3" />} text="Notifications" />
-                    <NavItem href="/dashboard/notifications" icon={<Icons.archive className="h-6 w-6 mr-3" />} text="Archives" />
-                    <NavItem href="/dashboard/settings" icon={<Cog6ToothIcon className="h-6 w-6 mr-3" />} text="Settings" />
                 </ul>
             </nav>
             <div className="pl-4">

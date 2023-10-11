@@ -1,5 +1,7 @@
 import json
 from typing import Optional, List, Union
+
+from dependencies.uploads import upload_image_to_cloudinary, delete_image
 from models import User, UserToHobby, Post, Follower, Ban
 from models.schemas.userSchemas import (
     ReadAllUsersResponse,
@@ -33,11 +35,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 @router.get("/users", response_model=List[UserListResponse])
 def read_users(
-    page: int = Query(1, description="page"),
-    per_page: int = Query(10, description="per_page"),
-    search: str = Query(None, description="search"),
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        page: int = Query(1, description="page"),
+        per_page: int = Query(10, description="per_page"),
+        search: str = Query(None, description="search"),
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     per_page = 10
     skip = (page - 1) * per_page
@@ -66,10 +68,10 @@ def read_users(
 
 @router.get("/all-users", response_model=ReadAllUsersResponse)
 def read_all_users(
-    page: int = Query(1, description="Page number"),
-    search: str = Query(None, description="search"),
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        page: int = Query(1, description="Page number"),
+        search: str = Query(None, description="search"),
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     limit = 10
     skip = (page - 1) * limit
@@ -109,10 +111,10 @@ def read_all_users(
 
 @router.get("/user/{user_id}", response_model=None)
 async def get_user_by_id(
-    user_id: int,
-    page: int = 1,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        user_id: int,
+        page: int = 1,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     user = db.query(User).filter(User.id == user_id).first()
 
@@ -121,12 +123,12 @@ async def get_user_by_id(
 
     # Check if the current user is following the user
     is_following = (
-        db.query(Follower)
-        .filter(
-            Follower.follower_id == current_user.id, Follower.following_id == user.id
-        )
-        .first()
-        is not None
+            db.query(Follower)
+            .filter(
+                Follower.follower_id == current_user.id, Follower.following_id == user.id
+            )
+            .first()
+            is not None
     )
 
     # Pagination
@@ -167,9 +169,9 @@ async def get_user_by_id(
 
 @router.post("/user/add_or_delete_hobby/{hobby_id}", response_model=None)
 async def add_or_delete_hobby(
-    hobby_id: int,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        hobby_id: int,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     # Check if the user already has this hobby
     existing_relationship = (
@@ -195,11 +197,11 @@ async def add_or_delete_hobby(
 
 @router.post("/ban_user/{user_id}/{duration}", response_model=None)
 async def ban_user(
-    user_id: int,
-    duration: int,
-    request: Request,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        user_id: int,
+        duration: int,
+        request: Request,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     if current_user.user_role != "ROLE_ADMIN":
         raise HTTPException(
@@ -256,9 +258,9 @@ async def ban_user(
 
 @router.patch("/users/setup", response_model=UserProfileSetupResponse)
 async def setup_user_profile(
-    request: Request,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        request: Request,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     form_data = await request.form()
     first_name = form_data.get("firstName")
@@ -297,20 +299,26 @@ async def setup_user_profile(
 
 
 @router.patch("/users/update-profile", response_model=None)
-async def update_user_profile_data(
-    profile_data: UpdateProfile,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
-):
+async def update_user_profile_data(request: Request, db: Session = Depends(get_session),
+                                   current_user: User = Depends(get_current_active_user)):
+    profile_data = await request.body()
+    json_data = json.loads(profile_data)
+    bio = json_data.get("bio")
+    firstname = json_data.get("firstname")
+    lastname = json_data.get("lastname")
+
     # Check if the user exists
     user = db.query(User).filter(User.id == current_user.id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
+    if not firstname or not lastname:
+        raise HTTPException(status_code=400, detail="Les données de profil ne sont pas valides")
+
     # Update the user's profile
-    user.bio = profile_data.bio
-    user.firstname = profile_data.firstname
-    user.lastname = profile_data.lastname
+    user.bio = bio if bio else ""
+    user.firstname = firstname
+    user.lastname = lastname
     db.commit()
 
     user_info = {
@@ -321,20 +329,49 @@ async def update_user_profile_data(
         "role": user.user_role,
     }
 
-    return user_info
+    return {"success": True, "user_info": user_info}
+
+
+@router.patch("/users/update-profile-picture", response_model=None)
+async def change_profile_picture(
+        request: Request, db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
+):
+    print(current_user)
+    form_data = await request.form()
+    profile_picture = form_data.get("file")
+
+    user = db.query(User).filter(User.id == current_user.id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    await delete_image(user.public_id)
+
+    file = await upload_image_to_cloudinary(
+        file=profile_picture, directory="profil"
+    )
+
+    # Update the user's profile picture and public ID
+    user.profile_picture = file["secure_url"]
+    user.public_id = file["public_id"]
+
+    db.commit()
+    db.refresh(user)
+
+    return {"success": True, "profile_picture": user.profile_picture}
 
 
 @router.delete("/unban_user/{user_id}", response_model=None)
 async def unban_user(
-    user_id: int,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        user_id: int,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     if current_user.user_role != "ROLE_ADMIN":
         raise HTTPException(
             status_code=403, detail="Vous n'êtes pas autorisé à effectuer cette action."
         )
-
     # Query the ban record for the user
     ban = db.query(Ban).filter(Ban.user_id == user_id).first()
 

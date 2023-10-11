@@ -1,12 +1,11 @@
 import json
 from typing import Dict, List, Union
 from fastapi import APIRouter, HTTPException, Depends, Request, Query
-from fastapi.responses import RedirectResponse
 import httpx
 from sqlalchemy.orm import Session
 from dependencies.report import delete_notifications_report, delete_other_reports_except_current
 from models.Notification import AdminNotification
-from models.schemas.reportSchemas import PinnedReportSchema, ReportSchema
+from models.schemas.reportSchemas import PinnedReportSchema
 from settings.database import get_session
 from models import User, Report
 from dependencies.auth import get_current_active_user
@@ -23,10 +22,10 @@ router = APIRouter(
 
 class ReportsQueryParams:
     def __init__(
-        self,
-        page: int = Query(1, description="page"),
-        per_page: int = Query(10, description="per_page"),
-        search: str = Query(None, description="search"),
+            self,
+            page: int = Query(1, description="page"),
+            per_page: int = Query(10, description="per_page"),
+            search: str = Query(None, description="search"),
     ):
         self.page = page
         self.per_page = per_page
@@ -48,9 +47,9 @@ Returns:
 
 @router.get("/reports")
 async def read_reports(
-    params: ReportsQueryParams = Depends(),
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        params: ReportsQueryParams = Depends(),
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     # Check if the current user has admin role
     if current_user.role.value != "ROLE_ADMIN":
@@ -72,6 +71,7 @@ async def read_reports(
 
     return {"reports": reports, "totalPages": total_pages}
 
+
 """
 Retrieves a list of pinned reports.
 
@@ -88,10 +88,12 @@ Returns:
 Raises:
     - HTTPException: If the current user is not authorized to perform this action.
 """
+
+
 @router.get("/pinned_reports", response_model=Dict[str, Union[List[PinnedReportSchema], int]])
 def pin_reports(
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     if current_user.role.value != "ROLE_ADMIN":
         raise HTTPException(
@@ -132,9 +134,9 @@ Returns:
 
 @router.get("/report/{report_id}", response_model=None)
 def read_report(
-    report_id: int,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        report_id: int,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     if current_user.role.value != "ROLE_ADMIN":
         raise HTTPException(
@@ -143,7 +145,7 @@ def read_report(
 
     report = db.query(Report).filter_by(id=report_id).first()
 
-    if report.is_read == False:
+    if not report.is_read:
         report.is_read = True
         db.commit()
         db.refresh(report)
@@ -172,9 +174,9 @@ Raises:
 
 @router.post("/report")
 async def create_report(
-    request: Request,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        request: Request,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     data = await request.json()
     reported_id = data["reported_id"]
@@ -195,15 +197,14 @@ async def create_report(
     )
     db.add(report)
     db.commit()
-    
+
     report_id_user = None
-    report_id_post = None 
+    report_id_post = None
     if reported_type == "USER":
         report_id_user = reported_id
     elif reported_type == "POST":
         report_id_post = str(reported_id)
 
-    
     notification = AdminNotification(
         sender_id=current_user.id,
         content=reason,
@@ -238,9 +239,9 @@ Returns:
 
 @router.patch("/report/pin_unpin/{report_id}", response_model=None)
 async def update_report(
-    report_id: int,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        report_id: int,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     if current_user.role.value != "ROLE_ADMIN":
         raise HTTPException(
@@ -281,10 +282,10 @@ Returns:
 
 @router.patch("/report/approve/{report_id}", response_model=None)
 async def approve_report(
-    report_id: int,
-    request: Request,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        report_id: int,
+        request: Request,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     if current_user.role.value != "ROLE_ADMIN":
         raise HTTPException(
@@ -322,10 +323,10 @@ async def approve_report(
                 status_code=response.status_code,
                 detail="Erreur lors de la demande POST vers /ban_user",
             )
-            
+
     await delete_other_reports_except_current(db, report_id, report)
-    await delete_notifications_report(db,reported_id=report.reported_id)
-    
+    await delete_notifications_report(db, reported_id=report.reported_id)
+
     db.commit()
     db.refresh(report)
 
@@ -334,9 +335,9 @@ async def approve_report(
 
 @router.patch("report/reject/{report_id}", response_model=None)
 async def reject_report(
-    report_id: int,
-    db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+        report_id: int,
+        db: Session = Depends(get_session),
+        current_user: User = Depends(get_current_active_user),
 ):
     if current_user.role.value != "ROLE_ADMIN":
         raise HTTPException(
@@ -352,8 +353,8 @@ async def reject_report(
 
     report.is_process = True
     await delete_other_reports_except_current(db, report_id, report)
-    await delete_notifications_report(db,reported_id=report.reported_id)
-    
+    await delete_notifications_report(db, reported_id=report.reported_id)
+
     db.commit()
     db.refresh(report)
 

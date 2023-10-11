@@ -34,7 +34,7 @@ const UserCard = ({ search, initialUsers }: { search?: string | undefined, initi
   return (
     <>
       {users.map((user) => (
-        <article key={user.id} className="col-span-1 h-64 bg-white p-4 relative w-full overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white">
+        <article key={user.id} className="col-span-1 h-30 bg-white p-4 relative w-full overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white">
           <div className="h-full flex flex-col justify-between">
             <div className="group relative pt-4">
               <Avatar className="mx-auto">

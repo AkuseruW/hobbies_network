@@ -22,7 +22,7 @@ async def upload_image_to_cloudinary(file: UploadFile, directory: str):
 
     # Validate file extension and contents
     image_format = imghdr.what(file.filename, await file.read(1024))
-    if image_format not in {"jpeg", "png", "gif"}:
+    if image_format not in {"jpeg", "png", "gif", "webp"}:
         raise HTTPException(
             status_code=400, detail="Format de l'image invalide")
 

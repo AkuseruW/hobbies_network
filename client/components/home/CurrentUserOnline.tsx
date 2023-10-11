@@ -3,6 +3,7 @@ import { WebSocketContext } from '@/providers/ws_provider';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { User } from '@/types/user_types';
+import { ScrollArea } from '../ui/scroll-area';
 
 const CurrentUserOnline = () => {
     const socket = useContext(WebSocketContext);
@@ -49,23 +50,25 @@ const CurrentUserOnline = () => {
     }, [socket, fetchOnlineUsers]);
 
     return (
-        <div className='fixed right-16 p-6 bg-white dark:bg-gray-800 rounded-lg border-l border-t border-b border-gray-300 dark:border-gray-800 transition-all duration-300 ease-in-out mt-5 '>
-            <h2>Utilisateurs en ligne :</h2>
-            <ul>
-                {onlineUsers.map((user: User) => (
-                    <li className='flex items-center justify-center mt-4' key={user.user_id}>
-                        <Avatar className='mr-2 h-8 w-8'>
-                            <AvatarImage
-                                src={user.profile_picture}
-                                alt="Profile picture"
-                                className="h-8 w-8 rounded-full"
-                            />
-                        </Avatar>
-                        <span className='flex items-center '>
-                            {user.username}
-                        </span>
-                    </li>
-                ))}
+        <div className='fixed w-64 max-w-xl p-6 bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md mt-5'>
+            <h2>Contacts en ligne :</h2>
+            <ul className='w-full flex'>
+                <ScrollArea className='w-full h-[300px]'>
+                    {onlineUsers.map((user: User) => (
+                        <li className='flex items-center justify-center mt-4' key={user.user_id}>
+                            <Avatar className='mr-2 h-8 w-8'>
+                                <AvatarImage
+                                    src={user.profile_picture}
+                                    alt="Profile picture"
+                                    className="h-8 w-8 rounded-full"
+                                />
+                            </Avatar>
+                            <span className='flex items-center '>
+                                {user.username}
+                            </span>
+                        </li>
+                    ))}
+                </ScrollArea>
             </ul>
         </div>
     );

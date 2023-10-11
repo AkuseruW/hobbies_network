@@ -65,12 +65,13 @@ export const updateProfile = async ({
   lastname: string;
   bio: string | undefined | null;
 }) => {
+
   try {
     return await fetcher(
       apiUrl("/api/users/update-profile"),
       "PATCH",
       {},
-      { firstname, lastname, bio }
+      JSON.stringify({ firstname, lastname, bio })
     );
   } catch (error) {
     throw error;
@@ -141,6 +142,14 @@ export const unbanUser = async ({ user_id }: { user_id: number }) => {
 export const deleteAccount = async () => {
   try {
     return await fetcher(apiUrl(`/api/delete_account`), "DELETE");
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateProfilPicture = async ({ formData }: { formData: FormData }) => {
+  try {
+    return await fetcher(apiUrl(`/api/users/update-profile-picture`), "PATCH", {}, formData);
   } catch (error) {
     throw error;
   }

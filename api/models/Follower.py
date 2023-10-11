@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from settings.database import Base
 
+
 class Follower(Base):
     __tablename__ = "followers"
 

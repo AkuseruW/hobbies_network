@@ -50,10 +50,9 @@ const HobbyFormUpdate = ({ hobby }: { hobby: Hobby }) => {
 
         const updatedCategory = await updateHobby({ slug: hobby.slug, formData });
 
-
-        if (updatedCategory) {
+        if (updatedCategory.success === true) {
             setIsLoading(false);
-            router.push(`/dashboard/hobbies`)
+            router.back();
             router.refresh();
         }
     }
@@ -67,9 +66,10 @@ const HobbyFormUpdate = ({ hobby }: { hobby: Hobby }) => {
     }, [hobby, setValue]);
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="mx-auto mt-16">
-            <div className="flex">
-                <div className="w-1/2 pr-2">
+        <div className='container mt-16 w-3/4'>
+            <h1 className="text-2xl font-bold tracking-tight">Update {hobby.name}</h1>
+            <form onSubmit={handleSubmit(onSubmit)} className=" mt-16 ">
+                <div className="pr-2">
                     <div className="mb-4">
                         <label htmlFor="name" className="block text-gray-700 font-medium mb-1">Name</label>
                         <input
@@ -101,53 +101,23 @@ const HobbyFormUpdate = ({ hobby }: { hobby: Hobby }) => {
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                         />
                     </div>
-                </div>
-
-                <div className="w-1/2 pl-24">
                     <div className="mb-4">
-                        <div className="relative">
-                            <label htmlFor='image' className="block text-gray-700 font-medium mb-1">Image</label>
-                            <input
-                                type="file"
-                                id='image'
-                                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-                                onChange={(e) => handleFileChange(e)}
-                                multiple
-                            />
-                            <div className="w-64 h-64 rounded-md border-2 border-gray-300 flex items-center justify-center cursor-pointer">
-                                {selectedImage ? (
-                                    <Image src={selectedImage} alt="Selected Image" width={500} height={500} className="w-full h-full object-cover" />
-                                ) : (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        className="w-6 h-6 text-gray-400"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                        />
-                                    </svg>
-                                )}
-                            </div>
-                            {selectedFile && (
-                                <span className="text-gray-500 text-sm mt-1">{selectedFile[0].name}</span>
-                            )}
-                        </div>
+                        <label htmlFor="image" className="block font-medium text-gray-700 dark:text-white">Icon</label>
+                        <input
+                            type="file"
+                            onChange={(e) => handleFileChange(e)}
+                        />
                     </div>
                 </div>
-            </div>
 
-            <div className="mt-8">
-                <button type="submit" className="bg-black text-white px-4 py-2 rounded-md w-3/6" disabled={isLoading}>
-                    {isLoading ? 'Updating...' : 'Update Category'}
-                </button>
-            </div>
-        </form>
+
+                <div className="mt-8">
+                    <button type="submit" className="bg-black text-white px-4 py-2 rounded-md w-3/6" disabled={isLoading}>
+                        {isLoading ? 'Updating...' : 'Update Category'}
+                    </button>
+                </div>
+            </form>
+        </div>
     );
 }
 

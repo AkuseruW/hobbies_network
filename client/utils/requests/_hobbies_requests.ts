@@ -82,7 +82,7 @@ export const proposeHobby = async ({ values }: { values: { name: string, descrip
 
 export const updateHobby = async ({ slug, formData }: { slug: string, formData: FormData }) => {
   try {
-    return await fetcher(apiUrl(`/api/hobby_update/${slug}`), "POST", {}, formData);
+    return await fetcher(apiUrl(`/api/hobby_update/${slug}`), "PATCH", {}, formData);
   } catch (error) {
     throw error;
   }

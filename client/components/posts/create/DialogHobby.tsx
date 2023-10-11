@@ -13,10 +13,13 @@ interface Props {
     hobbies: Hobby[];
     selectedHobby: number | null;
     handleHobbyChange: (hobbyId: number) => void;
+    setIsValid: (isValid: boolean) => void;
+    error: boolean;
 }
 
-export const HobbiesSelect: React.FC<Props> = ({ hobbies, selectedHobby, handleHobbyChange }) => {
+export const HobbiesSelect: React.FC<Props> = ({ hobbies, selectedHobby, handleHobbyChange, setIsValid, error }) => {
     const [hobbyVisible, setHobbyVisible] = useState(false);
+
     const emojiPickerRef = useRef<HTMLDivElement>(null);
     const [hobbySelectedName, setHobbySelectedName] = useState(
         hobbies.find((hobby) => hobby.id === selectedHobby)?.name || 'Ajouter un hobby'
@@ -32,17 +35,19 @@ export const HobbiesSelect: React.FC<Props> = ({ hobbies, selectedHobby, handleH
         const selectedHobby = hobbies.find((hobby) => hobby.id === hobbyId);
         if (selectedHobby) {
             setHobbySelectedName(selectedHobby.name);
+            setIsValid(true);
         } else {
             setHobbySelectedName('Ajouter un hobby');
+            setIsValid(false);
         }
         handleHobbyChange(hobbyId);
     };
 
     return (
         <div className="text-center relative z-1">
-            <Button variant="outline" onClick={handleToggleHobby} className='w-42 max-w-42'>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-tag"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z" /><path d="M7 7h.01" /></svg>
-                <span className="ml-2">{hobbySelectedName}</span>
+            <Button variant="outline" onClick={handleToggleHobby} className={`w-42 max-w-42 ${error? 'border-red-500': 'border-accent-color'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={`${error? 'red' : 'currentColor'} `} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-tag"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z" /><path d="M7 7h.01" /></svg>
+                <span className={`ml-2 ${error? 'text-red-500': 'text-accent-color'}`}>{hobbySelectedName}</span>
             </Button>
             {hobbyVisible && (
                 <div className="absolute top-12 right-0 mb-4 z-10" ref={emojiPickerRef}>

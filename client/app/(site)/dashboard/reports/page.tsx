@@ -11,6 +11,7 @@ const ReportsPage = async ({ searchParams }: { searchParams: { search?: string; 
     const { reports, totalPages } = await getReports({ search, page })
     const url = '/dashboard/reports';
 
+
     return (
         <div>
             <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">

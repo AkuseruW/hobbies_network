@@ -5,11 +5,22 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import Link from 'next/link'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { NotificationResponse } from '@/types/notifications_types'
-import { Notification } from '../../types/notifications_types';
 import { notification_is_read } from '@/utils/requests/_notifications_requests'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
-const Notifications = ({ notifications, client }: { notifications: NotificationResponse, client?: boolean }) => {
+const Notifications = ({ notifications: notifications_db, client }: { notifications: NotificationResponse, client?: boolean }) => {
+    const [notifications, setNotifications] = useState<NotificationResponse>(notifications_db)
+
+    const deleteNotification = async (id: number) => {
+        await notification_is_read({ notification_id: id });
+
+        setNotifications((prevNotifications) => ({
+            ...prevNotifications,
+            notifications: prevNotifications.notifications.filter(notification => notification.id !== id),
+            count_new_notifications: prevNotifications.count_new_notifications - 1,
+        }));
+    }
 
     return (
         <DropdownMenu>
@@ -27,6 +38,7 @@ const Notifications = ({ notifications, client }: { notifications: NotificationR
                 {notifications.notifications.map((notification) => (
                     <DropdownMenuItem key={notification.id}>
                         <Link
+                            onClick={() => deleteNotification(notification.id)}
                             href={client ? `/profil/${notification.user.id}` : `/dashboard/${notification.notification_type}/${notification.report_id}`}
                             className="cursor-pointer h-full w-full p-0 m-0"
                         >
@@ -55,12 +67,17 @@ const Notifications = ({ notifications, client }: { notifications: NotificationR
 
 export default Notifications;
 
-export const NotificationMobile = ({ notifications }: { notifications: NotificationResponse }) => {
-    const router = useRouter();
+export const NotificationMobile = ({ notifications: notifications_db }: { notifications: NotificationResponse }) => {
+    const [notifications, setNotifications] = useState<NotificationResponse>(notifications_db)
 
-    const onclick = async (id: number) => {
+    const deleteNotification = async (id: number) => {
         await notification_is_read({ notification_id: id });
-        router.refresh();
+
+        setNotifications((prevNotifications) => ({
+            ...prevNotifications,
+            notifications: prevNotifications.notifications.filter(notification => notification.id !== id),
+            count_new_notifications: prevNotifications.count_new_notifications - 1,
+        }));
     }
 
     return (
@@ -84,7 +101,7 @@ export const NotificationMobile = ({ notifications }: { notifications: Notificat
                         <Link
                             href={`/profil/${notification.user.id}`}
                             className="cursor-pointer h-full w-full p-0 m-0"
-                            onClick={() => onclick(notification.id)}
+                            onClick={() => deleteNotification(notification.id)}
                         >
                             <div className="flex items-center">
                                 <Avatar className="w-6 h-6 mr-2">

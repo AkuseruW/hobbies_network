@@ -11,7 +11,6 @@ from seeds.hobby import predefined_hobbies
 from dependencies.hobbies import get_hobby_by_slug, update_hobby_fields
 from typing import Dict, List, Union
 
-
 # Create an APIRouter instance with a prefix and tags
 router = APIRouter(
     prefix="/api", tags=["hobbies"], dependencies=[Depends(get_current_active_user)])
@@ -19,14 +18,16 @@ router = APIRouter(
 
 # Define a Pydantic model for query parameters
 class HobbyQueryParams:
-    def __init__(self, page: int = Query(1, description="page"), per_page: int = Query(10, description="per_page"), search: str = Query(None, description="search")):
+    def __init__(self, page: int = Query(1, description="page"), per_page: int = Query(10, description="per_page"),
+                 search: str = Query(None, description="search")):
         self.page = page
         self.per_page = per_page
         self.search = search
 
 
 @router.get("/all_hobbies", response_model=dict)
-def get_hobbies(params: HobbyQueryParams = Depends(), db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)) -> dict:
+def get_hobbies(params: HobbyQueryParams = Depends(), db: Session = Depends(get_session),
+                current_user: User = Depends(get_current_active_user)) -> dict:
     # Calculate offset and total pages
     offset = (params.page - 1) * params.per_page
     total_hobbies = db.query(Hobby).count()
@@ -101,8 +102,8 @@ async def create_hobby(request: Request, db: Session = Depends(get_session)):
 
 # Define a route to update an existing hobby
 @router.patch("/hobby_update/{hobby_slug}")
-async def update_hobby(hobby_slug: str, request: Request, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
-
+async def update_hobby(hobby_slug: str, request: Request, db: Session = Depends(get_session),
+                       current_user: User = Depends(get_current_active_user)):
     if current_user.user_role != "ROLE_ADMIN":
         raise HTTPException(
             status_code=403, detail="You are not authorized to perform this action.")
@@ -136,13 +137,13 @@ async def update_hobby(hobby_slug: str, request: Request, db: Session = Depends(
     db.commit()
     db.refresh(hobby)
 
-    return {"message": "Hobby updated successfully"}
+    return {"success": True, "message": "Hobby updated successfully"}
 
 
 # Define a route to delete a hobby
 @router.delete("/hobby/{hobby_slug}")
-async def delete_hobby(hobby_slug: str, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
-
+async def delete_hobby(hobby_slug: str, db: Session = Depends(get_session),
+                       current_user: User = Depends(get_current_active_user)):
     if current_user.user_role != "ROLE_ADMIN":
         raise HTTPException(
             status_code=403, detail="You are not authorized to perform this action.")
@@ -155,7 +156,7 @@ async def delete_hobby(hobby_slug: str, db: Session = Depends(get_session), curr
     db.delete(hobby)
     db.commit()
 
-    return {"message": "Hobby deleted successfully"}
+    return {"success": True, "message": "Hobby deleted successfully"}
 
 
 # Define a route to get a hobby by its slug
@@ -170,10 +171,11 @@ async def get_hobby(hobby_slug: str, db: Session = Depends(get_session)):
 
 
 @router.post("/propose_hobby")
-async def propose_hobby(request: Request, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
+async def propose_hobby(request: Request, db: Session = Depends(get_session),
+                        current_user: User = Depends(get_current_active_user)):
     data = await request.body()
     json_data = json.loads(data)
-    
+
     propose_hobby = ProposedHobby(
         user_id=current_user.id,
         name=json_data["name"],
@@ -182,5 +184,5 @@ async def propose_hobby(request: Request, db: Session = Depends(get_session), cu
 
     db.add(propose_hobby)
     db.commit()
-    
+
     return {"message": "Le Hobby a été proposé avec succès"}

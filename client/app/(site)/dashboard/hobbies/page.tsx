@@ -8,6 +8,7 @@ const HobbiesAdminPage = async ({ searchParams }: { searchParams: { search?: str
   
   const {hobbies, totalPages}= await getHobbiesAdmin({ search, page });
   const url = '/dashboard/hobbies'
+  console.log(totalPages)
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">

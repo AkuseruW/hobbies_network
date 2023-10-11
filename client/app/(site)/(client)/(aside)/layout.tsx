@@ -9,20 +9,18 @@ const ClientLayout = async ({ children }: { children: React.ReactNode }) => {
     const user = currentUser();
 
     return (
-
-        <div className="flex flex-row min-h-screen mt-5">
-            <div className='w-1/5'>
+        <div className="lg:flex lg:flex-row min-h-screen mt-5">
+            <div className='hidden lg:w-1/5 relative lg:flex'>
                 <LeftAside />
             </div>
-            <main key={uuid()} className="flex flex-col items-center w-3/5">
+            <main key={uuid()} className="flex flex-col items-center lg:w-3/5">
                 {children}
             </main>
-            <div className='w-1/5'>
+            <div className='hidden lg:w-1/5 relative lg:flex justify-end'>
                 <CurrentUserOnline />
                 <MessagesToggle />
             </div>
         </div>
-
     );
 };
 

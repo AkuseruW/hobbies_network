@@ -1,4 +1,4 @@
-import { setCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 
 export const setAuthCookies = async (
   token: string,
@@ -69,3 +69,26 @@ export const updateAuthCookies = async (
     }
   );
 };
+
+
+export const updateProfilePictureInCookie = (newProfilePicture: string) => {
+  // Retrieve the existing cookie
+  const existingCookie = getCookie("auth");
+  // Check if the cookie exists
+  if (existingCookie) {
+    // Parse the existing cookie into an object
+    const authData = JSON.parse(existingCookie);
+    // Update the 'profile_picture' value in the cookie object with the new value
+    authData.profile_picture = newProfilePicture;
+    // Set a new expiration date for the cookie
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 7);
+    // Reset the cookie with the updated value
+    setCookie("auth", JSON.stringify(authData), {
+      expires,
+      sameSite: true,
+      secure: true,
+    });
+  }
+};
+

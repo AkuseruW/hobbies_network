@@ -35,14 +35,12 @@ const BtnEditProfil = ({ currentUser }: { currentUser: any }) => {
                 Modifier le profil
             </Button>
             {isModalOpen && (
-                <Modal size="sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
+                <Modal size="sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]" title='Modifier le profil'>
                     <div className='p-4' ref={modalRef}>
                         <Tabs defaultValue="account">
-
                             <TabsList>
                                 <TabsTrigger value="account">Account</TabsTrigger>
                                 <TabsTrigger value="password">Password</TabsTrigger>
-                                <TabsTrigger value="test">Setting</TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="account">
@@ -52,11 +50,6 @@ const BtnEditProfil = ({ currentUser }: { currentUser: any }) => {
                             <TabsContent value="password">
                                 <FormEditUserPassword />
                             </TabsContent>
-
-                            <TabsContent value="test">
-                                <Button type='submit' >Delete account</Button>
-                            </TabsContent>
-
                         </Tabs>
 
                     </div>
