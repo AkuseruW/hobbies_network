@@ -66,7 +66,7 @@ async def get_cookie_or_token(
 async def websocket_endpoint(websocket: WebSocket, cookie_or_token: Annotated[str, Depends(get_cookie_or_token)],
                              db: Session = Depends(get_session)):
     current_user = get_current_user(cookie_or_token)
-    await ws_manager.connect(websocket, current_user)
+    await ws_manager.connect(websocket, current_user, db)
 
     try:
         while True:
@@ -78,3 +78,4 @@ async def websocket_endpoint(websocket: WebSocket, cookie_or_token: Annotated[st
 
     except WebSocketDisconnect:
         ws_manager.disconnect(websocket)
+        await ws_manager.notify_disconnect(current_user, db)

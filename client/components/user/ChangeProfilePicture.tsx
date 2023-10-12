@@ -16,11 +16,13 @@ import { updateProfilPicture } from '@/utils/requests/_users_requests'
 import { updateProfilePictureInCookie } from '@/utils/_auth_cookies'
 import { useRouter } from 'next/navigation'
 import { Icons } from '../icons'
+import Modal from '../Modal'
 
 
 export const ChangeProfilePicture = () => {
     const ref = useRef<HTMLInputElement | null>(null);
     const [src, setSrc] = useState('');
+    const [showModal, setShowModal] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast()
@@ -103,30 +105,26 @@ export const ChangeProfilePicture = () => {
 
     return (
         <>
-            <Dialog>
-                <DialogTrigger className="icon_change_photo md:block absolute bottom-0 right-0 w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 border-2 border-white bg-gray-300 flex items-center justify-center rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-camera"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></svg>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle className='text-lg text-center'>Voulez vous changer de photo ?</DialogTitle>
-                        <Separator />
-                        <DialogDescription className='pt-4 flex justify-center flex-col'>
-                            <div className="flex justify-center text-center">
-                                <ImageUpload
-                                    src={src}
-                                    ref={ref}
-                                    handleImageUpload={handleImageUpload}
-                                    handleImageDelete={handleImageDelete}
-                                />
-                            </div>
-                            <Button disabled={isLoading} onClick={handleChangeProfilePicture} size="lg" className='mt-4' >
-                                {isLoading ? <Icons.spinner className='animate-spin' /> : 'Modifier'}
-                            </Button>
-                        </DialogDescription>
-                    </DialogHeader>
-                </DialogContent>
-            </Dialog>
+            <Button onClick={() => setShowModal(true)} className='icon_change_photo md:block absolute bottom-0 right-0 w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 border-2 border-white bg-gray-300 flex items-center justify-center rounded-full'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-camera"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></svg>
+            </Button>
+            {showModal && (
+                <Modal title='Modifier le profil' size='sm:w-[80%] md:w-[70%] lg:w-[50%] xl:w-[50%] 2xl:w-[40%]' close={() => setShowModal(false)}>
+                    <div className="flex justify-center flex-col p-6">
+                        <div className="flex justify-center text-center">
+                            <ImageUpload
+                                src={src}
+                                ref={ref}
+                                handleImageUpload={handleImageUpload}
+                                handleImageDelete={handleImageDelete}
+                            />
+                        </div>
+                        <Button disabled={isLoading} onClick={handleChangeProfilePicture} size="lg" className='mt-4' >
+                            {isLoading ? <Icons.spinner className='animate-spin' /> : 'Modifier'}
+                        </Button>
+                    </div>
+                </Modal>
+            )}
         </>
     )
 }

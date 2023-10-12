@@ -5,9 +5,10 @@ import { Avatar, AvatarImage } from '../ui/avatar';
 import { User } from '@/types/user_types';
 import { ScrollArea } from '../ui/scroll-area';
 
+
 const CurrentUserOnline = () => {
     const socket = useContext(WebSocketContext);
-    const [onlineUsers, setOnlineUsers] = useState([]);
+    const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
 
     const fetchOnlineUsers = useCallback(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
@@ -25,12 +26,33 @@ const CurrentUserOnline = () => {
             socket.addEventListener('message', (event) => {
                 const dataArray = JSON.parse(event.data);
                 console.log(dataArray);
+            
                 if (Array.isArray(dataArray)) {
                     const userInfos = dataArray.filter((data) => data.action === 'user_info');
-                    //@ts-ignore
                     setOnlineUsers((prevUsers) => [...prevUsers, ...userInfos]);
                 }
+            
+                if (dataArray.action === 'new_user_connected') {
+                    // Add the new user to the onlineUsers list
+                    const newUser = dataArray.user_info;
+                    setOnlineUsers((prevUsers) => {
+                        // Check if the user is not already in the list
+                        if (!prevUsers.some((user) => user.user_id === newUser.user_id)) {
+                            return [...prevUsers, newUser];
+                        }
+                        return prevUsers;
+                    });
+                }
+            
+                if (dataArray.action === 'user_disconnected') {
+                    // Remove the disconnected user from the onlineUsers list
+                    const disconnectedUser = dataArray.user_info;
+                    setOnlineUsers((prevUsers) => {
+                        return prevUsers.filter((user) => user.user_id !== disconnectedUser.user_id);
+                    });
+                }
             });
+            
 
             if (socket.readyState === WebSocket.OPEN) {
                 // If the socket is already open, fetch online users immediately

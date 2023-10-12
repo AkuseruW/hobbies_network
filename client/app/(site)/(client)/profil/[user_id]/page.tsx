@@ -23,7 +23,7 @@ const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
       <div className="w-full md:w-[70%] relative h-auto overflow-hidden rounded-lg bg-white dark:bg-gray-800">
         <div className="profiles_content flex flex-col lg:flex-row items-center p-6 lg:p-8">
 
-          <div className="profile_avatar relative z-10 w-24 h-24 md:w-40 md:h-40 lg:w-48 lg:h-48 mr-4 md:mr-8 mb-4 lg:mb-0">
+          <div className="profile_avatar relative w-24 h-24 md:w-40 md:h-40 lg:w-48 lg:h-48 mr-4 md:mr-8 mb-4 lg:mb-0">
             <div className="profile_avatar_holder overflow-hidden rounded-full bg-gray-400 w-full h-full">
               <Image src={user.profile_picture} width={100} height={100} alt="" className="w-full h-full object-cover" />
             </div>
@@ -56,9 +56,10 @@ const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
         <HobbiesCarousel hobbies={hobbies} />
       </section>
 
-      <section className="flex justify-between max-sm:flex-col max-md:flex-col mt-5 relative w-full lg:w-[70%]">
-        <div className='lg:w-[30%] max-md:mb-5 max-sm:mb-5 flex justify-start items-start'>
-          <aside className="p-4 w-full shadow-md max-lg-[600px] bg-white dark:bg-gray-800 rounded-lg z-10 overflow-hidden dark:border-gray-800">
+      <section className="flex flex-col mt-5 w-full lg:w-[70%] lg:flex-row">
+
+        <div className='lg:w-[35%] max-md:mb-5 max-sm:mb-5 flex justify-start items-start md:w-[70%] md:mx-auto'>
+          <aside className="p-4 w-full shadow-md max-lg-[600px] bg-white dark:bg-gray-800 rounded-lg dark:border-gray-800">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Bio</h3>
             <ScrollArea className="h-[320px] max-lg-[600px]">
               <p className="text-gray-700 dark:text-gray-300">{user.bio}</p>
@@ -66,14 +67,16 @@ const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
           </aside>
         </div>
 
-        <div className="col-span-2 max-w-xl mx-auto md:w-[60%] lg:w-[70%] flex justify-center items-center">
-          <div className="w-xl md:w-[90%] mx-auto">
+        <div className="col-span-2 max-w-xl lg:ml-auto lg:w-[55%] lg:mt-0 flex justify-center items-center md:mx-auto sm:mx-auto md:mt-5">
+          <div className="w-xl md:w-full lg:ml-auto">
             <div key={uuid()} className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
               <PostsSection initialPosts={posts_with_time} />
             </div>
           </div>
         </div>
+
       </section>
+
     </div>
   );
 };
