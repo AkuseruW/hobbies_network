@@ -1,9 +1,9 @@
-import './globals.css'
 import type { Metadata } from 'next'
 import { ThemeProvider } from '@/providers/theme_provider';
 import { Toaster } from '@/components/ui/toaster';
 import { CookieSettings } from '@/components/CookieSettings';
 import { cookies } from 'next/headers'
+import './globals.css'
 
 
 export const metadata: Metadata = {

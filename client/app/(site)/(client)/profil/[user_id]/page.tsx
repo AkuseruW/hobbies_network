@@ -58,17 +58,17 @@ const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
 
       <section className="flex flex-col mt-5 w-full lg:w-[70%] lg:flex-row">
 
-        <div className='lg:w-[35%] max-md:mb-5 max-sm:mb-5 flex justify-start items-start md:w-[70%] md:mx-auto'>
+        <div className='lg:w-[35%] max-md:mb-5 max-sm:mb-5 flex justify-start items-start md:w-[70%]'>
           <aside className="p-4 w-full shadow-md max-lg-[600px] bg-white dark:bg-gray-800 rounded-lg dark:border-gray-800">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Bio</h3>
-            <ScrollArea className="h-[320px] max-lg-[600px]">
+            <ScrollArea className="h-[200px] max-lg-[600px]">
               <p className="text-gray-700 dark:text-gray-300">{user.bio}</p>
             </ScrollArea>
           </aside>
         </div>
 
-        <div className="col-span-2 max-w-xl lg:ml-auto lg:w-[55%] lg:mt-0 flex justify-center items-center md:mx-auto sm:mx-auto md:mt-5">
-          <div className="w-xl md:w-full lg:ml-auto">
+        <div className="col-span-2 max-w-xl lg:ml-auto lg:w-[55%] lg:mt-0 flex justify-center items-center md:mt-5">
+          <div className="w-xl md:w-full">
             <div key={uuid()} className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
               <PostsSection initialPosts={posts_with_time} />
             </div>

@@ -36,7 +36,6 @@ class User(Base):
     public_id = Column(String, unique=True, nullable=True)
     role = Column(Enum(Role), default=Role.ROLE_USER)
     is_certified = Column(Boolean, default=False)
-    banner_picture = Column(String, nullable=True)
 
     bans = relationship("Ban", back_populates="user", cascade="all, delete-orphan")
     hobbies = relationship("UserToHobby", back_populates="user", cascade="all, delete-orphan")

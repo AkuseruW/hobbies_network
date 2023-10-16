@@ -30,7 +30,7 @@ export const HobbiesCarousel = ({ hobbies }: { hobbies: Hobby[] }) => {
 
             <div className="relative">
                 <div className="flex space-x-8 overflow-x-auto">
-                    {hobbies.map((hobby, index) => (
+                    {hobbies.map((hobby) => (
                         <div
                             key={hobby.id}
                             className="

@@ -66,6 +66,7 @@ def read_users(
     return users_with_status
 
 
+
 @router.get("/all-users", response_model=ReadAllUsersResponse)
 def read_all_users(
         page: int = Query(1, description="Page number"),
