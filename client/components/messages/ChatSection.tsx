@@ -2,10 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { sendChatMessage } from '@/utils/requests/_chats';
+import Image from 'next/image';
 
 interface Message {
     author: string;
     content: string;
+    sender_id: number;
+    sender_name: string;
+    sender_profile_picture: string;
 }
 
 interface ChatSectionProps {
@@ -17,6 +21,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, currentUser }) => {
     const [message, setMessage] = useState<string>('');
     const [receivedMessages, setReceivedMessages] = useState<Message[]>([]);
     const params = useParams<{ room_id: string }>();
+
+    console.log(messages)
 
     const handleSendMessage = async () => {
         if (message.trim() !== '') {
@@ -36,13 +42,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, currentUser }) => {
         <div className="p-4 bg-gray-100 rounded-lg shadow-lg">
             <div className="messages">
                 {messages.map((message, index) => (
-                    //@ts-ignore
-                    <div key={index} className={`mb-2 ${message.author === currentUser.id ? 'text-right' : 'text-left'}`}>
-                        <div className="font-semibold text-blue-600">{message.author}</div>
-                        <div className="text-gray-700">{message.content}</div>
+                    <div key={index} className={`message-container ${message.sender_id === currentUser.id ? 'justify-end' : 'justify-start'} flex items-center space-x-2`}>
+                        {message.sender_id !== currentUser.id && (
+                            <img src={message.sender_profile_picture} alt={message.sender_name} className="w-10 h-10 rounded-full" />
+                        )}
+                        <div className={`message ${message.sender_id === currentUser.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}  p-2 rounded-lg`}>
+                            <div className="text-sm">{message.content}</div>
+                        </div>
                     </div>
                 ))}
             </div>
+
 
             <div className="message-input mt-4">
                 <input

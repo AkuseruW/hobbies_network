@@ -21,7 +21,6 @@ class Post(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
     hobby_id = Column(ForeignKey("hobbies.id"), nullable=True)
-    visibility = Column(String, default="public")
 
     hobby = relationship("Hobby", back_populates="posts")
     likes = relationship("User", secondary="likes_table", overlaps="liked_posts")

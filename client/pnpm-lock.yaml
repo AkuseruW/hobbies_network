@@ -84,8 +84,8 @@ dependencies:
     specifier: latest
     version: 18.2.0
   react-datepicker:
-    specifier: ^4.20.0
-    version: 4.20.0(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^4.21.0
+    version: 4.21.0(react-dom@18.2.0)(react@18.2.0)
   react-dom:
     specifier: latest
     version: 18.2.0(react@18.2.0)
@@ -1615,7 +1615,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001549
-      electron-to-chromium: 1.4.556
+      electron-to-chromium: 1.4.557
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
     dev: true
@@ -1875,8 +1875,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /electron-to-chromium@1.4.556:
-    resolution: {integrity: sha512-6RPN0hHfzDU8D56E72YkDvnLw5Cj2NMXZGg3UkgyoHxjVhG99KZpsKgBWMmTy0Ei89xwan+rbRsVB9yzATmYzQ==}
+  /electron-to-chromium@1.4.557:
+    resolution: {integrity: sha512-6x0zsxyMXpnMJnHrondrD3SuAeKcwij9S+83j2qHAQPXbGTDDfgImzzwgGlzrIcXbHQ42tkG4qA6U860cImNhw==}
     dev: true
 
   /emoji-regex@9.2.2:
@@ -3268,8 +3268,8 @@ packages:
       strip-json-comments: 2.0.1
     dev: false
 
-  /react-datepicker@4.20.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-I29yHN9SabUDSy7Xq3P8+E8E+D2vyeuYAYYWWjeMisGGtsatltV4CSHodyA7W9z0BuGycc/bhSClDbizx4gZHA==}
+  /react-datepicker@4.21.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-z0DtuRrKMz9i7dcTusW29VacbM9pn08g1yw0cG+Y5GpodJDxSWv7zUMxl3IwKN9Ap/AMphiepvmT5P+iNCgEiA==}
     peerDependencies:
       react: ^16.9.0 || ^17 || ^18
       react-dom: ^16.9.0 || ^17 || ^18

@@ -11,9 +11,9 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex h-screen overflow-hidden">
       <Aside />
-      <div className="flex  flex-col flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1 ">
         <HeaderAdmin currentUser={user} notifications={notifications} />
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1">
           <div className=" mx-auto px-4 ">
             {children}
           </div>

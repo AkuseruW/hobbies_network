@@ -73,9 +73,9 @@ async def get_posts(current_user: User, page: int = 1, db: Session = Depends(get
     return {"posts": filtered_posts_data, "is_end_of_list": is_end_of_list}
 
 
-async def post_to_database(db, content, user_id, images, hobby_id, visibility):
+async def post_to_database(db, content, user_id, images, hobby_id):
     # Create a new Post object
-    new_post = Post(content=content, user_id=user_id, hobby_id=hobby_id, visibility=visibility)
+    new_post = Post(content=content, user_id=user_id, hobby_id=hobby_id)
     # Create PostImage objects if images are present
     if images:
         for image in images:

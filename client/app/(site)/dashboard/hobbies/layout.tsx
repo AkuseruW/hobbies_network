@@ -8,7 +8,7 @@ export default async function ProductLayout({
     children: React.ReactNode;
 }) {
     return (
-        <main className="w-full overflow-x-hidden min-h-screen overflow-auto">
+        <main className="w-full">
             <div className="w-full">
                 <div className="container mx-auto px-4 py-6">
                     <nav className="flex flex-wrap justify-center lg:justify-start">
