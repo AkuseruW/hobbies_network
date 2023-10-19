@@ -73,6 +73,14 @@ def login_for_access_token(signin_request: SignInRequest):
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
+    if user.bans:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Votre compte a été banni",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     # Create access token
     access_token = create_access_token(
         data={"email": user.email}, expires_delta=access_token_expires
@@ -82,15 +90,14 @@ def login_for_access_token(signin_request: SignInRequest):
     return user_info
 
 
-@router.get("/users/me", response_model=GetSession)
-def read_users_me(current_user: User = Depends(get_current_active_user)):
-    user = GetSession(
-        id=current_user.id,
-        firstname=current_user.firstname,
-        lastname=current_user.lastname,
-        profile_picture=current_user.profile_picture,
-    )
-    return user
+@router.get("/users/me", response_model=None)
+def read_users_me(db: Session = Depends(get_session),current_user: User = Depends(get_current_active_user)):
+    current_user = db.query(User).get(current_user.id)
+    # Check if the user is banned
+    if current_user.is_banned:
+        raise HTTPException(status_code=401, detail="Your account is banned.")
+
+    return {"status_code": 200, "detail": "Sucess"}
 
 
 @router.post("/signup", response_model=UserCreated)

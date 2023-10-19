@@ -2,9 +2,10 @@ version: "3.8"
 
 services:
   db_hobbies:
-    image: postgres:latest
+    image: postgres:16
     mem_limit: 512m
     mem_reservation: 128M
+    restart: always
     cpus: 0.5
     environment:
       POSTGRES_DB: hobbies
@@ -14,6 +15,14 @@ services:
       - "5432:5432"
     networks:
       - hobbies
+    security_opt:
+      - "no-new-privileges:true"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
   hobbies:
     build: .
@@ -29,7 +38,6 @@ services:
       - db_hobbies
     networks:
       - hobbies
-
 
 networks:
   hobbies:

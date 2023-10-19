@@ -17,6 +17,7 @@ class LikesTable(Base):
 
 class Role(enum.Enum):
     ROLE_USER = 'ROLE_USER'
+    SUPER_ADMIN = 'SUPER_ADMIN'
     ROLE_ADMIN = 'ROLE_ADMIN'
     ROLE_MODERATOR = 'ROLE_MODERATOR'
 
@@ -37,7 +38,7 @@ class User(Base):
     role = Column(Enum(Role), default=Role.ROLE_USER)
     is_certified = Column(Boolean, default=False)
 
-    bans = relationship("Ban", back_populates="user", cascade="all, delete-orphan")
+    bans = relationship("Ban", back_populates="user", cascade="all, delete-orphan", lazy="joined")
     hobbies = relationship("UserToHobby", back_populates="user", cascade="all, delete-orphan")
     posts = relationship("Post", back_populates="user", cascade="all, delete-orphan")
     comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")

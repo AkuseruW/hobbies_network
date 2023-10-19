@@ -14,7 +14,7 @@ from models.Post import Base as Post
 from models.User import Base as User
 from models.Reports import Base as Report
 from models.Notification import Base as Notification
-from routers import (auth, chat, comments, content, follow_routes, hobbies, post, users, report, country, notifications)
+from routers import (auth, chat, comments, content, follow_routes, hobbies, post, users, report, country, notifications, certification)
 from settings.database import engine, get_session
 from sockets import ws_manager
 from sqlalchemy.orm import Session
@@ -33,7 +33,7 @@ for model_class in model_classes:
 # List of routers
 routers = [auth.router, users.router, content.router, post.router, comments.router,
            follow_routes.router, hobbies.router, chat.router,
-           report.router, country.router, notifications.router]
+           report.router, country.router, notifications.router, certification.router]
 # Include all routers
 for router in routers:
     app.include_router(router)
