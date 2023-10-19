@@ -47,6 +47,7 @@ REDIRECT_URI = "http://localhost:3000/connexion/callback"
 
 @router.post("/token", response_model=Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    # Check if the user exists
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -54,6 +55,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    # Create access token
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"email": user.email}, expires_delta=access_token_expires
@@ -63,6 +65,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @router.post("/signin", response_model=None)
 def login_for_access_token(signin_request: SignInRequest):
+    # Check if the user exists
     user = authenticate_user(signin_request.email, signin_request.password)
     if not user:
         raise HTTPException(
@@ -70,10 +73,11 @@ def login_for_access_token(signin_request: SignInRequest):
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
+    # Create access token
     access_token = create_access_token(
         data={"email": user.email}, expires_delta=access_token_expires
     )
+    # Create user info
     user_info = create_user_info(user, access_token)
     return user_info
 
@@ -111,6 +115,7 @@ def sign_up(user_data: UserIn, session: Session = Depends(get_session)):
     session.commit()
     session.refresh(new_user)
 
+    # Send an email
     send_mail(email=new_user.email, subject="Bienvenu sur hobbies", message="Bonjour !")
 
     return UserCreated(id=new_user.id, email=new_user.email, role=new_user.role.value)
@@ -193,16 +198,16 @@ def delete_user_with_posts_and_likes(
     db: Session = Depends(get_session),
     current_user: User = Depends(get_current_active_user),
 ):
-        # Supprimer les likes associés aux posts de l'utilisateur
-        user_id_to_delete = current_user.id
-        db.query(LikesTable).filter(LikesTable.user_id == user_id_to_delete).delete(synchronize_session=False)
+    # Delete all likes associated with the user
+    user_id_to_delete = current_user.id
+    db.query(LikesTable).filter(LikesTable.user_id == user_id_to_delete).delete(synchronize_session=False)
 
-        # Supprimer les posts de l'utilisateur
-        db.query(Post).filter(Post.user_id == user_id_to_delete).delete(synchronize_session=False)
+    # Delete all posts associated with the user
+    db.query(Post).filter(Post.user_id == user_id_to_delete).delete(synchronize_session=False)
 
-        # Supprimer l'utilisateur
-        db.delete(current_user)
-        db.commit()
+    # Delete user
+    db.delete(current_user)
+    db.commit()
 
-        return {"message": "Utilisateur supprimé avec succès."}
+    return {"message": "Utilisateur supprimé avec succès."}
 

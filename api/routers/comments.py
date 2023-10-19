@@ -9,18 +9,27 @@ from sockets import ws_manager
 from dependencies.comments import comment_to_database
 
 router = APIRouter(
-    prefix="/api", tags=["comments"], dependencies=[Depends(get_current_active_user)])
+    prefix="/api", tags=["comments"], dependencies=[Depends(get_current_active_user)]
+)
 
 
 @router.post("/add-comment", response_model=None)
 async def create_comment(
     request: Request,
     db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ):
+    # Parse the JSON data from the request
     comment_data = await request.json()
-    new_comment = await comment_to_database(db, content=comment_data["content"], user_id=current_user.id, post_id=comment_data["post_id"])
+    # Create a new comment
+    new_comment = await comment_to_database(
+        db,
+        content=comment_data["content"],
+        user_id=current_user.id,
+        post_id=comment_data["post_id"],
+    )
 
+    #  Create a dictionary with the new comment data for the websocket
     new_comment_data = {
         "type": "comment",
         "data": {
@@ -31,22 +40,28 @@ async def create_comment(
                 "id": new_comment.user_id,
                 "username": new_comment.user_name,
                 "profile_picture": new_comment.user_profile_picture,
-            }
-        }
+            },
+        },
     }
+    # Send new comment to all connected clients
     await ws_manager.send_new_comment(new_comment_data)
     return new_comment
 
 
 @router.get("/post/{post_id}/comments", response_model=None)
 def get_comments_for_post(
-        post_id: UUID,
-        offset: int = 0,
-        limit: int = 10,
-        db: Session = Depends(get_session)
+    post_id: UUID, offset: int = 0, limit: int = 10, db: Session = Depends(get_session)
 ):
-    comments = db.query(Comment).filter(Comment.post_id == post_id).offset(offset).limit(limit).all()
+    # Get comments for post
+    comments = (
+        db.query(Comment)
+        .filter(Comment.post_id == post_id)
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
 
+    # Return comments as a list
     comment_list = []
     for comment in comments:
         comment_dict = {
@@ -57,7 +72,7 @@ def get_comments_for_post(
                 "id": comment.user_id,
                 "username": comment.user_name,
                 "profile_picture": comment.user_profile_picture,
-            }
+            },
         }
         comment_list.append(comment_dict)
 

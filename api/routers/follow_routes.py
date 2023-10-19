@@ -7,64 +7,76 @@ from dependencies.auth import get_current_active_user
 from models.schemas.userSchemas import PublicUserData
 
 router = APIRouter(
-    prefix="/api", tags=["follow"], dependencies=[Depends(get_current_active_user)])
+    prefix="/api", tags=["follow"], dependencies=[Depends(get_current_active_user)]
+)
 
 
-@router.post('/follow_or_unfollow_user/{user_id}', response_model=None)
-async def follow_or_unfollow_user(user_id: int, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
+@router.post("/follow_or_unfollow_user/{user_id}", response_model=None)
+async def follow_or_unfollow_user(
+    user_id: int,
+    db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_active_user),
+):
     try:
         # Fetch the user to follow/unfollow
         user_to_follow = db.query(User).filter_by(id=user_id).first()
 
         if not user_to_follow:
-            raise HTTPException(status_code=404, detail='User not found.')
+            raise HTTPException(status_code=404, detail="User not found.")
 
         # Check if the user is already being followed
-        existing_follower = db.query(Follower).filter_by(
-            follower_id=current_user.id, following_id=user_id).first()
+        existing_follower = (
+            db.query(Follower)
+            .filter_by(follower_id=current_user.id, following_id=user_id)
+            .first()
+        )
 
         if existing_follower:
             # If the user is already followed, unfollow
             db.delete(existing_follower)
             db.commit()
-            return {'message': 'You have unfollowed this user.'}
+            return {"message": "You have unfollowed this user."}
         else:
             # If the user is not followed, follow
             follower = Follower(follower_id=current_user.id, following_id=user_id)
-            
+
             notification = Notification(
-                title='Follow',
+                title="Follow",
                 sender_id=current_user.id,
                 receiver_id=user_to_follow.id,
-                content=f'{current_user.user_name} vous a follow',                
+                content=f"{current_user.user_name} vous a follow",
             )
-            
+
             db.add_all([follower, notification])
-            
             db.commit()
-            
-            return
+
+            return {"message": "You have followed this user."}
 
     except HTTPException as he:
         raise he
     except Exception as e:
         db.rollback()
         raise HTTPException(
-            status_code=500, detail='An error occurred while updating the follow status.')
-
+            status_code=500,
+            detail="An error occurred while updating the follow status.",
+        )
     finally:
         db.close()
 
 
-@router.get('/following', response_model=List[PublicUserData])
-async def get_following(current_user: User = Depends(get_current_active_user), db: Session = Depends(get_session)):
+@router.get("/following", response_model=List[PublicUserData])
+async def get_following(
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_session),
+):
     current_user = db.query(User).get(current_user.id)
-
     return current_user.following_list
 
 
-@router.get('/followers', response_model=List[PublicUserData])
-async def get_followers(current_user: User = Depends(get_current_active_user), db: Session = Depends(get_session)):
+@router.get("/followers", response_model=List[PublicUserData])
+async def get_followers(
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_session),
+):
     current_user = db.query(User).get(current_user.id)
-
     return current_user.followers_list

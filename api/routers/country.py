@@ -7,9 +7,11 @@ router = APIRouter(prefix="/api", tags=["geolocation"])
 
 geolocator = Nominatim(user_agent="my_geocoder")
 
+
 class Location(BaseModel):
     latitude: float
     longitude: float
+
 
 @router.post("/detect-country/")
 async def detect_city(location: Location):
