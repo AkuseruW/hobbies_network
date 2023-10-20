@@ -14,12 +14,25 @@ from models.Post import Base as Post
 from models.User import Base as User
 from models.Reports import Base as Report
 from models.Notification import Base as Notification
-from routers import (auth, chat, comments, content, follow_routes, hobbies, post, users, report, country, notifications, certification)
+from routers import (
+    auth,
+    chat,
+    comments,
+    content,
+    follow_routes,
+    hobbies,
+    post,
+    users,
+    report,
+    country,
+    notifications,
+    certification,
+)
 from settings.database import engine, get_session
 from sockets import ws_manager
 from sqlalchemy.orm import Session
 
-from fastapi import (Cookie, Depends, Query, WebSocket, status)
+from fastapi import Cookie, Depends, Query, WebSocket, status
 from starlette.exceptions import WebSocketException
 
 app = FastAPI()
@@ -31,9 +44,20 @@ for model_class in model_classes:
     model_class.metadata.create_all(bind=engine)
 
 # List of routers
-routers = [auth.router, users.router, content.router, post.router, comments.router,
-           follow_routes.router, hobbies.router, chat.router,
-           report.router, country.router, notifications.router, certification.router]
+routers = [
+    auth.router,
+    users.router,
+    content.router,
+    post.router,
+    comments.router,
+    follow_routes.router,
+    hobbies.router,
+    chat.router,
+    report.router,
+    country.router,
+    notifications.router,
+    certification.router,
+]
 # Include all routers
 for router in routers:
     app.include_router(router)
@@ -43,19 +67,22 @@ origins = [
     "http://localhost:3000/",
 ]
 
-app.add_middleware(SessionMiddleware, secret_key="d0f75c01f47d53050dad60158c9f98840b6e22f3dce028a9a1d1e229286a236a")
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="d0f75c01f47d53050dad60158c9f98840b6e22f3dce028a9a1d1e229286a236a",
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
 async def get_cookie_or_token(
-        session: Annotated[str | None, Cookie()] = None,
-        token: Annotated[str | None, Query()] = None,
+    session: Annotated[str | None, Cookie()] = None,
+    token: Annotated[str | None, Query()] = None,
 ):
     if session is None and token is None:
         raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
@@ -63,8 +90,11 @@ async def get_cookie_or_token(
 
 
 @app.websocket("/ws/")
-async def websocket_endpoint(websocket: WebSocket, cookie_or_token: Annotated[str, Depends(get_cookie_or_token)],
-                             db: Session = Depends(get_session)):
+async def websocket_endpoint(
+    websocket: WebSocket,
+    cookie_or_token: Annotated[str, Depends(get_cookie_or_token)],
+    db: Session = Depends(get_session),
+):
     current_user = get_current_user(cookie_or_token)
     await ws_manager.connect(websocket, current_user, db)
 

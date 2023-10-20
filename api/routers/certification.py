@@ -9,16 +9,13 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-YOUR_DOMAIN = os.getenv('API_URL')
+YOUR_DOMAIN = os.getenv("API_URL")
+STRIPE_SECRET = os.getenv("STRIPE_SECRET")
 
-router = APIRouter(
-    prefix="/api", tags=["certification"]
-)
+router = APIRouter(prefix="/api", tags=["certification"])
 
-Stripe_public = "pk_test_51MDxjEAdBPRBiTy5FvwJmzysA1ZLoY42rudTfxFGZwaoFbsYHFW2TpAMRVAbnRssDYnzAQBYrsLlfrrlqSEEG7jO00lZVWvJW9"
-stripe_secret = "sk_test_51MDxjEAdBPRBiTy5oGSiNbySjt1NzaKvA1hAf94E6gwa0thQmV0GqzBZGmf4T9x2iPabz9YFvhRujL0futnfakZa00X51Zwl8b"
+stripe.api_key = STRIPE_SECRET
 
-stripe.api_key = stripe_secret
 
 @router.post("/certification")
 def create_certification():
@@ -26,16 +23,16 @@ def create_certification():
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
-                    'price': "price_1O35JtAdBPRBiTy5VrwSFzdI",
-                    'quantity': 1,
+                    "price": "price_1O35JtAdBPRBiTy5VrwSFzdI",
+                    "quantity": 1,
                 },
             ],
-            mode='subscription',
-            success_url=YOUR_DOMAIN +
-            '?success=true&session_id={CHECKOUT_SESSION_ID}',
-            cancel_url=YOUR_DOMAIN + '?canceled=true',
+            mode="subscription",
+            success_url=YOUR_DOMAIN + "?success=true&session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=YOUR_DOMAIN + "?canceled=true",
         )
-        return RedirectResponse(checkout_session.url, status_code=303) 
+        print(checkout_session.url)
+        return {"checkout_url": checkout_session.url}       
     except Exception as e:
         print(e)
         return "Server error", 500
