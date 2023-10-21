@@ -46,8 +46,10 @@ class Token(BaseModel):
 
 class GetSession(BaseModel):
     id: str
+    email: str
     firstname: str
     lastname: str
+    bio: Optional[str]
     profile_picture: Optional[str]
 
 

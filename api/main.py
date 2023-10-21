@@ -14,6 +14,7 @@ from models.Post import Base as Post
 from models.User import Base as User
 from models.Reports import Base as Report
 from models.Notification import Base as Notification
+from models.Subscription import Base as Subscription
 from routers import (
     auth,
     chat,
@@ -38,7 +39,7 @@ from starlette.exceptions import WebSocketException
 app = FastAPI()
 
 # List of model classes
-model_classes = [User, Hobby, Post, Comment, Follower, ChatRoom, Report, Notification]
+model_classes = [User, Hobby, Post, Comment, Follower, ChatRoom, Report, Notification, Subscription]
 # Create tables for each model class
 for model_class in model_classes:
     model_class.metadata.create_all(bind=engine)

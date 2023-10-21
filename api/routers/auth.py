@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from fastapi.security import OAuth2PasswordRequestForm
+import stripe
 
 from settings.database import get_session
 from dependencies.auth import (
@@ -34,6 +35,8 @@ github_client = os.getenv("GITHUB_CLIENT")
 github_secret = os.getenv("GITHUB_SECRET")
 google_client = os.getenv("GOOGLE_CLIENT")
 google_secret = os.getenv("GOOGLE_SECRET")
+STRIPE_SECRET = os.getenv("STRIPE_SECRET")
+
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -43,6 +46,7 @@ github_client_id = github_client
 github_client_secret = github_secret
 SCOPE = "https://www.googleapis.com/auth/userinfo.email"
 REDIRECT_URI = "http://localhost:3000/connexion/callback"
+stripe.api_key = STRIPE_SECRET
 
 
 @router.post("/token", response_model=Token)
@@ -90,14 +94,27 @@ def login_for_access_token(signin_request: SignInRequest):
     return user_info
 
 
-@router.get("/users/me", response_model=None)
+@router.get("/users/me")
 def read_users_me(db: Session = Depends(get_session),current_user: User = Depends(get_current_active_user)):
     current_user = db.query(User).get(current_user.id)
     # Check if the user is banned
     if current_user.is_banned:
         raise HTTPException(status_code=401, detail="Your account is banned.")
+    
+    has_subscription = bool(current_user.subscriptions)
+    print(has_subscription)
+    
+    user_session = {
+        "id": current_user.id,
+        "email": current_user.email,
+        "firstname": current_user.firstname,
+        "lastname": current_user.lastname,
+        "profile_picture": current_user.profile_picture,
+        "bio": current_user.bio,
+        "has_subscription": has_subscription
+    }
 
-    return {"status_code": 200, "detail": "Sucess"}
+    return {"status_code": 200, "detail": "Sucess", "data": user_session}
 
 
 @router.post("/signup", response_model=UserCreated)
@@ -205,12 +222,18 @@ def delete_user_with_posts_and_likes(
     db: Session = Depends(get_session),
     current_user: User = Depends(get_current_active_user),
 ):
+    user_to_delete = db.query(User).get(current_user.id)
+    
+    # Delete all subscriptions associated with the user
+    subscription_id = user_to_delete.subscription_id
+    if subscription_id:
+        stripe.Subscription.delete(subscription_id)
+    
     # Delete all likes associated with the user
-    user_id_to_delete = current_user.id
-    db.query(LikesTable).filter(LikesTable.user_id == user_id_to_delete).delete(synchronize_session=False)
+    db.query(LikesTable).filter(LikesTable.user_id == user_to_delete.id).delete(synchronize_session=False)
 
     # Delete all posts associated with the user
-    db.query(Post).filter(Post.user_id == user_id_to_delete).delete(synchronize_session=False)
+    db.query(Post).filter(Post.user_id == user_to_delete.id).delete(synchronize_session=False)
 
     # Delete user
     db.delete(current_user)

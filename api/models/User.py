@@ -43,6 +43,7 @@ class User(Base):
     posts = relationship("Post", back_populates="user", cascade="all, delete-orphan")
     comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
     reports = relationship("Report", back_populates="user", cascade="all, delete-orphan")
+    subscriptions = relationship("Subscription", back_populates="user", cascade="all, delete-orphan")
 
     sent_notifications = relationship("Notification", back_populates="sender", foreign_keys="Notification.sender_id",
                                       cascade="all, delete-orphan")
