@@ -1,18 +1,14 @@
-import json
 from fastapi import APIRouter, Depends, Header, Request
-from fastapi.responses import RedirectResponse
-from httpx import request
 from dependencies.auth import get_current_active_user
 import stripe
 from sqlalchemy.orm import Session
-from datetime import datetime
+from models import Subscription, User
+from settings.database import get_session
 
 
 from dotenv import load_dotenv
 import os
 
-from models import Subscription, User
-from settings.database import get_session
 
 load_dotenv()
 YOUR_DOMAIN = os.getenv("CLIENT_URL")
@@ -58,26 +54,26 @@ def create_certification(current_user: User = Depends(get_current_active_user)):
         return "Server error", 500
 
 
-def create_subscription(
-    db: Session,
-    user_id: int,
-    subscription_id: str,
-    current_period_start,
-    current_period_end
-):
-    subscription = Subscription(
-        user_id=user_id,
-        subscription_id=subscription_id,
-        current_period_start=current_period_start,
-        current_period_end=current_period_end
-    )
-    db.add(subscription)
-    db.commit()
-    db.refresh(subscription)
-    return subscription
+# def create_subscription(
+#     db: Session,
+#     user_id: int,
+#     subscription_id: str,
+#     current_period_start,
+#     current_period_end
+# ):
+#     subscription = Subscription(
+#         user_id=user_id,
+#         subscription_id=subscription_id,
+#         current_period_start=current_period_start,
+#         current_period_end=current_period_end
+#     )
+#     db.add(subscription)
+#     db.commit()
+#     db.refresh(subscription)
+#     return subscription
 
 @router.post("/webhook")
-async def webhook_received(request: Request, stripe_signature: str = Header(str), db: Session = Depends(get_session)):
+async def webhook_received(request: Request, stripe_signature: str = Header(), db: Session = Depends(get_session)):
     endpoint_secret = 'whsec_DxJhwmxows8xhOcCUL7aPH0XnIfRwG6L'
     payload  = await request.body()
     try:
@@ -99,26 +95,38 @@ async def webhook_received(request: Request, stripe_signature: str = Header(str)
 
     if event_type == 'checkout.session.completed':
         print('🔔 Payment succeeded!')
-    elif event_type == 'invoice.payment_succeeded':
-        print(data)
-        user_email = data.get('customer_email')
-        user = db.query(User).filter(User.email == user_email).first()
-        lines = data['lines']['data'][0]
-        current_period_start = datetime.utcfromtimestamp(lines['period']['start'])
-        current_period_end = datetime.utcfromtimestamp(lines['period']['end'])
-        create_subscription(
-            db,
-            user.id,
-            data.get('subscription'),
-            current_period_start=current_period_start,
-            current_period_end=current_period_end,
-        )
+    # elif event_type == 'invoice.payment_succeeded':
+    #     print(data)
+    #     user_email = data.get('customer_email')
+    #     invoice_pdf = data.get('invoice_pdf')
+    #     user = db.query(User).filter(User.email == user_email).first()
+    #     lines = data['lines']['data'][0]
+    #     current_period_start = datetime.utcfromtimestamp(lines['period']['start'])
+    #     current_period_end = datetime.utcfromtimestamp(lines['period']['end'])
+    #     create_subscription(
+    #         db,
+    #         user.id,
+    #         data.get('subscription'),
+    #         current_period_start=current_period_start,
+    #         current_period_end=current_period_end,
+    #     )
         
-        user.is_certified = True
-        db.commit()
+    #     user.is_certified = True
+    #     db.commit()
         
-    elif event_type == 'subscription.deleted':
+    elif event_type == 'customer.subscription.updated':
+        cancellation_reason = event.data.object.cancellation_details.get("reason")
+        if cancellation_reason == "cancellation_requested":
+            print('Subscription created %s', event.id)
+        
+    if event.type == "customer.subscription.created":
+        print('sub', data)
+
+        
+    elif event_type == 'customer.subscription.deleted':
+        print('Subscription canceled: %s', event.id)
         subscription_id = data.get('id')
+        print(subscription_id)
         user_email = data.get('customer_email')
         user = db.query(User).filter(User.email == user_email).first()
 
@@ -145,7 +153,7 @@ def create_portal_session(db: Session = Depends(get_session), current_user: User
     # Retrieve the Checkout Session associated with the subscription
     checkout_session = stripe.Subscription.retrieve(subscription_id)
 
-    return_url = YOUR_DOMAIN  # Replace with your actual return URL
+    return_url = YOUR_DOMAIN
 
     portalSession = stripe.billing_portal.Session.create(
         customer=checkout_session.customer,

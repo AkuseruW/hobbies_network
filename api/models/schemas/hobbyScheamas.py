@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from fastapi import FastAPI, File, UploadFile, Depends
 
 
 class NewHobby(BaseModel):

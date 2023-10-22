@@ -39,7 +39,7 @@ from starlette.exceptions import WebSocketException
 app = FastAPI()
 
 # List of model classes
-model_classes = [User, Hobby, Post, Comment, Follower, ChatRoom, Report, Notification, Subscription]
+model_classes = [User, Hobby, Post, Comment, Follower, ChatRoom, Report, Notification]
 # Create tables for each model class
 for model_class in model_classes:
     model_class.metadata.create_all(bind=engine)

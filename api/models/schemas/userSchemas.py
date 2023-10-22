@@ -1,6 +1,5 @@
 from typing import Optional, List, Union
 from pydantic import BaseModel
-from enum import Enum
 from models.User import Role
 
 
