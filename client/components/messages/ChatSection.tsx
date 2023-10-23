@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { sendChatMessage } from '@/utils/requests/_chats';
 import Image from 'next/image';
@@ -44,7 +44,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, currentUser }) => {
                 {messages.map((message, index) => (
                     <div key={index} className={`message-container ${message.sender_id === currentUser.id ? 'justify-end' : 'justify-start'} flex items-center space-x-2`}>
                         {message.sender_id !== currentUser.id && (
-                            <img src={message.sender_profile_picture} alt={message.sender_name} className="w-10 h-10 rounded-full" />
+                            <Image width={40} height={40} src={message.sender_profile_picture} alt={message.sender_name} className="w-10 h-10 rounded-full" />
                         )}
                         <div className={`message ${message.sender_id === currentUser.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}  p-2 rounded-lg`}>
                             <div className="text-sm">{message.content}</div>

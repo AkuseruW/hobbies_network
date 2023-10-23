@@ -7,4 +7,4 @@ from .Messages import ChatRoom, MessageHistory
 from .Reports import Report
 from .Ban import Ban
 from .Notification import Notification
-from .Subscription import Subscription
+from .Subscription import Subscription, StatusChoice

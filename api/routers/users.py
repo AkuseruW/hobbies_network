@@ -33,7 +33,7 @@ router = APIRouter(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 
-@router.get("/users", response_model=List[UserListResponse])
+@router.get("/users")
 def read_users(
         page: int = Query(1, description="page"),
         per_page: int = Query(10, description="per_page"),
@@ -49,7 +49,6 @@ def read_users(
 
     users = query.offset(skip).limit(per_page).all()
     current_user = db.query(User).filter(User.id == current_user.id).one_or_none()
-
     users_with_status = []
     for user in users:
         if user.firstname is not None or user.lastname is not None:
@@ -63,7 +62,7 @@ def read_users(
             )
             users_with_status.append(user_data)
 
-    return users_with_status
+    return {"users": users_with_status}
 
 
 

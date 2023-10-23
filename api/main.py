@@ -28,6 +28,7 @@ from routers import (
     country,
     notifications,
     certification,
+    seed
 )
 from settings.database import engine, get_session
 from sockets import ws_manager
@@ -58,20 +59,21 @@ routers = [
     country.router,
     notifications.router,
     certification.router,
+    seed.router
 ]
 # Include all routers
 for router in routers:
     app.include_router(router)
 
-origins = [
-    "http://localhost:3000",
-    "http://localhost:3000/",
-]
+
 
 app.add_middleware(
     SessionMiddleware,
     secret_key="d0f75c01f47d53050dad60158c9f98840b6e22f3dce028a9a1d1e229286a236a",
 )
+
+origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -79,7 +81,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 async def get_cookie_or_token(
     session: Annotated[str | None, Cookie()] = None,

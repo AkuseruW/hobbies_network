@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Icons } from '../icons';
 import { signup } from '@/utils/requests/_auth_requests';
+import { useToast } from '../ui/use-toast';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'required' }),
@@ -20,8 +21,8 @@ const SignUpForm = () => {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const { toast } = useToast()
     const form = useForm<z.infer<typeof formSchema>>({
-        // @ts-ignore
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: '',
@@ -32,20 +33,26 @@ const SignUpForm = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsLoading(true);
         try {
-          const response = await signup(values);
-      
-          if (response.success) {
-            router.push('/connexion');
-          }
+            const res = await signup(values);
+            console.log(res)
+            if (res.status_code === 201) {
+                router.push('/connexion');
+            }else {
+                toast({
+                    description: res.detail,
+                    variant: "destructive"
+                })
+            }
+
         } catch (error) {
-          setErrorMessage("Une erreur s'est produite");
+            setErrorMessage("Une erreur s'est produite");
         } finally {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 2000);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 2000);
         }
-      };
-      
+    };
+
 
     return (
         <Form {...form}>
@@ -76,13 +83,9 @@ const SignUpForm = () => {
                     className={`bg-[#535f54] text-white inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring w-full ${isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
                         } h-9 px-4 py-2`}
                 >
-                    {isLoading && (
-                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    )}
-                    Connexion
+                    {isLoading && (<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />)}
+                    Inscription
                 </Button>
-
-
             </form>
             <div className="relative">
                 <div className="absolute inset-0 flex items-center">

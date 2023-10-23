@@ -117,8 +117,8 @@ def read_users_me(db: Session = Depends(get_session),current_user: User = Depend
     return {"status_code": 200, "detail": "Sucess", "data": user_session}
 
 
-@router.post("/signup", response_model=UserCreated)
-def sign_up(user_data: UserIn, session: Session = Depends(get_session)):
+@router.post("/signup")
+async def sign_up(user_data: UserIn, session: Session = Depends(get_session)):
     email = user_data.email
     password = user_data.password
 
@@ -142,7 +142,11 @@ def sign_up(user_data: UserIn, session: Session = Depends(get_session)):
     # Send an email
     send_mail(email=new_user.email, subject="Bienvenu sur hobbies", message="Bonjour !")
 
-    return UserCreated(id=new_user.id, email=new_user.email, role=new_user.role.value)
+    return {
+        "status_code": 201, 
+        "detail": "User created successfully", 
+        "user": UserCreated(id=new_user.id, email=new_user.email, role=new_user.role.value)
+    }
 
 
 @router.patch("/update-password", response_model=None)

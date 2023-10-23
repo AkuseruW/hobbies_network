@@ -118,7 +118,6 @@ export const banUser = async ({
   reason: string;
 }) => {
   try {
-    console.log(user_id, duration);
     return await fetcher(
       apiUrl(`/api/ban_user/${user_id}/${duration}`),
       "POST",

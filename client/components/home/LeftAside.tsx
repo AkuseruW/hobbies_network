@@ -2,6 +2,7 @@ import React from 'react';
 import { UserGroupIcon, HomeIcon, RectangleGroupIcon, } from "@heroicons/react/24/outline";
 import HeaderLinksIcons from '../header/HeaderLinksIcons';
 import { Button } from '../ui/button';
+import { Icons } from '../icons';
 
 const LeftAside = () => {
     const headerLinks = [
@@ -19,6 +20,11 @@ const LeftAside = () => {
             icon: <UserGroupIcon className="w-6 h-6 text-accent-color" />,
             text: "Utilisateurs",
             url: "/utilisateurs",
+        },
+        {
+            icon: <Icons.message_circle className="w-6 h-6 text-accent-color" />,
+            text: "Messages",
+            url: "/conversations",
         }
         
     ];

@@ -19,6 +19,8 @@ formSchema.refine(data => data.newPassword === data.confirmPassword, {
     message: 'Les mots de passe ne correspondent pas.',
 });
 
+
+
 const FormEditUserPassword = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { toast } = useToast()
@@ -47,7 +49,6 @@ const FormEditUserPassword = () => {
         } finally {
             setIsLoading(false);
         }
-
     };
 
     return (

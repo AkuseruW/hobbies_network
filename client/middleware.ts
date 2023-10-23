@@ -12,17 +12,23 @@ export const middleware = async (request: NextRequest) => {
     // Check if the current page is the login page or register page
     const isLoginPage = request.nextUrl.pathname.startsWith('/connexion');
     const isRegisterPage = request.nextUrl.pathname === '/inscription';
+    const isPrivacyPage = request.nextUrl.pathname.startsWith('/privacy');
+    const isTermsPage = request.nextUrl.pathname.startsWith('/terms');
 
-    if (!token && !isLoginPage && !isRegisterPage) {
+    if (!token && !isLoginPage && !isRegisterPage && !isPrivacyPage && !isTermsPage) {
         return NextResponse.redirect(new URL('/connexion', request.url))
     }
 
     if (token && session) {
         const user = JSON.parse(session);
+        // check if the user is already logged in
+        if(isLoginPage || isRegisterPage) {
+            return NextResponse.redirect(new URL('/', request.url))
+        }
+
         // Check if the session data for lastname and firstname is missing
         const isMissingSessionData = !user.lastname || !user.firstname
         // Check if the current page is "setup", "login", or "register"
-        // const isExcludedPage = request.nextUrl.pathname === '/setup' || 'setup/hobbies' || 'setup/confirmation'
         const isExcludedPage = request.nextUrl.pathname.startsWith('/setup');
 
         if (isMissingSessionData && !isExcludedPage) {
@@ -30,8 +36,8 @@ export const middleware = async (request: NextRequest) => {
             return NextResponse.redirect(new URL('/setup', request.url))
         }
 
+        // Check if the user is an admin
         const adminPage = request.nextUrl.pathname.startsWith('/dashboard')
-
         if (adminPage && user.role !== 'ROLE_ADMIN') {
             return NextResponse.redirect(new URL('/error/forbidden-access', request.url)) 
         }

@@ -5,10 +5,10 @@ import React from 'react'
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
     const user = currentUser();
-    const users  = await getUsersPaginated({});
-    console.log(users)
+    const { users } = await getUsersPaginated({});
+
     return (
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex overflow-hidden h-[80vh]">
             <AsideChats currentUser={user} users={users} />
             {children}
         </div>

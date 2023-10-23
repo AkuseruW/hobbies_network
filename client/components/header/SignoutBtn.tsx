@@ -11,7 +11,9 @@ const SignoutBtn = () => {
         const cookies = document.cookie.split(';');
         cookies.forEach((cookie) => {
             const cookieName = cookie.split('=')[0].trim();
-            deleteCookie(cookieName);
+            if (cookieName !== '_cookie_settings') {
+                deleteCookie(cookieName);
+            }
         });
 
         window.location.href = '/connexion';

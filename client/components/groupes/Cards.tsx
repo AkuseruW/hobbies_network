@@ -33,6 +33,9 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  console.log(hobbies, 'users')
+  console.log(page, 'page')
+
   const loadMoreHobbies = useCallback(async () => {
     const next = page + 1;
     const { hobbies: newHobbies } = await getHobbies({ search, page: next });
@@ -77,9 +80,9 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
         </Modal>
       )}
 
-      <div className='min-h-full grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 '>
+      <div className='min-h-full grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3'>
         <div
-          className="cursor-pointer col-span-1 flex items-center justify-center bg-white p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
+          className="cursor-pointer col-span-1 flex items-center justify-center bg-white p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
           onClick={() => setIsOpen(true)}
         >
           <div className="space-y-4 lg:space-y-0">
@@ -94,7 +97,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
         {hobbies.map(({ id, name, description, slug, icone_black, icone_white }) => (
           <div
             key={id}
-            className="col-span-1 bg-white p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
+            className="col-span-1 bg-white p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
           >
             <div className="h-full flex flex-col justify-between">
               <div key={name} className="group relative">

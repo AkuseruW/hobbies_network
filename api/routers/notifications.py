@@ -21,8 +21,11 @@ class ReportsQueryParams:
 
 
 @router.get("/admin_notifications", response_model=Dict[str, Union[List[AdminNotificationSchema], int]])
-def read_admin_notifications(params: ReportsQueryParams = Depends(), db: Session = Depends(get_session),
-                             current_user: User = Depends(get_current_active_user)):
+def read_admin_notifications(
+    params: ReportsQueryParams = Depends(),
+    db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_active_user)
+    ):
     # Check if the current user has the "ROLE_ADMIN"
     if "ROLE_ADMIN" != current_user.role.value:
         raise HTTPException(

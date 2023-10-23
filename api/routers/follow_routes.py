@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.post("/follow_or_unfollow_user/{user_id}", response_model=None)
+@router.post("/follow_or_unfollow_user/{user_id}")
 async def follow_or_unfollow_user(
     user_id: int,
     db: Session = Depends(get_session),

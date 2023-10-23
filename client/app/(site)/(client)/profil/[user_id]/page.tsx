@@ -33,7 +33,7 @@ const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
 
           <div className="profile_info flex-1">
             <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold capitalize mb-1 md:mb-2 md:mt-2"> {user.firstname} {user.lastname} </h1>
-            {isCurrentUser ? <BtnEditProfil currentUser={user} /> : <BtnFollowProfil is_following={is_following} user_id={user.id} />}
+            {!isCurrentUser && <BtnFollowProfil is_following={is_following} user_id={user.id} />}
           </div>
 
         </div>

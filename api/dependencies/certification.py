@@ -1,0 +1,32 @@
+from models import Subscription,StatusChoice
+from sqlalchemy.orm import Session
+
+
+def create_subscription(
+    db: Session,
+    user_id: int,
+    subscription_id: str,
+    current_period_start,
+    current_period_end
+):
+    subscription = Subscription(
+        user_id=user_id,
+        subscription_id=subscription_id,
+        status= StatusChoice.active,
+        current_period_start=current_period_start,
+        current_period_end=current_period_end
+    )
+    
+    db.add(subscription)
+    db.commit()
+    db.refresh(subscription)
+    return subscription
+
+def cancel_subscription(
+    db: Session,
+    subscription_id: str
+):
+    subscription = db.query(Subscription).filter(Subscription.subscription_id == subscription_id).first()
+    subscription.status = StatusChoice.canceled
+    db.commit()
+    return subscription

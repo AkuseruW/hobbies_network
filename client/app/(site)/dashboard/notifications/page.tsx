@@ -6,11 +6,8 @@ import React from 'react'
 const page = async ({ searchParams }: { searchParams: { search?: string; page?: string } }) => {
   const search = typeof searchParams.search === 'string' ? searchParams.search : undefined
   const page = typeof searchParams.page === 'string' ? searchParams.page : undefined;
-
   const { notifications, totalPages } = await getNotificationsAdmin({ search, page })
   const url = '/dashboard/notifications'
-  console.log(totalPages)
-
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">

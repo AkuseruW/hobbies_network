@@ -28,6 +28,7 @@ dnspython==2.4.0
 ecdsa==0.18.0
 email-validator==2.0.0.post2
 exceptiongroup==1.1.2
+Faker==19.11.0
 fastapi==0.99.1
 fastapi_auth_middleware==1.0.2
 Fiona==1.9.4.post1

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Session } from '@/types/sessions_types';
 import { User } from '@/types/user_types';
 import { getChatUuid } from '@/utils/requests/_chats';
+import { ScrollArea } from '../ui/scroll-area';
 
 const AsideChats = ({ currentUser, users }: { currentUser: Session, users: User[] }) => {
     const router = useRouter()
@@ -17,12 +18,12 @@ const AsideChats = ({ currentUser, users }: { currentUser: Session, users: User[
     }
 
     return (
-        <aside className="w-full sm:w-1/4 md:w-1/5 bg-white dark:bg-gray-800 text-gray-800 dark:text-white p-4 flex flex-col justify-between">
+        <aside className="w-full sm:w-1/4 md:w-1/5 bg-white dark:bg-gray-800 text-gray-800 dark:text-white p-4 flex flex-col justify-between h-[100%]">
             <div className="text-center mb-4">
                 <h1 className="text-2xl font-semibold">Hobbies</h1>
             </div>
 
-            <div className="flex flex-col">
+            <ScrollArea className="flex flex-col h-[50%]">
                 {users.map((user) => (
                     <Button
                         key={user.id}
@@ -41,7 +42,7 @@ const AsideChats = ({ currentUser, users }: { currentUser: Session, users: User[
                         </div>
                     </Button>
                 ))}
-            </div>
+            </ScrollArea>
 
             <Button className="mb-4 h-16 flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                 <Avatar className="w-12 h-12">

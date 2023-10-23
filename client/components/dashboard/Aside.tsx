@@ -21,7 +21,7 @@ const NavItem = ({ href, icon, text }: { href: string, icon: any, text: string }
 
 const Aside = () => {
     return (
-        <aside className="hidden lg:block w-1/5 bg-white dark:bg-gray-800 shadow-md">
+        <aside className="hidden lg:block w-1/5 bg-white dark:bg-gray-800 shadow-md h-screen overflow-hidden">
             <header className="p-4">
                 <div className="flex items-center mb-6">
                     <Image className="h-8 w-auto mr-2" src="/octagon.svg" width={50} height={50} alt="Logo" />

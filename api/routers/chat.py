@@ -10,7 +10,7 @@ from settings.database import get_session
 router = APIRouter(prefix="/api")
 
 
-@router.get("/conversations/start/{user_id}", response_model=None)
+@router.get("/conversations/start/{user_id}")
 def start_conversation(user_id: int, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     # Find the user by their ID
     user = db.query(User).filter(User.id == user_id).first()
@@ -51,7 +51,7 @@ def start_conversation(user_id: int, db: Session = Depends(get_session), current
     return str(room_uuid)
 
 
-@router.get("/conversations/{room_uuid}", response_model=None)
+@router.get("/conversations/{room_uuid}")
 def get_conversation(room_uuid: str, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     # Fetch the conversation by its room_uuid
     conversation = db.query(ChatRoom).filter(
@@ -90,7 +90,7 @@ def get_conversation(room_uuid: str, db: Session = Depends(get_session), current
     return messages_with_user_info
 
 
-@router.post("/conversations/{room_uuid}/message", response_model=None)
+@router.post("/conversations/{room_uuid}/message")
 async def send_message(
     room_uuid: str,
     request: Request,

@@ -9,7 +9,7 @@ const HeaderAdmin = ({ currentUser, notifications }: { currentUser: Session, not
 
     return (
         <>
-            <nav className="relative flex w-full items-center justify-between text-neutral-200 shadow-lg lg:flex-wrap lg:justify-start lg:py-4 h-20">
+            <nav className="relative fixed flex w-full items-center justify-between text-neutral-200 shadow-lg lg:flex-wrap lg:justify-start lg:py-4 h-20">
                 <div className="flex w-full items-center justify-between px-3 flex-row w-full">
                     <div className="flex w-full justify-start h-full">
                         <button

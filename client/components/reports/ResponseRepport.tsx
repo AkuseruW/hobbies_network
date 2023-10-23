@@ -11,7 +11,6 @@ const ResponseReport = ({ is_process, id }: { is_process: boolean, id: number })
   const [banUser, setBanUser] = useState(false);
 
   const onClickApprove = async () => {
-    console.log(banUser)
     if (banUser) {
       await approve_report({ report_id: id, duration: durationInMinutes });
     } else {
@@ -21,7 +20,7 @@ const ResponseReport = ({ is_process, id }: { is_process: boolean, id: number })
   };
 
   const onClickReject = async () => {
-    // Ajoutez ici la logique pour le rejet
+    
   };
 
   const onCloseModal = () => {

@@ -23,7 +23,6 @@ export const UserInformation = async ({
 };
 
 export const UserHobbies = async ({ hobbies }: { hobbies: Hobby[] }) => {
-  console.log(hobbies);
   const expires = new Date();
   expires.setDate(expires.getDate() + 1);
   setCookie("hobbies_info", JSON.stringify(hobbies), {

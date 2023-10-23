@@ -15,7 +15,7 @@ const ClientLayout = async ({ children }: { children: React.ReactNode }) => {
                     <div className=" mt-5">
                         {children}
                     </div>
-                    <div className='flex items-center justify-center lg:hidden '>
+                    <div className='flex items-center justify-center lg:hidden'>
                         <MobileNav currentUser={user} />
                     </div>
                 </div>

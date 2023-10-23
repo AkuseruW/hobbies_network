@@ -2,6 +2,7 @@
 
 import { BASE_API_URL } from "../_api_config";
 import { getAccessToken } from "../_auth_informations";
+import { fetcher } from "../_fetcher";
 
 const apiUrl = (path: string) => `${BASE_API_URL}${path}`;
 
@@ -34,19 +35,11 @@ export const signin = async (values: FormValues) => {
 
 export const signup = async (values: FormValues) => {
   try {
-    const response = await fetch(apiUrl(`/api/auth/signup`), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Request failed with status: ${response.status}`);
-    }
-
-    return { success: true };
+    return await fetcher(apiUrl(`/api/auth/signup`),
+      "POST",
+      { "Content-Type": "application/json" },
+      JSON.stringify(values),
+    )
   } catch (error) {
     throw error;
   }
@@ -71,3 +64,12 @@ export const setUpProfil = async ({ formData }: { formData: FormData }) => {
     throw error;
   }
 };
+
+
+export const me = async () => {
+  try {
+    return await fetcher(apiUrl("/api/auth/users/me"), "GET");
+  } catch (error) {
+    throw error;
+  }
+}
