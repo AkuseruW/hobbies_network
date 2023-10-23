@@ -8,7 +8,7 @@ const CreatePost = async ({ session }: { session: Session }) => {
     const user_hobbies = await getUserHobbies();
 
     return (
-        <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md mt-5 flex">
+        <div className="p-4 bg-white dark:bg-secondary_dark rounded-lg shadow-md mt-5 flex">
             <div className="flex items-center flex-1">
                 <div className="mr-4">
                     <AvatarUser data={session} />

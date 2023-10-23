@@ -51,7 +51,7 @@ const Header = async ({ currentUser }: { currentUser: Session }) => {
   );
 
   return (
-    <div className="bg-white dark:bg-gray-800 items-center py-4 px-4 shadow-md lg:sticky top-0 z-20  rounded ">
+    <div className="bg-white dark:bg-secondary_dark items-center py-4 px-4 shadow-md lg:sticky top-0 z-20  rounded ">
       <div className="hidden lg:flex justify-between">
         <Link href="/" className="">
           <strong className="text-2xl text-accent-color hidden md:flex md:lg lg:flex">Hobbies</strong>

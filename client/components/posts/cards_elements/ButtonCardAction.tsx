@@ -60,7 +60,7 @@ const BtnAction = ({ data, handleToggleInput }: { data: PostData; handleToggleIn
             )}
             <button
                 onClick={handleLikePost}
-                className="py-2 px-2 sm:px-3 font-medium rounded-lg transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 border dark:border-slate-700 flex-1 sm:w-[200px] flex justify-center ml-2 sm:ml-0 mt-2 sm:mt-0"
+                className="py-2 px-2 sm:px-3 font-medium rounded-lg transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 border dark:border-gray-500 flex-1 sm:w-[200px] flex justify-center ml-2 sm:ml-0 mt-2 sm:mt-0"
             >
                 {isLiked ? (
                     <HeartIconFilled className="h-6 w-6 text-red-500" />
@@ -69,14 +69,14 @@ const BtnAction = ({ data, handleToggleInput }: { data: PostData; handleToggleIn
                 )}
             </button>
             <button
-                className="py-2 px-2 sm:px-3 font-medium rounded-lg transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 border dark:border-slate-700 flex-1 sm:w-[200px] flex justify-center ml-2 sm:ml-0 mt-2 sm:mt-0"
+                className="py-2 px-2 sm:px-3 font-medium rounded-lg transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 border dark:border-gray-500 flex-1 sm:w-[200px] flex justify-center ml-2 sm:ml-0 mt-2 sm:mt-0"
                 onClick={handleToggleInput}
             >
                 <ChatBubbleLeftIcon className="h-6 w-6 text-gray-500" />
             </button>
             <button
                 onClick={() => setIsOpen(true)}
-                className="py-2 px-2 sm:px-3 font-medium rounded-lg transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 border dark:border-slate-700  flex-1 sm:w-[200px] flex justify-center ml-2 sm:ml-0 mt-2 sm:mt-0"
+                className="py-2 px-2 sm:px-3 font-medium rounded-lg transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 border dark:border-gray-500 flex-1 sm:w-[200px] flex justify-center ml-2 sm:ml-0 mt-2 sm:mt-0"
             >
                 <PaperAirplaneIcon className="h-6 w-6 text-gray-500" />
             </button>

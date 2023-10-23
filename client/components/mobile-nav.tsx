@@ -27,7 +27,7 @@ export const MobileNav = async ({ currentUser }: { currentUser: any }) => {
   ];
 
   return (
-    <div className="flex items-center rounded-full w-[95%] bg-[#616469] m-0 p-1 md:p-2 fixed bottom-2 md:max-w-[60%]">
+    <div className="flex items-center rounded-full w-[95%] bg-[#616469] dark:bg-primary_dark m-0 p-1 md:p-2 fixed bottom-2 md:max-w-[60%]">
       <div className="flex flex-1 border-r border-zinc-600 w-[77%]">
         <div className="relative flex justify-between text-white w-full mx-4 md:mx-9">
           {headerLinks.map((link, index) => (

@@ -25,7 +25,9 @@ const Notifications = ({ notifications: notifications_db, client }: { notificati
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon"
+                    className='flex items-center justify-center rounded-lg transition-colors hover:bg-zinc-100 dark:bg-secondary_dark dark:border-gray-600 dark:hover:bg-zinc-700'
+                >
                     <Icons.bell className="w-4 h-4 text-black dark:text-white" />
                     {notifications.count_new_notifications > 0 && (
                         <span className="rounded text-[12px] relative top-[-5px] text-black dark:text-white">
@@ -87,7 +89,7 @@ export const NotificationMobile = ({ notifications: notifications_db }: { notifi
                 flex items-center border-1
                 justify-center w-6 h-6
                 text-white'>
-                    <Icons.bell className="w-6 h-6 text-white dark:text-black" />
+                    <Icons.bell className="w-6 h-6 text-white dark:text-white" />
                     {notifications.count_new_notifications > 0 && (
                         <span className="rounded text-[12px] relative top-[-5px] text-white dark:text-white">
                             {notifications.count_new_notifications}

@@ -37,8 +37,8 @@ export const HobbiesCarousel = ({ hobbies }: { hobbies: Hobby[] }) => {
                                 flex flex-col items-center gap-2
                                 bg-white p-4 relative w-28 h-26 overflow-hidden 
                                 rounded-xl border border-gray-300 dark:border-gray-700
-                                hover:border-gray-500 hover:shadow-lg transition-all
-                                duration-300 ease-in-out dark:bg-gray-800 dark:text-white"
+                                hover:border-gray-500 hover:shadow-lg dark:hover:border-gray-500 transition-all
+                                duration-300 ease-in-out dark:bg-secondary_dark dark:text-white"
                         >
                             <IconColor icone_black={hobby.icone_black} icone_white={hobby.icone_white} />
                             <p>{hobby.name}</p>

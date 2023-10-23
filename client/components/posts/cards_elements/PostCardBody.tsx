@@ -35,12 +35,12 @@ const PostBody: React.FC<PostBodyProps> = ({
 
             <div className="flex gap-4  flex-col p-2">
                 <div className="flex px-2 mx-2 ">
-                    <div className="cursor-pointer text-blue-500 "> {data.total_likes} Likes </div>
-                    <div className="cursor-pointer text-blue-500 ml-auto">
+                    <div className="cursor-pointer text-blue-500 dark:text-text_dark"> {data.total_likes} Likes </div>
+                    <div className="cursor-pointer text-blue-500 ml-auto dark:text-text_dark">
                         {data.total_comments} commentaires
                     </div>
                 </div>
-                <Separator />
+                <Separator className="dark:bg-gray-500"/>
                 <BtnAction data={data} handleToggleInput={handleToggleInput} />
                 {showCommentInput && <InputComment post_id={data.id} />}
             </div>

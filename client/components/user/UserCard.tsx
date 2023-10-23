@@ -6,12 +6,16 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useInView } from 'react-intersection-observer'
 import { Icons } from "../icons";
+import { useTheme } from "next-themes";
+import Image from "next/image";
 
 
 const UserCard = ({ search, initialUsers }: { search?: string | undefined, initialUsers: User[] }) => {
   const [users, setUsers] = useState(initialUsers);
   const [page, setPage] = useState(1)
   const [ref, inView] = useInView()
+  const { resolvedTheme } = useTheme();
+  const isDarkMode = resolvedTheme === "dark";
 
   console.log(users, 'users')
 
@@ -43,7 +47,7 @@ const UserCard = ({ search, initialUsers }: { search?: string | undefined, initi
             className="col-span-1 bg-white h-60 rounded-xl border border-gray-300 
             dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-300 
             hover:shadow-lg transition-all duration-300 
-            ease-in-out dark:bg-gray-800 dark:text-white">
+            ease-in-out dark:bg-background_dark dark:text-white">
             <div className="h-full flex flex-col justify-between p-4">
               <div className="group relative pt-4 space-y-3">
                 <Avatar className="mx-auto">
@@ -51,7 +55,13 @@ const UserCard = ({ search, initialUsers }: { search?: string | undefined, initi
                 </Avatar>
                 <h2 className="text-lg font-medium dark:text-white text-center pt-2">{user.firstname} {user.lastname}</h2>
                 {user.is_certified && (
-                  <Icons.badgecheck className=" w-6 h-6 mx-auto" />
+                  <Image
+                    width={25}
+                    height={20}
+                    src={`/assets/${isDarkMode ? "certif_blue.svg" : "certif_black.svg"}`}
+                    alt="certif"
+                    className="mx-auto"
+                  />
                 )}
               </div>
               <div className="mt-6 flex justify-center">

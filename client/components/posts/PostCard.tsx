@@ -5,7 +5,7 @@ import PostBody from "./cards_elements/PostCardBody";
 
 const PostCard = ({ data }: { data: PostData }) => {
     return (
-        <article className="mb-4 break-inside bg-white dark:bg-gray-800 flex flex-col rounded-lg shadow-md ">
+        <article className="mb-4 break-inside bg-white dark:bg-secondary_dark flex flex-col rounded-lg shadow-md ">
             <div className=" mb-2 p-2">
                 <UserInfo data={data} />
             </div>

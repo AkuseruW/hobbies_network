@@ -37,7 +37,7 @@ const InputNewPost = ({ session, hobbies }: { session: Session, hobbies: Hobby[]
     return (
         <div className="w-full relative">
             <input
-                className="flex-1 dark:bg-gray-800 py-2 text-lg pl-2 pr-10 outline-none border-none placeholder-gray-500 dark:placeholder-gray-300 focus:placeholder-gray-400 w-full"
+                className="flex-1 dark:bg-secondary_dark border-none py-2 text-lg pl-2 pr-10 outline-none placeholder-gray-500 dark:placeholder-gray-300 focus:placeholder-gray-400 w-full"
                 type="text"
                 placeholder="Quoi de nouveau ?"
                 onClick={handleInputClick}

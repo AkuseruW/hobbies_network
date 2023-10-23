@@ -135,7 +135,7 @@ const FormNewPost = ({
                 <HobbiesSelect hobbies={hobbies} selectedHobby={selectedHobby} handleHobbyChange={handleHobbyChange} setIsValid={setIsValid} error={error} />
             </div>
 
-            <form onSubmit={handleSubmit} className="dark:text-white">
+            <form onSubmit={handleSubmit} className="dark:text-white ">
                 <TextAreaInput
                     postContent={postContent}
                     handlePostContentChange={handlePostContentChange}
@@ -146,7 +146,7 @@ const FormNewPost = ({
                     handleRemoveImage={handleRemoveImage}
                 />
                 <div className="bsolute bottom-0 p-4 w-full">
-                    <div className="flex bg-gray-50 dark:bg-gray-800 border border-purple-100 dark:border-gray-400 rounded-2xl p-2 shadow-sm items-center">
+                    <div className="flex bg-gray-50 dark:bg-secondary_dark border border-purple-100 dark:border-gray-400 rounded-2xl p-2 shadow-sm items-center">
                         <div className="lg:block hidden ml-1"> Ajouter a votre post</div>
                         <div className="flex flex-1 items-center lg:justify-end justify-center space-x-2">
                             <EmojiPicker content={postContent} setContent={setPostContent} />
@@ -165,7 +165,7 @@ const FormNewPost = ({
                     <div className="text-center mt-5">
                         <Button
                             type="submit"
-                            className={`bg-black w-full text-white px-4 py-2 rounded font-semibold ${isLoading ? 'cursor-not-allowed' : 'hover:bg-gray-900 dark:hover:bg-gray-700'
+                            className={`bg-black dark:bg-background_light dark:text-text_light w-full text-white px-4 py-2 rounded font-semibold ${isLoading ? 'cursor-not-allowed' : 'hover:bg-gray-900 dark:hover:bg-gray-300'
                                 } transition-colors`}
                             disabled={isLoading}
                         >

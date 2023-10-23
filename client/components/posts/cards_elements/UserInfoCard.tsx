@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -5,9 +6,11 @@ import Link from "next/link";
 import { PostData } from "@/types/post_types";
 import DropDownBtn from "./DropDownCardPost";
 import DropDownComponent from "@/components/header/DropDownComponent";
+import { useTheme } from "next-themes";
 
 const UserInfo = ({ data }: { data: PostData }) => {
-    const isDarkMode = false;
+    const { resolvedTheme } = useTheme();
+    const isDarkMode = resolvedTheme === "dark";
 
     const dropMenuItems = [
         { 'label': 'Signaler', 'href': `/profil/${data.user.user_id}` },
@@ -52,7 +55,7 @@ const UserInfo = ({ data }: { data: PostData }) => {
                         )}
                     </div>
 
-                    <p className="text-[rgba(97,97,97,1)] text-sm sm:text-base">
+                    <p className="text-[rgba(97,97,97,1)] dark:text-text_dark text-sm sm:text-base">
                         {data.time_of_publication}
                     </p>
                 </div>

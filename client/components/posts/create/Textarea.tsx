@@ -12,7 +12,7 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({ postContent, handlePostCo
             <textarea
                 id="postContent"
                 name="postContent"
-                className="w-full p-2 focus:outline-none h-32 dark:bg-gray-800 placeholder-gray-500 dark:placeholder-gray-300 resize-none"
+                className="w-full p-2 focus:outline-none h-32 dark:bg-background_dark placeholder-gray-500 dark:placeholder-gray-300 resize-none"
                 required
                 value={postContent}
                 onChange={handlePostContentChange}

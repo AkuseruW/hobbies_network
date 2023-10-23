@@ -36,7 +36,7 @@ const InputComment = ({ post_id }: { post_id: string }): JSX.Element => {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder="Laisse un commentaire..."
-          className="resize-none h-12 px-4 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring focus:border-blue-300 bg-white dark:bg-gray-800 text-black dark:text-white"
+          className="resize-none h-12 px-4 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring focus:border-blue-300 bg-white dark:bg-secondary_dark text-black dark:text-white"
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
           <EmojiPicker content={comment} setContent={setComment} />

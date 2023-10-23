@@ -37,7 +37,7 @@ const SignUpForm = () => {
             console.log(res)
             if (res.status_code === 201) {
                 router.push('/connexion');
-            }else {
+            } else {
                 toast({
                     description: res.detail,
                     variant: "destructive"
@@ -53,6 +53,11 @@ const SignUpForm = () => {
         }
     };
 
+    const handleGoogleLogin = () => {
+        setIsLoading(true);
+        router.push(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login/google`);
+    };
+
 
     return (
         <Form {...form}>
@@ -62,7 +67,9 @@ const SignUpForm = () => {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <Input placeholder="Email ..." {...field} />
+                            <Input placeholder="Email ..." {...field}
+                                className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
+                            />
                             <FormMessage />
                         </FormItem>
                     )}
@@ -72,7 +79,9 @@ const SignUpForm = () => {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <Input type="password" placeholder="Password ..." {...field} />
+                            <Input type="password" placeholder="Password ..." {...field}
+                                className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
+                            />
                             <FormMessage />
                         </FormItem>
                     )}
@@ -80,7 +89,12 @@ const SignUpForm = () => {
                 <Button
                     type='submit'
                     disabled={isLoading}
-                    className={`bg-[#535f54] text-white inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring w-full ${isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+                    className={`bg-[#535f54] text-white inline-flex items-center
+                     justify-center rounded-md text-sm font-medium transition-colors
+                      focus-visible:outline-none focus-visible:ring-1
+                      dark:bg-background_light dark:text-text_light 
+                      dark:focus-visible:ring-white
+                       focus-visible:ring-ring w-full ${isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
                         } h-9 px-4 py-2`}
                 >
                     {isLoading && (<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />)}
@@ -92,28 +106,23 @@ const SignUpForm = () => {
                     <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground ">
+                    <span className="bg-background dark:bg-background_dark px-2 text-muted-foreground ">
                         Or continue with
                     </span>
                 </div>
             </div>
             <div className="flex flex-col">
-                <Button variant="outline" type="button" disabled={isLoading}>
+                <Button variant="outline" type="button" disabled={isLoading}
+                    className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
+                    onClick={() => {
+                        handleGoogleLogin();
+                    }}>
                     {isLoading ? (
                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                         <Icons.google className="mr-2 h-4 w-4" />
                     )}{" "}
                     Google
-                </Button>
-
-                <Button variant="outline" className="mt-2" type="button" disabled={isLoading}>
-                    {isLoading ? (
-                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                        <Icons.gitHub className="mr-2 h-4 w-4" />
-                    )}{" "}
-                    Github
                 </Button>
             </div>
         </Form>

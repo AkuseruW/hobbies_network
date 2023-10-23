@@ -72,7 +72,7 @@ const CurrentUserOnline = () => {
     }, [socket, fetchOnlineUsers]);
 
     return (
-        <div className='fixed aside-size p-6 bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md mt-5'>
+        <div className='fixed aside-size p-6 bg-white dark:bg-secondary_dark rounded-lg overflow-hidden shadow-md mt-5'>
             <h2>Contacts en ligne :</h2>
             <ul className='w-full flex'>
                 <ScrollArea className='w-full h-[300px]'>

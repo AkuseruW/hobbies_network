@@ -16,7 +16,9 @@ const BtnProfile = ({ currentUser }: { currentUser: Session }) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" 
+                className='flex items-center justify-center dark:bg-secondary_dark border-none'
+                >
                     <Image width={100} height={100}
                         src={`${currentUser?.profile_picture}`}
                         alt="profile_picture"
