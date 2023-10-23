@@ -30,7 +30,7 @@ const ConnectionPage = () => {
               href="/terms"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Conditions d'utilisation
+              Conditions d&apos;utilisation
             </Link>{" "}
             et notre{" "}
             <Link
