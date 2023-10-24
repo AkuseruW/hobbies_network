@@ -25,7 +25,7 @@ const PostImagesCarousel = ({ images }: { images: string[] }) => {
                         ))}
                     </div>
                 ) : (
-                    <Image className="h-auto max-w-full rounded-lg" src={images[0]} alt="" width={515} height={500} />
+                    <Image className="h-auto max-w-full rounded-lg w-full" src={images[0]} alt="" width={515} height={500} />
                 )}
             </div>
         </div>
