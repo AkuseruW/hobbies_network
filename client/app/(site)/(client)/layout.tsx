@@ -12,7 +12,7 @@ const ClientLayout = async ({ children }: { children: React.ReactNode }) => {
             <section className="m-2 lg:m-6">
                 <div className="flex flex-col flex-1">
                     <Header currentUser={user} />
-                    <div className=" mt-5">
+                    <div className="mt-5">
                         {children}
                     </div>
                     <div className='flex items-center justify-center lg:hidden'>

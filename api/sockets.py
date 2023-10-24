@@ -1,8 +1,10 @@
+import json
 from typing import Dict, List
 from fastapi import WebSocket
 from sqlalchemy.orm import Session
 
-from models import User
+from models import Follower, User
+from models.Hobby import UserToHobby
 
 
 def get_mutually_following_users(current_user_id: int, db: Session) -> List[User]:
@@ -25,6 +27,7 @@ def get_mutually_following_users(current_user_id: int, db: Session) -> List[User
 class WebSocketManager:
     def __init__(self):
         self.active_connections: Dict[WebSocket, User] = {}
+        self.user_to_websocket: Dict[int, WebSocket] = {}
 
     async def connect(self, websocket: WebSocket, current_user, db: Session):
         await websocket.accept()
@@ -68,6 +71,25 @@ class WebSocketManager:
     async def send_post_events(self, post_dict: dict):
         for connection in list(self.active_connections):
             await connection.send_json(post_dict)
+            
+    async def send_new_post_to_followers(self, new_posts_data: dict, hobby_id: int,user_id: int, db: Session):
+        # Get the list of users following the hobby associated with the post
+        users_following_hobby = db.query(User).join(UserToHobby, User.id == UserToHobby.user_id).filter(UserToHobby.hobby_id == hobby_id).all()
+        # Get the list of users who follow the current user
+        current_user_followers = db.query(User).join(Follower, User.id == Follower.follower_id).filter(Follower.following_id == user_id).all()
+        # Combine the two lists to get all the target users
+        target_users = set(users_following_hobby) | set(current_user_followers)
+        # Create a message for the new post
+        message = {
+            "type": "post",
+            "data": new_posts_data
+        }
+
+        # Send the message to users following the hobby
+        for user in target_users:
+            for connection, user_id in self.active_connections.items():
+                if user_id == user.id:
+                    await connection.send_json(message)
 
     async def send_new_comment(self, comment_dict: dict):
         for connection in list(self.active_connections):
@@ -96,6 +118,35 @@ class WebSocketManager:
                 users.append(user_info)
 
         return users
+    
+    async def send_personal_message(self, message, sender_id, receiver_id):
+        sender_connection = self.get_connection_by_user_id(sender_id)
+        receiver_connection = self.get_connection_by_user_id(receiver_id)
+
+        if sender_connection:
+            try:
+                if not isinstance(message, str):
+                    message = json.dumps(message)
+                await sender_connection.send_text(message)
+            except Exception as e:
+                # Handle any potential errors when sending messages to the sender
+                print(f"Error sending message to sender {sender_id}: {e}")
+
+        if receiver_connection:
+            try:
+                if not isinstance(message, str):
+                    message = json.dumps(message)
+                await receiver_connection.send_text(message)
+            except Exception as e:
+                # Handle any potential errors when sending messages to the receiver
+                print(f"Error sending message to receiver {receiver_id}: {e}")
+
+    def get_connection_by_user_id(self, user_id: int) -> WebSocket:
+        for connection, user in self.active_connections.items():
+            if user == user_id:
+                return connection
+        return None
+
 
 
 ws_manager = WebSocketManager()

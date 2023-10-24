@@ -18,7 +18,7 @@ const AsideChats = ({ currentUser, users }: { currentUser: Session, users: User[
     }
 
     return (
-        <aside className="w-full sm:w-1/4 md:w-1/5 bg-white dark:bg-gray-800 text-gray-800 dark:text-white p-4 flex flex-col justify-between h-[100%]">
+        <aside className="w-full bg-white dark:bg-secondary_dark text-gray-800 dark:text-white p-4 flex flex-col justify-between h-[100%]">
             <div className="text-center mb-4">
                 <h1 className="text-2xl font-semibold">Hobbies</h1>
             </div>
@@ -27,7 +27,7 @@ const AsideChats = ({ currentUser, users }: { currentUser: Session, users: User[
                 {users.map((user) => (
                     <Button
                         key={user.id}
-                        className="h-16 w-full mb-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="h-16 w-full mb-2 bg-white dark:bg-primary_dark text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
                         onClick={() => handleStartConversation(user.id)}
                     >
                         <div className="flex items-center space-x-2">
@@ -44,7 +44,7 @@ const AsideChats = ({ currentUser, users }: { currentUser: Session, users: User[
                 ))}
             </ScrollArea>
 
-            <Button className="mb-4 h-16 flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <Button className="mb-4 h-16 flex items-center bg-white dark:bg-primary_dark text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                 <Avatar className="w-12 h-12">
                     <AvatarImage
                         src={currentUser.profile_picture as string}

@@ -24,7 +24,6 @@ async def read_posts(page: int = 1, db: Session = Depends(get_session), current_
 @router.get("/posts/{hobby_slug}")
 async def read_hobby_posts(hobby_slug: str, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     hobby = db.query(Hobby).filter(Hobby.slug == hobby_slug).first()
-    print(hobby.name)
     if not hobby:
         raise HTTPException(status_code=404, detail="Hobby not found")
     posts = await get_post_by_hobby(current_user, hobby.id, db)
@@ -46,29 +45,26 @@ async def create_post(request: Request, db: Session = Depends(get_session), curr
     new_post = await post_to_database(db, content, user_id, images, hobby_id)
 
     new_posts_data = {
-        "type": "post",
-        "data": {
-            'id': str(new_post.id),
-            'content': new_post.content,
-            'post_images_urls': [image.url for image in new_post.post_images],
-            'total_comments': new_post.total_comments(),
-            'total_likes': new_post.total_likes(),
-            'created_at': new_post.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-            'hobby': {
-                'hobby_id': new_post.hobby.id,
-                'name': new_post.hobby.name,
-                'slug': new_post.hobby.slug,
-            },
-            'user': {
-                'user_id': new_post.user_id,
-                'username': new_post.user_name(),
-                'is_certified': new_post.is_certified(),
-                'profile_picture': new_post.user_profile_picture(),
-            }
+        'id': str(new_post.id),
+        'content': new_post.content,
+        'post_images_urls': [image.url for image in new_post.post_images],
+        'total_comments': new_post.total_comments(),
+        'total_likes': new_post.total_likes(),
+        'created_at': new_post.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+        'hobby': {
+            'hobby_id': new_post.hobby.id,
+            'name': new_post.hobby.name,
+            'slug': new_post.hobby.slug,
+        },
+        'user': {
+            'user_id': new_post.user_id,
+            'username': new_post.user_name(),
+            'is_certified': new_post.is_certified(),
+            'profile_picture': new_post.user_profile_picture(),
         }
     }
 
-    await ws_manager.send_post_events(new_posts_data)
+    await ws_manager.send_new_post_to_followers(new_posts_data, hobby_id, user_id, db)
     return new_post
 
 

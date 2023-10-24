@@ -48,7 +48,7 @@ const SetupProfileForm = ({ initialUser }: { initialUser?: { firstname: string, 
         <div className="flex justify-center">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex flex-col justify-center mt-5">
-                    <div className="flex flex-wrap space-y-6 rounded-md border p-4 mt-4 bg-white dark:bg-gray-800">
+                    <div className="flex flex-wrap space-y-6 rounded-md border p-4 mt-4 bg-white dark:bg-secondary_dark dark:border-gray-500 dark:text-white shadow">
                         {['firstname', 'lastname'].map((fieldName) => (
                             <div key={fieldName} className="w-full px-2">
 
@@ -59,7 +59,7 @@ const SetupProfileForm = ({ initialUser }: { initialUser?: { firstname: string, 
                                     render={({ field }) => (
                                         <FormItem className="px-4 py-2">
                                             <Input
-                                                className="px-4 py-2"
+                                                className="px-4 py-2 dark:bg-secondary_dark dark:border-gray-500 dark:text-white dark:placeholder:text-white" 
                                                 placeholder={`${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)} ...`}
                                                 {...field}
                                             />
@@ -75,8 +75,8 @@ const SetupProfileForm = ({ initialUser }: { initialUser?: { firstname: string, 
                                 control={form.control}
                                 name="bio"
                                 render={({ field }) => (
-                                    <FormItem className="px-4 py-2">
-                                        <Textarea className="h-32 resize-none" placeholder="Entrer une bio ..." {...field} />
+                                    <FormItem className="px-4 py-2 ">
+                                        <Textarea className="h-32 resize-none dark:bg-secondary_dark dark:text-white dark:placeholder:text-white dark:border-gray-500" placeholder="Entrer une bio ..." {...field} />
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -87,7 +87,7 @@ const SetupProfileForm = ({ initialUser }: { initialUser?: { firstname: string, 
                     <div className="w-full px-2 mx-4 py-2">
                         <Button
                             type="submit"
-                            className="bg-black text-white px-4 py-2 rounded"
+                            className="bg-background_dark  dark:bg-background_light dark:text-text_light text-white px-4 py-2 rounded"
                             disabled={isLoading}
                         >
                             {isLoading ? 'Enregistrement en cours...' : 'Enregistrer'}

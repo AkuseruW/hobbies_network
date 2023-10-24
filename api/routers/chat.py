@@ -54,9 +54,8 @@ def start_conversation(user_id: int, db: Session = Depends(get_session), current
 @router.get("/conversations/{room_uuid}")
 def get_conversation(room_uuid: str, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     # Fetch the conversation by its room_uuid
-    conversation = db.query(ChatRoom).filter(
-        ChatRoom.room_uuid == room_uuid).first()
-    
+    conversation = db.query(ChatRoom).filter(ChatRoom.room_uuid == room_uuid).first()
+    user_correspondent = conversation.user_a if conversation.user_a_id != current_user.id else conversation.user_b
     # Check if the conversation exists, return a 404 error if not
     if not conversation:
         raise HTTPException(status_code=404, detail="Conversation not found")
@@ -66,8 +65,7 @@ def get_conversation(room_uuid: str, db: Session = Depends(get_session), current
         raise HTTPException(status_code=403, detail="Access denied")
         
     # Fetch the message history for the conversation
-    message_history = db.query(MessageHistory).filter(
-        MessageHistory.message_id == conversation.id).all()
+    message_history = db.query(MessageHistory).filter(MessageHistory.message_id == conversation.id).all()
     
     # Create a list to store the messages with user info
     messages_with_user_info = []
@@ -75,7 +73,6 @@ def get_conversation(room_uuid: str, db: Session = Depends(get_session), current
     for message in message_history:
         # Get user information for the sender of the message
         sender_user = message.user
-        
         # Create a dictionary with message and user info
         message_with_user = {
             "content": message.content,
@@ -87,7 +84,7 @@ def get_conversation(room_uuid: str, db: Session = Depends(get_session), current
         # Add the message to the list
         messages_with_user_info.append(message_with_user)
 
-    return messages_with_user_info
+    return {"messages": messages_with_user_info, "other_user": {"username": user_correspondent.user_name, "profile_picture": user_correspondent.profile_picture}}
 
 
 @router.post("/conversations/{room_uuid}/message")
@@ -137,10 +134,12 @@ async def send_message(
 
     # Prepare the WebSocket message
     message_ws = {
-        "type": "message",
+        "room_id": room_uuid,
         "data": {
             "content": content,
-            "sender_id": current_user.id
+            "sender_id": current_user.id,
+            "sender_name": current_user.user_name,
+            "sender_profile_picture": current_user.profile_picture
         }
     }
 

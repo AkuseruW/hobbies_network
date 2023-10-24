@@ -8,9 +8,13 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     const { users } = await getUsersPaginated({});
 
     return (
-        <div className="flex overflow-hidden h-[80vh]">
-            <AsideChats currentUser={user} users={users} />
-            {children}
+        <div className="flex overflow-hidden h-[85vh]">
+            <div className='w-[28%]'>
+                <AsideChats currentUser={user} users={users} />
+            </div>
+            <div className='w-[72%]'>
+                {children}
+            </div>
         </div>
     )
 }

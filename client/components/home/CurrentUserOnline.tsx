@@ -25,7 +25,6 @@ const CurrentUserOnline = () => {
         if (socket) {
             socket.addEventListener('message', (event) => {
                 const dataArray = JSON.parse(event.data);
-                console.log(dataArray);
             
                 if (Array.isArray(dataArray)) {
                     const userInfos = dataArray.filter((data) => data.action === 'user_info');

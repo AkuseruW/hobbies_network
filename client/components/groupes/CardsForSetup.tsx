@@ -78,17 +78,16 @@ const CardGroupeSetup: React.FC<Props> = ({ search, initialHobbies, hobbiesCooki
 
     return (
         <div className="flex flex-col">
-            <ScrollArea className="h-[500px] rounded-md border p-4 mt-4 bg-white dark:bg-gray-800">
+            <ScrollArea className="h-[500px] rounded-md border p-4 mt-4 bg-white dark:bg-secondary_dark dark:border-gray-300">
                 {hobbies.map((hobby) => (
                     <div
                         key={hobby.id}
                         className={`col-span-1 bg-white p-4 relative w-full h-full cursor-pointer overflow-hidden rounded-xl border my-4
                     ${selectedHobbies.some(
-                            (selectedHobby) => selectedHobby.id === hobby.id
-                        )
-                                ? 'border-blue-50 border-opacity-75 bg-blue-50 dark:bg-slate-800 '
-                                : 'border-gray-300'
-                            } dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-gray-800 dark:text-white`}
+                        (selectedHobby) => selectedHobby.id === hobby.id)
+                            ? 'border-blue-50 border-opacity-75 bg-blue-50 dark:bg-gray-500 dark:border-accent_dark'
+                            : 'border-gray-300'
+                        } dark:border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-primary_dark dark:border-gray-300 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                         onClick={() => handleHobbyClick(hobby)}
                     >
                         <div className=" space-y-4 lg:space-y-0 h-full">
