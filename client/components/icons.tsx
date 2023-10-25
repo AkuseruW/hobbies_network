@@ -35,6 +35,7 @@ import {
     MessageCircle,
     BadgeCheck,
     Send,
+    CheckIcon,
     // @ts-ignore
     type Icon as LucideIcon,
 } from "lucide-react"
@@ -101,7 +102,9 @@ export const Icons = {
     archive: Archive,
     pin: Pin,
     unpin: PinOff,
+    x: X,
     send: Send,
+    approve: CheckIcon,
     badgecheck: BadgeCheck,
     message_circle: MessageCircle,
     gitHub: (props: LucideProps) => (

@@ -80,9 +80,8 @@ const CardGroupeSetup: React.FC<Props> = ({ search, initialHobbies, hobbiesCooki
         <>
             <ScrollArea className="h-[500px] ">
                 {hobbies.map((hobby) => (
-                    <Suspense fallback={<p>Loading...</p>}>
+                    <Suspense key={hobby.id} fallback={<p>Loading...</p>}>
                         <div
-                            key={hobby.id}
                             className={`col-span-1 bg-white p-4 relative w-full h-full cursor-pointer overflow-hidden rounded-xl border my-4
                                 ${selectedHobbies.some(
                                 (selectedHobby) => selectedHobby.id === hobby.id)

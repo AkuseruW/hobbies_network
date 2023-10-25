@@ -1,6 +1,6 @@
 'use client';
 import slugify from 'slugify';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useToast } from '@/components/ui/use-toast';
@@ -20,6 +20,7 @@ type FormData = {
 
 export const CategoryFormCreate = () => {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState<any | null>(null);
@@ -123,6 +124,7 @@ export const CategoryFormCreate = () => {
                         onChange={(e) => setName(e.target.value)}
                         type="text"
                         id="name"
+                        defaultValue={searchParams.get('name') || undefined}
                         className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                     />
                     {errors.name && <span className="text-red-500">Name is required</span>}
@@ -134,6 +136,7 @@ export const CategoryFormCreate = () => {
                         {...register('slug', { required: true })}
                         type="text"
                         id="slug"
+                        defaultValue={searchParams.get('name') || undefined}
                         className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                     />
                     {errors.slug && <span className="text-red-500">Slug is required</span>}
@@ -143,6 +146,7 @@ export const CategoryFormCreate = () => {
                     <label htmlFor="description" className="block text-gray-700 font-medium mb-1 dark:text-white">Description</label>
                     <textarea
                         {...register('description')}
+                        defaultValue={searchParams.get('description') || undefined}
                         id="description"
                         className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                     />

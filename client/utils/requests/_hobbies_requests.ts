@@ -63,6 +63,24 @@ export const getHobbiesAdmin = async ({
   }
 };
 
+export const getProposedHobbiesAdmin = async ({
+  page = "1",
+  search,
+}: {
+  page?: string;
+  search?: string;
+}) => {
+  try {
+    const searchParam = search ? `&search=${search}` : "";
+    return await fetcher(
+      apiUrl(`/api/proposed_hobbies?page=${parseInt(page)}${searchParam}`),
+      "GET"
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const deleteHobby = async ({ id }: { id: number }) => {
   try {
     return await fetcher(apiUrl(`/api/hobby/${id}`), "DELETE");
@@ -87,3 +105,12 @@ export const updateHobby = async ({ slug, formData }: { slug: string, formData: 
     throw error;
   }
 }
+// deleteHobbySuggest
+
+export const deleteHobbySuggest = async ({ id }: { id: number }) => {
+  try {
+    return await fetcher(apiUrl(`/api/hobby_suggest/${id}`), "DELETE");
+  } catch (error) {
+    throw error;
+  }
+};

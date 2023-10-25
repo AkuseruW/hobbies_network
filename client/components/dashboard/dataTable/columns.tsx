@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
-import { DataTableRowActionsHobbies, DataTableRowActionsCustomers, DataTableRowActionsProducts, DataTableRowActionsReports } from "./data-table-row-actions"
+import { DataTableRowActionsHobbies, DataTableRowActionsCustomers, DataTableRowActionsProducts, DataTableRowActionsReports, DataTableRowActionsProposedHobbies } from "./data-table-row-actions"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { Switch } from "@/components/ui/switch"
 import { format } from "date-fns"
@@ -385,5 +385,73 @@ export const columnsNotifications: ColumnDef<any>[] = [
             <DataTableColumnHeader column={column} title="Actions" />
         ),
         cell: ({ row }) => <DataTableRowActionsCustomers row={row} />,
+    },
+];
+
+
+
+export const columnsProposedHobbies: ColumnDef<any>[] = [
+    {
+        id: "select",
+        header: ({ table }) => (
+            <Checkbox
+                checked={table.getIsAllPageRowsSelected()}
+                onCheckedChange={(value: boolean) =>
+                    table.toggleAllPageRowsSelected(!!value)
+                }
+                aria-label="Select all"
+                className="translate-y-[2px]"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value: boolean) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+                className="translate-y-[2px]"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
+
+    {
+        accessorKey: "name",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Name" />
+        ),
+        cell: ({ row }) => {
+            return (
+                <div className="flex space-x-2">
+                    <span className="max-w-[500px] truncate font-medium">
+                        {row.getValue("name")}
+                    </span>
+                </div>
+            );
+        },
+    },
+
+    {
+        accessorKey: "description",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Description" />
+        ),
+        cell: ({ row }) => {
+            return (
+                <div className="flex space-x-2">
+                    <span className="max-w-[500px] truncate font-medium">
+                        {row.getValue("description")}
+                    </span>
+                </div>
+            );
+        },
+    },
+
+    {
+        id: "actions",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Actions"/>
+        ),
+        cell: ({ row }) => <DataTableRowActionsProposedHobbies row={row} />,
     },
 ];

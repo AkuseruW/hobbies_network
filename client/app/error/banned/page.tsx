@@ -3,7 +3,7 @@ import React from 'react'
 const BannedPage = () => {
   return (
     <div>
-      T'es ban
+      T&apos;es ban
     </div>
   )
 }

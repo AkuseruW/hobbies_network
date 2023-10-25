@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { PencilSquareIcon, TableCellsIcon } from '@heroicons/react/24/outline';
+import NavigationItem from '@/components/dashboard/NavigationComponent';
+import { Icons } from '@/components/icons';
 
 
 export default async function ProductLayout({
@@ -10,24 +12,18 @@ export default async function ProductLayout({
     return (
         <main className="w-full">
             <div className="w-full">
-                <div className="container mx-auto px-4 py-6">
+                <div className="container mx-auto px-6 py-6">
                     <nav className="flex flex-wrap justify-center lg:justify-start">
-                        <ul className="space-x-8 p-4 flex flex-wrap">
-                            <li className="flex items-center">
-                                <Link href="/dashboard/hobbies" className="text-gray-700 hover:text-blue-500 dark:text-white dark:hover:text-blue-500 font-medium text-lg sm:text-sm">
-                                    <TableCellsIcon className="h-6 w-6 mr-3" />
-                                    <span>All Hobbies</span>
-                                </Link>
-                            </li>
+                        <ul className="space-x-8 py-4 flex flex-wrap">
+                            <NavigationItem link="/dashboard/hobbies" icon={<TableCellsIcon className="h-6 w-6 mr-3" />} text="All Hobbies" />
                             <li className="flex items-center">
                                 <span className="border-l border-gray-300 h-6 mx-3"></span>
                             </li>
+                            <NavigationItem link="/dashboard/hobbies/new" icon={<PencilSquareIcon className="h-6 w-6 mr-3" />} text="Create Hobby" />
                             <li className="flex items-center">
-                                <Link href="/dashboard/hobbies/new" className="text-gray-700 hover:text-blue-500 font-medium text-lg sm:text-sm dark:text-white dark:hover:text-blue-500 ">
-                                    <PencilSquareIcon className="h-6 w-6 mr-3" />
-                                    <span>Create Hobby</span>
-                                </Link>
+                                <span className="border-l border-gray-300 h-6 mx-3"></span>
                             </li>
+                            <NavigationItem link="/dashboard/hobbies/proposed_hobbies" icon={<Icons.help className="h-6 w-6 mr-3" />} text="Hobbies Suggest" />
                         </ul>
                     </nav>
                     <div>

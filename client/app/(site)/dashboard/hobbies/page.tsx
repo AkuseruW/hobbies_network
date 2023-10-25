@@ -6,16 +6,12 @@ const HobbiesAdminPage = async ({ searchParams }: { searchParams: { search?: str
   const search = typeof searchParams.search === 'string' ? searchParams.search : undefined
   const page = typeof searchParams.page === 'string' ? searchParams.page : undefined;
 
-  const {hobbies, totalPages}= await getHobbiesAdmin({ search, page });
+  const { hobbies, totalPages } = await getHobbiesAdmin({ search, page });
   const url = '/dashboard/hobbies'
 
   return (
-    <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-      <div className="flex items-center justify-between space-y-2">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">List of Hobbies</h2>
-        </div>
-      </div>
+    <div className="hidden h-full flex-1 flex-col space-y-2 md:flex mt-5">
+      <h2 className="text-xl font-bold tracking-tight">List of Hobbies</h2>
       <DataTable
         //@ts-ignore
         columns={columnsHobbies}

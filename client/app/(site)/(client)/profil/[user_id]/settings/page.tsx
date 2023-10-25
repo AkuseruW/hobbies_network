@@ -1,9 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import React from 'react'
-import { useRouter } from 'next/navigation'
 const page = () => {
-    const router = useRouter();
     const handleClick = async () => {
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/certification`, {

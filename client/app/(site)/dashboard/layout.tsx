@@ -9,9 +9,9 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   const notifications = await getNotificationsAdmin({})
 
   return (
-    <div className="flex max-h-screen overflow-hidden">
+    <div className="flex max-h-screen overflow-hidden fixed w-full">
       <Aside />
-      <div className="flex flex-col flex-1 overflow-y-auto ">
+      <div className="flex flex-col flex-1 overflow-y-auto max-h-screen">
         <HeaderAdmin currentUser={user} notifications={notifications} />
         <div className="flex-1">
           <div className=" mx-auto px-4 ">

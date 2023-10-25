@@ -39,7 +39,7 @@ export function DataTablePagination<TData>({ table, url, pageSize, initialPage }
                 <div className="flex items-center space-x-2">
                     <Button
                         variant="outline"
-                        className="hidden h-8 w-8 p-0 lg:flex"
+                        className="hidden h-8 w-8 p-0 lg:flex dark:bg-secondary_dark dark:border-gray-400"
                         onClick={() => onPageChange(1)}
                         disabled={currentPage === 1}>
                         <span className="sr-only">Go to first page</span>
@@ -47,7 +47,7 @@ export function DataTablePagination<TData>({ table, url, pageSize, initialPage }
                     </Button>
                     <Button
                         variant="outline"
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-0 dark:bg-secondary_dark dark:border-gray-400"
                         onClick={() => onPageChange(currentPage - 1)}
                         disabled={currentPage === 1}>
                         <span className="sr-only">Go to previous page</span>
@@ -55,7 +55,7 @@ export function DataTablePagination<TData>({ table, url, pageSize, initialPage }
                     </Button>
                     <Button
                         variant="outline"
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-0 dark:bg-secondary_dark dark:border-gray-400"
                         onClick={() => onPageChange(currentPage + 1)}
                         disabled={currentPage === pageSize}>
                         <span className="sr-only">Go to next page</span>
@@ -63,7 +63,7 @@ export function DataTablePagination<TData>({ table, url, pageSize, initialPage }
                     </Button>
                     <Button
                         variant="outline"
-                        className="hidden h-8 w-8 p-0 lg:flex"
+                        className="hidden h-8 w-8 p-0 lg:flex dark:bg-secondary_dark dark:border-gray-400"
                         onClick={() => onPageChange(pageSize)}
                         disabled={currentPage === pageSize}>
                         <span className="sr-only">Go to last page</span>

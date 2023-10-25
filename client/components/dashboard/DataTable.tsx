@@ -24,7 +24,7 @@ export function DataTable<TData, TValue>({ type, columns, data, pageSize, initia
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [filterValue, setFilterValue] = useState(searchParams.get('search') || "");
-    
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newFilterValue = event.target.value;
         setFilterValue(newFilterValue);
@@ -67,14 +67,14 @@ export function DataTable<TData, TValue>({ type, columns, data, pageSize, initia
                     placeholder="Filter..."
                     value={filterValue}
                     onChange={handleInputChange}
-                    className="max-w-sm"
+                    className="max-w-sm dark:bg-secondary_dark dark:border-gray-400"
                 />
             </div>
-            <div className="rounded-md border bg-white dark:bg-gray-800">
+            <div className="rounded-md border bg-white dark:bg-secondary_dark dark:border-gray-400">
                 <Table>
-                    <TableHeader>
+                    <TableHeader >
                         {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
-                            <TableRow key={headerGroup.id}>
+                            <TableRow key={headerGroup.id} className="dark:border-gray-400">
                                 {headerGroup.headers.map((header) => {
                                     return (
                                         <TableHead key={header.id}>
@@ -92,10 +92,11 @@ export function DataTable<TData, TValue>({ type, columns, data, pageSize, initia
                             </TableRow>
                         ))}
                     </TableHeader>
-                    <TableBody>
+                    <TableBody >
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row: Row<TData>) => (
                                 <TableRow
+                                    className="dark:border-gray-400"
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                 >
