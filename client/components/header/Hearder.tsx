@@ -10,6 +10,7 @@ import { Session } from "@/types/sessions_types";
 import { getNotifications } from "@/utils/requests/_notifications_requests";
 import DropDownComponent from "./DropDownComponent";
 import SignoutBtn from "./SignoutBtn";
+import Dropdown from "../Dropdown";
 
 
 const Header = async ({ currentUser }: { currentUser: Session }) => {
@@ -69,8 +70,7 @@ const Header = async ({ currentUser }: { currentUser: Session }) => {
             <ToggleTheme />
             <Notifications notifications={notifications} client={true} />
           </div>
-          {/* <DropDownComponent menuItems={dropMenuItems} trigger={trigger} /> */}
-          <BtnProfile currentUser={currentUser} />
+          <Dropdown currentUser={currentUser}/>
         </div>
       </div>
       <div className="flex items-center justify-center lg:hidden text-center">

@@ -20,7 +20,7 @@ const SignoutBtn = () => {
     };
 
     return (
-        <button className='w-full bg-transparent dark:text-white p-0 m-0 hover:bg-transparent flex' onClick={signOut}>
+        <button className='w-full bg-transparent dark:text-white p-0 m-0 hover:bg-transparent flex px-4 py-2 text-sm' onClick={signOut}>
             Sign Out
         </button>
     );

@@ -49,7 +49,6 @@ const ConfirmUserInfo: React.FC<UserInformation> = ({ data }) => {
         }
     };
 
-
     const handleImageDelete = () => {
         setSrc('');
         setImageFile(null);
@@ -94,8 +93,8 @@ const ConfirmUserInfo: React.FC<UserInformation> = ({ data }) => {
     };
 
     return (
-        <div className="flex flex-col w-full justify-center items-center">
-            <div className="px-6 py-8 h-[500px] rounded-md border p-4 mt-4 bg-white dark:bg-gray-800 w-3/4">
+        <div className="flex flex-col w-full justify-center items-center mb-12">
+            <div className="px-6 py-8 h-[500px] rounded-md border p-4 mt-4 bg-white dark:bg-secondary_dark dark:border-gray-400 w-3/4">
                 <div className="flex justify-center text-center">
                     <ImageUpload
                         src={src}
@@ -104,24 +103,24 @@ const ConfirmUserInfo: React.FC<UserInformation> = ({ data }) => {
                         handleImageDelete={handleImageDelete}
                     />
                 </div>
-                <div className="text-gray-800 mt-6">
+                <div className="text-gray-800 mt-6 space-y-14">
                     <p className="text-xl font-semibold mb-6 dark:text-white text-center">
                         {data?.firstname} {data?.lastname}
                     </p>
-                    <p className="text-sm text-gray-600 mb-4 dark:text-white">Bio: {data?.bio}</p>
-                    <div className="mb-2">
-                        <span className="text-sm text-gray-700 dark:text-white">Hobbies:</span>
-                    </div>
-                    <p className="text-sm text-gray-700 dark:text-white">
-                        {data?.hobbies
-                            ? data.hobbies.map((hobby, index) => (
-                                <span key={index}>
-                                    {hobby.name}
-                                    {index !== data.hobbies.length - 1 ? ', ' : ''}
-                                </span>
-                            ))
+                    <p className="text-lg text-gray-600 mb-4 dark:text-white">Bio: {data?.bio}</p>
+                    <div className="mb-2 flex space-x-3 ">
+                        <span className="text-lg text-gray-700 dark:text-white">Hobbies :</span>
+                        <p className="text-lg text-gray-700 dark:text-white space-x-3">
+                            {data?.hobbies
+                                ? data.hobbies.map((hobby, index) => (
+                                    <span key={index}>
+                                        {hobby.name}
+                                        {index !== data.hobbies.length - 1 ? ', ' : ''}
+                                    </span>
+                                ))
                             : ''}
-                    </p>
+                        </p>
+                    </div>
                 </div>
             </div>
             <Button

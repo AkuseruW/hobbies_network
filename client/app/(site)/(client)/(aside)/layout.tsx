@@ -16,7 +16,7 @@ const ClientLayout = async ({ children }: { children: React.ReactNode }) => {
             </main>
             <div className='hidden lg:w-1/5 relative lg:flex justify-end'>
                 <CurrentUserOnline />
-                <MessagesToggle />
+                {/* <MessagesToggle /> */}
             </div>
         </div>
     );

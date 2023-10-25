@@ -25,7 +25,7 @@ const ImageUpload = forwardRef<HTMLInputElement, ImageUploadProps>(
                     accept={accept || 'image/jpeg, image/png'}
                     onChange={handleImageUpload}
                     ref={ref}
-                    className="border border-gray-300 rounded inset-0 opacity-0 hidden"
+                    className="border border-gray-300  rounded inset-0 opacity-0 hidden"
                 />
                 <div
                     className={`bg-black w-32 h-32 relative rounded-full flex items-center justify-center ${!src && 'outline outline-1 outline-zinc-300'
@@ -50,9 +50,9 @@ const ImageUpload = forwardRef<HTMLInputElement, ImageUploadProps>(
                     ) : (
                         <label
                             htmlFor="profilePicture"
-                            className="bg-white px-6 py-6 rounded-full flex items-center justify-center cursor-pointer w-32 h-32"
+                            className="bg-white dark:bg-primary_dark px-6 py-6 rounded-full flex items-center justify-center cursor-pointer w-32 h-32"
                         >
-                            <Icons.add className="w-12 h-12 text-black" />
+                            <Icons.add className="w-12 h-12 text-black dark:text-white" />
                         </label>
                     )}
                 </div>
