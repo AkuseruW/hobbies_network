@@ -22,10 +22,12 @@ class HobbyQueryParams:
         page: int = Query(1, description="page"),
         per_page: int = Query(10, description="per_page"),
         search: str = Query(None, description="search"),
+        q: str = Query(None, description="q"),
     ):
         self.page = page
         self.per_page = per_page
         self.search = search
+        self.q = q
 
 
 @router.get("/all_hobbies", response_model=dict)
@@ -63,6 +65,31 @@ def get_hobbies(
         hobbies_data.append(hobby_data)
 
     return {"hobbies": hobbies_data, "totalPages": total_pages}
+
+
+@router.get("/proposed_hobbies")
+def get_proposed_hobbies(
+    params: HobbyQueryParams = Depends(),
+    db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_active_user),
+):
+    if current_user.user_role != "ROLE_ADMIN":
+        raise HTTPException(
+            status_code=403, 
+            detail="You are not authorized to perform this action."
+        )
+    
+    offset = (params.page - 1) * params.per_page
+    total_hobbies = db.query(Hobby).count()
+    total_pages = (total_hobbies + params.per_page - 1) // params.per_page
+    hobbies_query = db.query(ProposedHobby)
+
+    if params.search:
+        hobbies_query = hobbies_query.filter(ProposedHobby.name.ilike(f"%{params.search}%"))        
+    
+    hobbies = hobbies_query.offset(offset).limit(params.per_page).all()
+    
+    return {"hobbies": hobbies, "totalPages": total_pages}
 
 
 @router.get("/user_hobbies")
@@ -181,6 +208,29 @@ async def delete_hobby(
 
     return {"success": True, "message": "Hobby deleted successfully"}
 
+
+@router.delete("/hobby_suggest/{hobby_id}")
+async def delete_hobby_suggest(
+    hobby_id: int,
+    db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_active_user),
+):
+    # Check if the current user is an admin, and if not, raise a 403 Forbidden error
+    if current_user.user_role != "ROLE_ADMIN":
+        raise HTTPException(
+            status_code=403, detail="You are not authorized to perform this action."
+        )
+
+    # Query the database to find the hobby with the given slug
+    hobby_suggest = db.query(ProposedHobby).filter(ProposedHobby.id == hobby_id).first()
+    # If the hobby doesn't exist, raise a 404 Not Found error
+    if not hobby_suggest:
+        raise HTTPException(status_code=404, detail="Hobby not found")
+
+    db.delete(hobby_suggest)
+    db.commit()
+
+    return {"success": True, "message": "Hobby deleted successfully"}
 
 @router.get("/hobby/{hobby_slug}")
 async def get_hobby(hobby_slug: str, db: Session = Depends(get_session)):
