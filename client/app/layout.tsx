@@ -4,6 +4,13 @@ import { Toaster } from '@/components/ui/toaster';
 import { CookieSettings } from '@/components/CookieSettings';
 import { cookies } from 'next/headers'
 import './globals.css'
+import { Poppins } from 'next/font/google'
+
+const inter = Poppins({
+  subsets: ['latin'],
+  weight: '500',
+  display: 'swap',
+})
 
 
 export const metadata: Metadata = {
@@ -18,7 +25,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const isApprovedCokkie = cookies().get('_cookie_settings')
   return (
-    <html lang="fr" className='min-h-screen' suppressHydrationWarning>
+    <html lang="fr" className={`min-h-screen `} suppressHydrationWarning >
       <body className=' bg-background_light dark:bg-background_dark p-0 m-0'>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}

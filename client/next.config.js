@@ -1,13 +1,27 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    experimental: {
-        serverActions: true,
-    },
     images: {
-        domains: ["localhost","flowbite.s3.amazonaws.com", "res.cloudinary.com", "via.placeholder.com"],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'via.placeholder.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'flowbite.s3.amazonaws.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'localhost',
+                port: '3000',
+            }
+        ],
     },
     reactStrictMode: false,
-
 }
 
 module.exports = nextConfig

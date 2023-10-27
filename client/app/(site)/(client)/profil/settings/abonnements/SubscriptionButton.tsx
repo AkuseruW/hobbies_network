@@ -13,8 +13,8 @@ const SubscriptionButton = () => {
                     'Authorization': "Bearer " + getAccessTokenFromClient()
                 }
             });
-            const { checkout_url } = await res.json();
-            window.open(checkout_url, '_blank');
+            // const { checkout_url } = await res.json();
+            // window.open(checkout_url, '_blank');
         } catch (error) {
             console.error('Erreur lors de la requête fetch :', error);
         }
