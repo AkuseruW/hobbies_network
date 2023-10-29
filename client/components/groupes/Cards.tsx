@@ -1,7 +1,7 @@
 "use client";
 import { useInView } from 'react-intersection-observer';
 import Link from "next/link";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { useTheme } from 'next-themes';
@@ -10,6 +10,7 @@ import { add_or_delete_hobby } from '@/utils/requests/_users_requests';
 import { Hobby } from '@/types/hobby_types';
 import Modal from '../Modal';
 import ProposeHobby from './ProposeHobby';
+import { useRouter } from 'next/navigation';
 
 interface CardGroupeProps {
   search?: string;
@@ -18,6 +19,7 @@ interface CardGroupeProps {
 
 const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   const [hobbies, setHobbies] = useState<Hobby[]>(initialHobbies);
+  const [isEndOfList, setIsEndOfList] = useState(false);
 
   const initialAddedHobbies: Record<number, boolean> = initialHobbies.reduce((acc, hobby) => {
     // @ts-ignore
@@ -32,16 +34,23 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   const isDarkTheme = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const loadMoreHobbies = useCallback(async () => {
+    if (isEndOfList) {
+      return;
+    }
     const next = page + 1;
-    const { hobbies: newHobbies } = await getHobbies({ search, page: next });
+    const { hobbies: newHobbies, is_end_of_list } = await getHobbies({ search, page: next });
     if (newHobbies?.length) {
       setPage(next);
       setHobbies((prev) => [
         ...(prev?.length ? prev : []),
         ...newHobbies
       ]);
+      if (is_end_of_list) {
+        setIsEndOfList(true);
+      }
     }
   }, [page, search]);
 
@@ -55,6 +64,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
       await add_or_delete_hobby({ id });
       setAddedHobbies({ ...addedHobbies, [id]: true });
     }
+    router.refresh();
   };
 
   useEffect(() => {
@@ -94,7 +104,10 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
         {hobbies.map(({ id, name, description, slug, icone_black, icone_white }) => (
           <div
             key={id}
-            className="col-span-1 bg-white p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-background_dark dark:text-white"
+            className={`${addedHobbies[id] && "dark:bg-secondary_dark dark:text-white bg-white"} col-span-1  p-4 relative w-full h-60 overflow-hidden 
+            rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500
+             dark:hover:border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out
+              dark:bg-background_dark dark:text-white `}
           >
             <div className="h-full flex flex-col justify-between">
               <div key={name} className="group relative">
@@ -154,7 +167,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
       </div>
 
       {/* loading spinner */}
-      {hobbies.length >= 10 && (
+      {!isEndOfList && hobbies.length >= 10 && (
         <div
           ref={ref}
           className='col-span-1 mt-16 flex items-center justify-center sm:col-span-2 md:col-span-3 lg:col-span-4'

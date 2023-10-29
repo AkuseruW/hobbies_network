@@ -72,6 +72,7 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
     setPosts(updatedPosts);
   }, [posts]);
 
+
   useEffect(() => {
     // Update post timestamps every 60 seconds
     const intervalId = setInterval(updatePostTimes, 60000);
@@ -86,7 +87,7 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
     <div>
       {postCards}
 
-      {posts.length >= 10 && (
+      {!isEndOfList && posts.length >= 10 && (
         <div
           ref={ref}
           className='h-4 col-span-1 my-6 flex items-center justify-center sm:col-span-2 md:col-span-3 lg:col-span-4'

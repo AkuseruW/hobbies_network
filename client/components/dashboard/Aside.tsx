@@ -38,7 +38,7 @@ const Aside = () => {
                 </ul>
             </nav>
             <div className="pl-4">
-                <NavItem href="/" icon={<ArrowLeftOnRectangleIcon className="h-6 w-6 mr-3" />} text="Logout" />
+                <NavItem href="/" icon={<ArrowLeftOnRectangleIcon className="h-6 w-6 mr-3" />} text="Return to website" />
             </div>
         </aside>
     );

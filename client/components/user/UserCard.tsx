@@ -9,28 +9,39 @@ import { Icons } from "../icons";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 
-
 const UserCard = ({ search, initialUsers }: { search?: string | undefined, initialUsers: User[] }) => {
   const [users, setUsers] = useState(initialUsers);
   const [page, setPage] = useState(1)
   const [ref, inView] = useInView()
   const { resolvedTheme } = useTheme();
+  const [isEndOfList, setIsEndOfList] = useState(false);
   const isDarkMode = resolvedTheme === "dark";
 
+  // loading more users when triggered.
   const loadMoreUsers = useCallback(async () => {
-    const next = page + 1
-    const { users } = await getUsersPaginated({ search, page: next })
+    // Check if we have reached the end of the list. If so, return early.
+    if (isEndOfList) {
+      return;
+    }
 
+    // Increment the page number for the next data fetch.
+    const next = page + 1
+    // Fetch users and related data for the next page using 'getUsersPaginated' function.
+    const { users, is_end_of_list } = await getUsersPaginated({ search, page: next })
+
+    // If there are users returned, update the page state, and add new users to the existing user list.
     if (users?.length) {
       setPage(next)
 
-      setUsers((prev) => [
-        ...(prev?.length ? prev : []),
-        ...users
-      ])
+      setUsers((prev) => [...(prev?.length ? prev : []), ...users])
+      // Set 'isEndOfList' to true if there are no more users to load.
+      if (is_end_of_list) {
+        setIsEndOfList(true);
+      }
     }
   }, [page, search])
 
+  // when the 'inView' prop is true and there are at least 10 users loaded.
   useEffect(() => {
     if (inView && users.length >= 10) {
       loadMoreUsers()
@@ -73,7 +84,7 @@ const UserCard = ({ search, initialUsers }: { search?: string | undefined, initi
       </div>
 
       {/* loading spinner */}
-      {users.length >= 10 && (
+      {!isEndOfList && users.length >= 10 && (
         <div
           ref={ref}
           className='col-span-1 mt-16 flex items-center justify-center sm:col-span-2 md:col-span-3 lg:col-span-4'
@@ -83,7 +94,6 @@ const UserCard = ({ search, initialUsers }: { search?: string | undefined, initi
         </div>
       )}
     </>
-
   );
 };
 
