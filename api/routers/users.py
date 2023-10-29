@@ -61,8 +61,13 @@ def read_users(
                 bio=user.bio,
             )
             users_with_status.append(user_data)
+    
+        
+    # check if the end of the list
+    total_users = query.count() - 1
+    is_end_of_list = (page * per_page) >= total_users
 
-    return {"users": users_with_status}
+    return {"users": users_with_status, "is_end_of_list": is_end_of_list}
 
 
 

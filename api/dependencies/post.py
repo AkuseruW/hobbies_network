@@ -67,7 +67,7 @@ async def get_posts(current_user: User, page: int = 1, db: Session = Depends(get
 
     filtered_posts_data = [create_post_info_dict(post, liked_post_ids) for post in posts]
 
-    # Vérifiez si nous avons atteint la fin de la liste
+    # check if the end of the list
     is_end_of_list = (page * per_page) >= total_posts
 
     return {"posts": filtered_posts_data, "is_end_of_list": is_end_of_list}

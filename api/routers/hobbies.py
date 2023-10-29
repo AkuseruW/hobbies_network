@@ -63,8 +63,11 @@ def get_hobbies(
             "added": hobby.id in user_hobbies,
         }
         hobbies_data.append(hobby_data)
+        
+    # check if the end of the list
+    is_end_of_list = (params.page * params.per_page) >= total_hobbies
 
-    return {"hobbies": hobbies_data, "totalPages": total_pages}
+    return {"hobbies": hobbies_data, "totalPages": total_pages, "is_end_of_list": is_end_of_list}
 
 
 @router.get("/proposed_hobbies")
