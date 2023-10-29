@@ -1,7 +1,6 @@
 import React from 'react';
 import { UserGroupIcon, HomeIcon, RectangleGroupIcon, } from "@heroicons/react/24/outline";
 import HeaderLinksIcons from '../header/HeaderLinksIcons';
-import { Button } from '../ui/button';
 import { Icons } from '../icons';
 
 const LeftAside = () => {
@@ -40,7 +39,6 @@ const LeftAside = () => {
                 </div>
 
                 <div className='absolute bottom-7 flex flex-col justify-center items-center'>
-                    <Button className='w-[80%]'>Sign Out</Button>
                     <p className='text-[13px] text-gray-500 mt-5'>© 2023 Hobbies, Inc. All rights reserved.</p>
                 </div>
             </div>

@@ -34,7 +34,6 @@ const SignUpForm = () => {
         setIsLoading(true);
         try {
             const res = await signup(values);
-            console.log(res)
             if (res.status_code === 201) {
                 router.push('/connexion');
             } else {

@@ -1,7 +1,7 @@
 "use client";
 import { useInView } from 'react-intersection-observer';
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { useTheme } from 'next-themes';
@@ -32,9 +32,6 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   const isDarkTheme = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  console.log(hobbies, 'users')
-  console.log(page, 'page')
 
   const loadMoreHobbies = useCallback(async () => {
     const next = page + 1;

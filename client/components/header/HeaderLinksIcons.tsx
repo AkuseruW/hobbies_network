@@ -1,6 +1,7 @@
+'use client'
 import React from 'react'
-import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from 'next/navigation';
 
 const HeaderLinksIcons = ({
     link,
@@ -8,11 +9,17 @@ const HeaderLinksIcons = ({
     link: { icon?: JSX.Element; text: string; url: string };
 }) => {
     const { icon, text, url } = link;
+    const pathname = usePathname()
+
 
     return (
         <Link
             href={url}
-            className="flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md px-4 py-2"
+            className={
+                pathname === url
+                    ? "bg-gray-200 dark:bg-gray-700 hover:bg-muted flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md px-4 py-2"
+                    : "hover:bg-transparent hover:underline flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md px-4 py-2"
+            }
             aria-label={text}
             title={text}
             prefetch={false}
@@ -40,7 +47,7 @@ export const MobileLinksIcons = ({ link }: { link: { icon?: JSX.Element; text: s
             >
                 {icon && <span className="w-6 h-6">{icon}</span>}
             </Link>
-            
+
         </>
     )
 }

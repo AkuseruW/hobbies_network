@@ -24,6 +24,8 @@ const Searchbar = ({ search, type }: { search?: string, type?: string }) => {
         router.push(`/hobbies`)
       } else if (type === 'setup') {
         router.push(`/setup/hobbies`)
+      } else if (type === 'chat') {
+        router.push(`/conversations`)
       }
     } else {
       if (type === 'users') {
@@ -32,6 +34,8 @@ const Searchbar = ({ search, type }: { search?: string, type?: string }) => {
         router.push(`/hobbies?search=${query}`)
       } else if (type === 'setup') {
         router.push(`/setup/hobbies?search=${query}`)
+      } else if (type === 'chat') {
+        router.push(`/conversations?search=${query}`)
       }
     }
 

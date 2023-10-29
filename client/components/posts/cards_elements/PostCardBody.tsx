@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import BtnAction from "./ButtonCardAction";
 import { PostData } from "@/types/post_types";
 import InputComment from "@/components/comments/InputComment";
 import PostImagesCarousel from "./PostImages";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface PostBodyProps {
     data: PostData;
@@ -29,7 +30,9 @@ const PostBody: React.FC<PostBodyProps> = ({
                     {data.hobby ? `#${data.hobby.name}` : ""}
                 </p>
                 {data.post_images_urls.length > 0 && (
-                    <PostImagesCarousel images={data.post_images_urls} />
+                    <Suspense fallback={<Skeleton className="col-span-1 p-4 relative w-full h-60 bg-gray-300 dark:bg-secondary_dark" />}>
+                        <PostImagesCarousel images={data.post_images_urls} />
+                    </Suspense>
                 )}
             </Link>
 
@@ -40,7 +43,7 @@ const PostBody: React.FC<PostBodyProps> = ({
                         {data.total_comments} commentaires
                     </div>
                 </div>
-                <Separator className="dark:bg-gray-500"/>
+                <Separator className="dark:bg-gray-500" />
                 <BtnAction data={data} handleToggleInput={handleToggleInput} />
                 {showCommentInput && <InputComment post_id={data.id} />}
             </div>

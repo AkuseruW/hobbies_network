@@ -10,7 +10,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="flex overflow-hidden h-[85vh]">
             <div className='w-[28%]'>
-                <AsideChats currentUser={user} users={users} />
+                <AsideChats currentUser={user} initialUsers={users} />
             </div>
             <div className='w-[72%]'>
                 {children}

@@ -11,6 +11,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { updatePostsWithTime } from '@/utils/_date';
 import { HobbiesCarousel } from '@/components/user/HobbiesCarousel';
 import Badge from './badge';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: { user_id: string } }): Promise<Metadata> {
+  const { user } = await getUserProfil({ user_id: params.user_id });
+  return { title: user.firstname + ' ' + user.lastname };
+}
 
 const ProfilePage = async ({ params }: { params: { user_id: string } }) => {
   const { user, hobbies, is_following, posts, count_hobbies, count_followers, count_following } = await getUserProfil({ user_id: params.user_id });

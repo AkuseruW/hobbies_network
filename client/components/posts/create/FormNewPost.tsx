@@ -98,7 +98,6 @@ const FormNewPost = ({
         try {
             // Send a request to create a new post with the form data
             const res = await createPost({ formData });
-            console.log(res)
             if (res) {
                 if (res.detail) {
                     setError(true);

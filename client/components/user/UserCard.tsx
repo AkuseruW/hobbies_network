@@ -17,8 +17,6 @@ const UserCard = ({ search, initialUsers }: { search?: string | undefined, initi
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
 
-  console.log(users, 'users')
-
   const loadMoreUsers = useCallback(async () => {
     const next = page + 1
     const { users } = await getUsersPaginated({ search, page: next })

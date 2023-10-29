@@ -79,9 +79,7 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
   }, [updatePostTimes]);
 
   const postCards = useMemo(() => posts.map((post) => (
-    <Suspense key={post.id} fallback={<Loading />}>
-      <PostCard data={post} />
-    </Suspense>
+    <PostCard key={post.id} data={post} />
   )), [posts]);
 
   return (

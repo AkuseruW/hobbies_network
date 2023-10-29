@@ -2,15 +2,31 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Session } from '@/types/sessions_types';
 import { User } from '@/types/user_types';
 import { getChatUuid } from '@/utils/requests/_chats';
 import { ScrollArea } from '../ui/scroll-area';
+import { getUsersPaginated } from '@/utils/requests/_users_requests';
+import Searchbar from '../Searchbar';
+import { string } from 'zod';
 
-const AsideChats = ({ currentUser, users }: { currentUser: Session, users: User[] }) => {
+const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initialUsers: User[] }) => {
+    const [users, setUsers] = useState(initialUsers);
     const router = useRouter()
+    const searchParams = useSearchParams();
+
+
+    useEffect(() => {
+        const search = typeof searchParams.get('search') === 'string' ? searchParams.get('search') : undefined
+        const getSearchUser = async () => {
+            const { users } = await getUsersPaginated({ search: search?.toString() });
+            setUsers(users);
+        }
+        getSearchUser();
+
+    }, [searchParams]);
 
     const handleStartConversation = async (user_id: number) => {
         const uuid = await getChatUuid({ user_id });
@@ -22,6 +38,8 @@ const AsideChats = ({ currentUser, users }: { currentUser: Session, users: User[
             <div className="text-center mb-4">
                 <h1 className="text-2xl font-semibold">Hobbies</h1>
             </div>
+
+            <Searchbar type='chat' />
 
             <ScrollArea className="flex flex-col h-[50%]">
                 {users.map((user) => (

@@ -4,7 +4,6 @@ import ResponseReport from './ResponseRepport';
 import { Report } from '@/types/reports_types';
 
 const ReportDetails = ({ report }: { report: Report }) => {
-    console.log(report)
     return (
         <div>
             <div className="mb-4">

@@ -5,7 +5,6 @@ import Image from 'next/image';
 import React from 'react'
 
 const Badge = ({ user }: { user: User }) => {
-    console.log(user)
     const { resolvedTheme } = useTheme();
     const isDarkMode = resolvedTheme === "dark";
     return (

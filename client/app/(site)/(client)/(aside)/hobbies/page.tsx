@@ -16,9 +16,7 @@ const GroupePage = async ({ searchParams }: { searchParams: { [key: string]: str
         <Searchbar search={search} type='hobbies' />
       </div>
       <div key={uuid()} className="mt-6  w-full">
-        <Suspense fallback={<></>}>
-          <CardGroupe search={search} initialHobbies={hobbies} />
-        </Suspense>
+        <CardGroupe search={search} initialHobbies={hobbies} />
       </div>
     </section>
   )

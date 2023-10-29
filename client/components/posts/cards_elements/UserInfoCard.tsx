@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
@@ -7,6 +7,7 @@ import { PostData } from "@/types/post_types";
 import DropDownBtn from "./DropDownCardPost";
 import DropDownComponent from "@/components/header/DropDownComponent";
 import { useTheme } from "next-themes";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const UserInfo = ({ data }: { data: PostData }) => {
     const { resolvedTheme } = useTheme();
@@ -31,14 +32,16 @@ const UserInfo = ({ data }: { data: PostData }) => {
     return (
         <div className="relative p-4 items-center justify-between dark:text-white">
             <div className="flex">
-                <Link href={`/profil/${data.user.user_id}`}>
-                    <Avatar>
-                        <AvatarImage
-                            src={data.user.profile_picture}
-                            alt={data.user.username}
-                        />
-                    </Avatar>
-                </Link>
+                <Suspense fallback={<Skeleton className="h-12 w-12 rounded-full" />}>
+                    <Link href={`/profil/${data.user.user_id}`}>
+                        <Avatar>
+                            <AvatarImage
+                                src={data.user.profile_picture}
+                                alt={data.user.username}
+                            />
+                        </Avatar>
+                    </Link>
+                </Suspense>
                 <div className="flex flex-col ml-2">
                     <div className="flex items-center">
                         <Link href={`/profil/${data.user.user_id}`}>
