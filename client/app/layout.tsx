@@ -4,11 +4,10 @@ import { Toaster } from '@/components/ui/toaster';
 import { CookieSettings } from '@/components/CookieSettings';
 import { cookies } from 'next/headers'
 import './globals.css'
-import { Poppins } from 'next/font/google'
+import { Inter, Poppins } from 'next/font/google'
 
-const inter = Poppins({
+const inter = Inter({
   subsets: ['latin'],
-  weight: '500',
   display: 'swap',
 })
 

@@ -52,7 +52,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
         setIsEndOfList(true);
       }
     }
-  }, [page, search]);
+  }, [page, search, isEndOfList]);
 
   const addHobbyOrRemove = async (id: number) => {
     if (addedHobbies[id]) {

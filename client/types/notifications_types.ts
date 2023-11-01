@@ -14,6 +14,7 @@ export interface Notification {
   is_read: boolean;
   timestamp: string;
   notification_type: string;
+  message_room_id: string;
   report_id: number;
   user: User;
 }

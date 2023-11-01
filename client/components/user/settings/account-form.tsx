@@ -61,7 +61,9 @@ export const AccountForm = () => {
             <FormItem>
               <FormLabel>Mot de passe actuel</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input type="password" {...field}
+                  className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -74,7 +76,9 @@ export const AccountForm = () => {
             <FormItem>
               <FormLabel>Nouveau mot de passe</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input type="password" {...field}
+                  className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -87,7 +91,9 @@ export const AccountForm = () => {
             <FormItem>
               <FormLabel>Confirmation mot de passe</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input type="password" {...field}
+                  className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

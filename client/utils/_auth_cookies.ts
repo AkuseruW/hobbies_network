@@ -14,7 +14,7 @@ export const setAuthCookies = async (
   setCookie("access_token", token, {
     expires,
     secure: true,
-    sameSite: true,
+    sameSite: false,
   });
 
   setCookie(
@@ -22,7 +22,7 @@ export const setAuthCookies = async (
     JSON.stringify({ lastname, firstname, profile_picture, id, role }),
     {
       expires,
-      sameSite: true,
+      sameSite: false,
       secure: true,
     }
   );

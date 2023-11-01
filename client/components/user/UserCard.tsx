@@ -39,7 +39,7 @@ const UserCard = ({ search, initialUsers }: { search?: string | undefined, initi
         setIsEndOfList(true);
       }
     }
-  }, [page, search])
+  }, [page, search, isEndOfList])
 
   // when the 'inView' prop is true and there are at least 10 users loaded.
   useEffect(() => {

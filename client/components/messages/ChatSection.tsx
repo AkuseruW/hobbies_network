@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { User } from '@/types/user_types';
 import { Icons } from '../icons';
 import { WebSocketContext } from '@/providers/ws_provider';
+import { ScrollArea } from '../ui/scroll-area';
 
 interface Message {
     author: string;
@@ -102,7 +103,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ initialMessages, currentUser,
                     room_id: params.room_id,
                     content: message,
                 });
-                // No need to setMessage('') here because it's done in the WebSocket message handler.
             } catch (error) {
                 console.error('Erreur lors de l\'envoi du message:', error);
             }
@@ -114,11 +114,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ initialMessages, currentUser,
             <div className="flex-1">
                 <ChatHeader roomName={other_user.username} room_profile_picture={other_user.profile_picture} />
                 <div className="h-screen overflow-y-auto p-4 pb-36">
-                    <div className="messages">
+                    <ScrollArea className="messages h-[400px]">
                         {messages.map((message, index) => (
                             <MessageItem key={index} message={message} currentUser={currentUser} />
                         ))}
-                    </div>
+                    </ScrollArea>
                 </div>
                 <ChatInput message={message} setMessage={setMessage} handleSendMessage={handleSendMessage} />
             </div>

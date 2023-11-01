@@ -85,6 +85,7 @@ export const ProfileForm = ({ currentUser }: { currentUser: any }) => {
                   <FormControl>
                     <Input
                       placeholder="First Name"
+                      className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
                       {...field}
                     />
                   </FormControl>
@@ -104,6 +105,7 @@ export const ProfileForm = ({ currentUser }: { currentUser: any }) => {
                   <FormControl>
                     <Input
                       placeholder="Last Name"
+                      className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
                       {...field}
                     />
                   </FormControl>
@@ -128,6 +130,7 @@ export const ProfileForm = ({ currentUser }: { currentUser: any }) => {
                 <FormControl>
                   <Input
                     placeholder="Email"
+                    className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
                     {...field}
                   />
                 </FormControl>
@@ -147,7 +150,7 @@ export const ProfileForm = ({ currentUser }: { currentUser: any }) => {
               <FormControl>
                 <Textarea
                   placeholder="Add a bio..."
-                  className="resize-none"
+                  className="resize-none dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
                   {...field}
                 />
               </FormControl>

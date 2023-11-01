@@ -53,11 +53,20 @@ const Notifications = ({ notifications: notifications_db, client }: { notificati
             dark:bg-background_dark
             ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
+                        {notifications.notifications.length === 0 && (
+                            <p className='text-center text-sm p-2'>
+                                Aucune notification
+                            </p>
+                        )}
                         {notifications.notifications.map((notification) => (
                             <Menu.Item key={notification.id}>
                                 <Link
                                     onClick={() => deleteNotification(notification.id)}
-                                    href={client ? `/profil/${notification.user.id}` : `/dashboard/${notification.notification_type}/${notification.report_id}`}
+                                    href={client ? 
+                                        notification.title === 'Message' ?
+                                        `/conversations/${notification.message_room_id}` :
+                                        `/profil/${notification.user.id}` 
+                                        : `/dashboard/${notification.notification_type}/${notification.report_id}`}
                                     className="cursor-pointer h-full w-full p-0 m-0"
                                 >
                                     <div className="flex items-center">
