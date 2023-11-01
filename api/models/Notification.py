@@ -3,7 +3,6 @@ from sqlalchemy import Boolean, CheckConstraint, Column, Integer, ForeignKey, St
 from settings.database import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-import uuid
 
 class Notification(Base):
     __tablename__ = "notifications"
@@ -12,6 +11,7 @@ class Notification(Base):
     title = Column(String)
     sender_id = Column(Integer, ForeignKey("users.id"))
     receiver_id = Column(Integer, ForeignKey("users.id"))
+    message_room_id = Column(UUID(as_uuid=True), nullable=True)
     content = Column(Text)
     is_read = Column(Boolean, default=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
@@ -20,7 +20,7 @@ class Notification(Base):
     sender = relationship("User", back_populates="sent_notifications", foreign_keys=[sender_id])
     
     __table_args__ = (
-        CheckConstraint(title.in_(['Follow', 'Like', 'Comment'])),
+        CheckConstraint(title.in_(['Follow', 'Like', 'Comment', 'Message'])),
     )
 
     @property

@@ -1,6 +1,6 @@
 import json
 import uuid
-from models import User, ChatRoom, MessageHistory
+from models import Notification, User, ChatRoom, MessageHistory
 from fastapi import HTTPException, Request, APIRouter, Depends, WebSocket
 from dependencies.auth import get_current_active_user
 from sockets import ws_manager
@@ -83,6 +83,10 @@ def get_conversation(room_uuid: str, db: Session = Depends(get_session), current
         
         # Add the message to the list
         messages_with_user_info.append(message_with_user)
+        
+    # Mark all related notifications as read
+    db.query(Notification).filter(Notification.message_room_id == conversation.room_uuid).update({"is_read": True}, synchronize_session=False)
+    db.commit()
 
     return {"messages": messages_with_user_info, "other_user": {"username": user_correspondent.user_name, "profile_picture": user_correspondent.profile_picture}}
 
@@ -126,6 +130,19 @@ async def send_message(
         content=content,
         chat_room=conversation
     )
+    
+    notification = Notification(
+        title="Message",
+        sender_id=current_user.id,
+        receiver_id=receiver.id,
+        message_room_id = str(room_uuid),
+        content=f"{current_user.user_name} vous a envoyé un message",
+    )
+
+    
+    db.add(notification)
+    db.commit()
+    db.refresh(notification)
 
     # Add the message to the database, commit, and refresh
     db.add(message)

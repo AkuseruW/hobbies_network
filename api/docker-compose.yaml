@@ -18,12 +18,6 @@ services:
     security_opt:
       - "no-new-privileges:true"
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
   hobbies:
     build: .
     command: sh -c "uvicorn main:app --reload --port=8000 --host=0.0.0.0"

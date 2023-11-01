@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, Header, Request
-from dependencies.auth import get_current_active_user
+from fastapi import APIRouter, Depends, Form, HTTPException, Header, Request
+from dependencies.auth import get_current_active_user, get_current_user
 import stripe
 from sqlalchemy.orm import Session
 from dependencies.certification import cancel_subscription, create_subscription
@@ -24,8 +24,13 @@ stripe.api_key = STRIPE_SECRET
 
 
 @router.post("/certification")
-def create_certification(current_user: User = Depends(get_current_active_user)):
+def create_certification(user_token: str = Form(...)):
     try:
+        current_user = get_current_user(token=user_token)
+        
+        if (not current_user):
+            HTTPException(status_code=404, detail="User not found")
+        
         user_email = current_user.email
         user_id = current_user.id 
         
@@ -37,8 +42,8 @@ def create_certification(current_user: User = Depends(get_current_active_user)):
                 },
             ],
             mode="subscription",
-            success_url=YOUR_DOMAIN+"/profil/settings/abonnements"+"?success=true&session_id={CHECKOUT_SESSION_ID}",
-            cancel_url=YOUR_DOMAIN+"/profil/settings/abonnements"+"?canceled=true",
+            success_url="http://localhost:3000/profil/settings/abonnements"+"?success=true&session_id={CHECKOUT_SESSION_ID}",
+            cancel_url="http://localhost:3000/profil/settings/abonnements"+"?canceled=true",
             customer_email=user_email 
         )
         
@@ -52,7 +57,8 @@ def create_certification(current_user: User = Depends(get_current_active_user)):
             }
         }
 
-        return {"checkout_url": checkout_session.url}       
+        # return {"checkout_url": checkout_session.url}   
+        return RedirectResponse(checkout_session.url, status_code=303)    
     except Exception as e:
         print(e)
         return "Server error", 500

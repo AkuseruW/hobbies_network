@@ -93,6 +93,7 @@ def read_notifications(params: ReportsQueryParams = Depends(), db: Session = Dep
             "id": notification.id,
             "title": notification.title,
             "content": notification.content,
+            "message_room_id": notification.message_room_id,
             "is_read": notification.is_read,
             "timestamp": notification.timestamp,
             "user": {

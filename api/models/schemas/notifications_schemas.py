@@ -1,6 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel
+from typing import Optional
 
 class UserSchema(BaseModel):
     id: int
@@ -20,6 +21,7 @@ class NotificationSchema(BaseModel):
         
 class UserNotificationSchema(NotificationSchema):
     title: str
+    message_room_id: Optional[UUID]
 
 
 class AdminNotificationSchema(NotificationSchema):
