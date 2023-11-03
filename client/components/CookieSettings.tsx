@@ -21,7 +21,7 @@ export const CookieSettings = () => {
     }
 
     return (
-        <Card className="z-[200] float-left fixed  bottom-2 left-2 bg-gray-100 border-2 border-slate-950 dark:bg-gray-800">
+        <Card className="z-[200] float-left fixed bottom-2 left-2 border-0 w-[30%] max-sm:w-full max-sm:bottom-0 max-sm:left-0  bg-secondary_light dark:bg-secondary_dark">
             <CardHeader>
                 <CardTitle>Cookie Settings</CardTitle>
             </CardHeader>
@@ -36,7 +36,7 @@ export const CookieSettings = () => {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button variant="outline" className="w-full" onClick={handleAccept}>
+                <Button variant="outline" className="w-full dark:bg-secondary_dark dark:border-secondary_light" onClick={handleAccept}>
                     J&apos;accepte
                     {isLoading && (<Icons.spinner className="ml-2 animate-spin" />)}
                 </Button>

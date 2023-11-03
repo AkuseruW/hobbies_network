@@ -1,52 +1,45 @@
 'use client'
-import React from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import { Hobby } from '@/types/hobby_types';
+import React, { useState } from 'react'
+import { Icons } from '../icons';
 import IconColor from './iconColor';
-
 export const HobbiesCarousel = ({ hobbies }: { hobbies: Hobby[] }) => {
-    const settings = {
-        infinite: true,
-        speed: 500,
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                },
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 2,
-                },
-            },
-            {
-                breakpoint: 640,
-                settings: {
-                    slidesToShow: 2,
-                },
-            },
-        ],
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const prevSlide = () => {
+        setCurrentSlide((currentSlide - 1 + hobbies.length) % hobbies.length);
     };
-
+    const nextSlide = () => {
+        setCurrentSlide((currentSlide + 1) % hobbies.length);
+    };
     return (
-        <div className='sm:container'>
-            <h2 className="text-2xl font-semibold mb-3">Mes hobbies</h2>
-            <Slider {...settings}>
+        <>
+            <div className='flex justify-between'>
+                <h2 className="text-2xl font-semibold mb-3">Mes hobbies</h2>
+                <div className='flex'>
+                    <button className=" p-4 text-gray-700 dark:text-gray-300" onClick={prevSlide}>
+                        <Icons.chevronLeft />
+                    </button>
+                    <button className=" p-4 text-gray-700 dark:text-gray-300" onClick={nextSlide}>
+                        <Icons.chevronRight />
+                    </button>
+                </div>
+            </div>
+            <div className="flex space-x-16 overflow-x-auto">
                 {hobbies.map((hobby) => (
-                    <div key={hobby.id} className='w-[20%]'>
-                        <div className="flex flex-col items-center gap-2 bg-white p-4 relative w-32 h-40 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:shadow-lg dark:hover:border-gray-500 transition-all duration-300 ease-in-out dark:bg-secondary_dark dark:text-white">
-                            <IconColor icone_black={hobby.icone_black} icone_white={hobby.icone_white} />
-                            <p>{hobby.name}</p>
-                        </div>
+                    <div
+                        key={hobby.id}
+                        className="
+                                flex flex-col items-center
+                                bg-white p-4 w-28 h-26
+                                rounded-xl border border-gray-300 dark:border-gray-700
+                                hover:border-gray-500 hover:shadow-lg dark:hover:border-gray-500 transition-all
+                                duration-300 ease-in-out dark:bg-secondary_dark dark:text-white"
+                    >
+                        <IconColor icone_black={hobby.icone_black} icone_white={hobby.icone_white} />
+                        <p className="text-sm font-medium flex items-center p-4">{hobby.name}</p>
                     </div>
                 ))}
-            </Slider>
-        </div>
-    );
-};
+            </div>
+        </>
+    )
+}

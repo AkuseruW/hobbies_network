@@ -13,6 +13,7 @@ const inter = Inter({
 
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://hobbies.wolfsaxel.com'),
   title: 'Hobbies',
   openGraph: {
     title: 'Hobbies',

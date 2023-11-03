@@ -10,7 +10,6 @@ import { add_or_delete_hobby } from '@/utils/requests/_users_requests';
 import { Hobby } from '@/types/hobby_types';
 import Modal from '../Modal';
 import ProposeHobby from './ProposeHobby';
-import { useRouter } from 'next/navigation';
 
 interface CardGroupeProps {
   search?: string;
@@ -20,22 +19,17 @@ interface CardGroupeProps {
 const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   const [hobbies, setHobbies] = useState<Hobby[]>(initialHobbies);
   const [isEndOfList, setIsEndOfList] = useState(false);
-
-  const initialAddedHobbies: Record<number, boolean> = initialHobbies.reduce((acc, hobby) => {
-    // @ts-ignore
-    acc[hobby.id] = hobby.added || false;
-    return acc;
-  }, {});
-  const [addedHobbies, setAddedHobbies] = useState<Record<number, boolean>>(initialAddedHobbies);
-
+  const [addedHobbies, setAddedHobbies] = useState<Record<number, boolean>>(() => {
+    const storedAddedHobbies = sessionStorage.getItem('addedHobbies');
+    return storedAddedHobbies ? JSON.parse(storedAddedHobbies) : {};
+  });
   const [page, setPage] = useState(1);
   const [ref, inView] = useInView();
   const { resolvedTheme } = useTheme();
   const isDarkTheme = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
-
+  
   const loadMoreHobbies = useCallback(async () => {
     if (isEndOfList) {
       return;
@@ -46,38 +40,41 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
       setPage(next);
       setHobbies((prev) => [
         ...(prev?.length ? prev : []),
-        ...newHobbies
+        ...newHobbies,
       ]);
       if (is_end_of_list) {
         setIsEndOfList(true);
       }
     }
   }, [page, search, isEndOfList]);
-
+  
   const addHobbyOrRemove = async (id: number) => {
     if (addedHobbies[id]) {
       await add_or_delete_hobby({ id });
       const updatedAddedHobbies = { ...addedHobbies };
       delete updatedAddedHobbies[id];
       setAddedHobbies(updatedAddedHobbies);
+      sessionStorage.setItem('addedHobbies', JSON.stringify(updatedAddedHobbies));
     } else {
       await add_or_delete_hobby({ id });
-      setAddedHobbies({ ...addedHobbies, [id]: true });
+      const updatedAddedHobbies = { ...addedHobbies, [id]: true };
+      setAddedHobbies(updatedAddedHobbies);
+      sessionStorage.setItem('addedHobbies', JSON.stringify(updatedAddedHobbies));
     }
-    router.refresh();
   };
-
+  
   useEffect(() => {
     if (inView && hobbies.length >= 10) {
       loadMoreHobbies();
     }
-  }, [inView, loadMoreHobbies, hobbies.length]);
-
+  }, [inView, loadMoreHobbies, hobbies.length, addedHobbies]);
+  
   useEffect(() => setMounted(true), []);
-
+  
   if (!mounted) {
     return null;
   }
+  
 
   return (
     <>
@@ -137,7 +134,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
                     />
                   </svg>
                   <Link href={`hobby/${slug}`} className="ml-4 flex-grow">
-                    <h2 className="font-medium dark:text-white text-base text-sm">
+                    <h2 className="font-medium dark:text-white text-sm">
                       {name}
                     </h2>
                   </Link>
