@@ -153,3 +153,11 @@ export const updateProfilPicture = async ({ formData }: { formData: FormData }) 
     throw error;
   }
 }
+
+export const getUserHobbies = async () => {
+  try {
+    return await fetcher(apiUrl(`/api/user_hobbies`), "GET");
+  } catch (error) {
+    throw error;
+  }
+}
