@@ -129,7 +129,6 @@ class WebSocketManager:
                     message = json.dumps(message)
                 await sender_connection.send_text(message)
             except Exception as e:
-                # Handle any potential errors when sending messages to the sender
                 print(f"Error sending message to sender {sender_id}: {e}")
 
         if receiver_connection:
@@ -138,7 +137,6 @@ class WebSocketManager:
                     message = json.dumps(message)
                 await receiver_connection.send_text(message)
             except Exception as e:
-                # Handle any potential errors when sending messages to the receiver
                 print(f"Error sending message to receiver {receiver_id}: {e}")
 
     def get_connection_by_user_id(self, user_id: int) -> WebSocket:
@@ -146,6 +144,17 @@ class WebSocketManager:
             if user == user_id:
                 return connection
         return None
+    
+    async def send_notification(self, notification, receiver_id):
+        receiver_connection = self.get_connection_by_user_id(receiver_id)
+        print(notification)
+        if receiver_connection:
+            try:
+                await receiver_connection.send_json(notification)
+            except Exception as e:
+                print(f"Error sending notification to receiver {receiver_id}: {e}")
+        
+        
 
 
 

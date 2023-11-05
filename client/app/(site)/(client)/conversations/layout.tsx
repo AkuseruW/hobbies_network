@@ -8,11 +8,11 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     const { users } = await getUsersPaginated({});
 
     return (
-        <div className="flex overflow-hidden h-[85vh]">
-            <div className='w-[28%]'>
+        <div className="flex flex-col md:flex-row lg:flex-row  pb-4 h-[85vh]">
+            <div className='lg-w-[28%] lg:block'>
                 <AsideChats currentUser={user} initialUsers={users} />
             </div>
-            <div className='w-[72%]'>
+            <div className='w-full lg:w-[72%]'>
                 {children}
             </div>
         </div>

@@ -37,7 +37,7 @@ const HeaderAdmin = ({ currentUser, notifications }: { currentUser: Session, not
                     </button>
                 </div>
                 <div className="flex flex-wrap w-full items-center space-x-2 flex-0 w-fit justify-end">
-                    <Notifications notifications={notifications} />
+                    <Notifications />
                     <Button variant="outline" size="icon">
                         <Image
                             width={100}

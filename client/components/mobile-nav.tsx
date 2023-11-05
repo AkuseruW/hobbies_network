@@ -4,9 +4,9 @@ import HeaderLinksIcons, { MobileLinksIcons } from "./header/HeaderLinksIcons";
 import ToggleTheme, { ToggleThemeMobile } from "./header/ToggleTheme";
 import Notifications, { NotificationMobile } from "./header/Notifications";
 import { getNotifications } from "@/utils/requests/_notifications_requests";
+import { Icons } from "./icons";
 
 export const MobileNav = async ({ currentUser }: { currentUser: any }) => {
-  const notifications = await getNotifications();
 
   const headerLinks = [
     {
@@ -23,6 +23,11 @@ export const MobileNav = async ({ currentUser }: { currentUser: any }) => {
       icon: <UserGroupIcon className="w-6 h-6 text-accent-color" />,
       text: "Utilisateurs",
       url: "/utilisateurs",
+    },
+    {
+      icon: <Icons.message_circle className="w-6 h-6 text-accent-color" />,
+      text: "Messages",
+      url: "/conversations",
     }
   ];
 
@@ -37,7 +42,7 @@ export const MobileNav = async ({ currentUser }: { currentUser: any }) => {
       </div>
 
       <div className="text-white justify-between mx-2 md:mx-4 flex items-center w-[22%]">
-        <NotificationMobile notifications={notifications} />
+        <NotificationMobile client={true} />
         <BtnMobileProfil currentUser={currentUser} />
       </div>
     </div>
