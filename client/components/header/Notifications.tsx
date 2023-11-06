@@ -115,10 +115,10 @@ export const NotificationMobile = ({ client }: { client?: boolean }) => {
         <Menu as="div" className="relative inline-block text-left ">
             <div>
                 <Menu.Button
-                    className='border border-input hover:bg-accent hover:text-accent-foreground h-6 w-6
-                    flex items-center justify-center  transition-colors hover:bg-zinc-100   dark:hover:bg-zinc-700'
+                    className='h-6 w-6
+                    flex items-center justify-center'
                 >
-                    <Icons.bell className="text-black dark:text-white" />
+                    <Icons.bell className="text-white" />
                     {notifications.length > 0 && (
                         <span className="rounded text-[12px] relative top-[-5px] text-black dark:text-white">
                             {notifications.length}
@@ -143,7 +143,7 @@ export const NotificationMobile = ({ client }: { client?: boolean }) => {
                 >
                     <div className="py-1">
                         {notifications.length === 0 && (
-                            <p className='text-center text-sm p-2'>
+                            <p className='text-center text-sm p-2 text-black dark:text-white'>
                                 Aucune notification
                             </p>
                         )}
@@ -157,8 +157,8 @@ export const NotificationMobile = ({ client }: { client?: boolean }) => {
                                         notification.user.id
                                     )}
 
-                                    className="cursor-pointer h-full w-full py-2 m-0 dark:text-white
-                                    dark:bg-secondary_dark w-full hover:bg-accent hover:text-accent-foreground"
+                                    className="cursor-pointer h-full w-full py-2 m-0 text-black dark:text-white
+                                    dark:bg-secondary_dark hover:bg-accent hover:text-accent-foreground"
                                 >
                                     <div className="flex items-center">
                                         <Avatar className="w-6 h-6 mr-2">

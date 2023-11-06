@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { v4 as uuid } from 'uuid'
 import CreatePost from '@/components/posts/CreatePost';
 import PostsSection from '@/components/posts/PostsSection';
-import StoriesSection from '@/components/stories/StoriesSection';
 import { currentUser } from '@/utils/_auth_informations';
 import { getPosts } from '@/utils/requests/_posts_requests';
 

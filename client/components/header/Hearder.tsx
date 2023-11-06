@@ -9,24 +9,24 @@ import { Session } from "@/types/sessions_types";
 import BtnProfile from "./DropDownComponent";
 
 
+export const headerLinks = [
+  {
+    icon: <HomeIcon className="w-6 h-6 text-accent-color" />,
+    text: "Accueil",
+    url: "/",
+  },
+  {
+    icon: <RectangleGroupIcon className="w-6 h-6 text-accent-color" />,
+    text: "Hobbies",
+    url: "/hobbies",
+  },
+  {
+    icon: <UserGroupIcon className="w-6 h-6 text-accent-color" />,
+    text: "Utilisateurs",
+    url: "/utilisateurs",
+  }
+];
 const Header = async ({ currentUser }: { currentUser: Session }) => {
-  const headerLinks = [
-    {
-      icon: <HomeIcon className="w-6 h-6 text-accent-color" />,
-      text: "Accueil",
-      url: "/",
-    },
-    {
-      icon: <RectangleGroupIcon className="w-6 h-6 text-accent-color" />,
-      text: "Hobbies",
-      url: "/hobbies",
-    },
-    {
-      icon: <UserGroupIcon className="w-6 h-6 text-accent-color" />,
-      text: "Utilisateurs",
-      url: "/utilisateurs",
-    }
-  ];
 
 
   return (

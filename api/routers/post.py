@@ -137,16 +137,16 @@ async def delete_post(post_id: str, db: Session = Depends(get_session), current_
         raise HTTPException(
             status_code=403, detail="You don't have permission to delete this post")
 
-    if post:
-        post_images = db.query(PostImage).filter(
-            PostImage.post_id == post_id).all()
-        if post_images:
-            # Delete images from Cloudinary and database
-            for post_image in post_images:
-                await delete_image(public_id=post_image.public_id)
+    # if post:
+    #     post_images = db.query(PostImage).filter(
+    #         PostImage.post_id == post_id).all()
+    #     if post_images:
+    #         # Delete images from Cloudinary and database
+    #         for post_image in post_images:
+    #             await delete_image(public_id=post_image.public_id)
 
-        db.delete(post)
-        db.commit()
+    #     db.delete(post)
+    #     db.commit()
 
     await ws_manager.send_post_events({"type": "post_deleted", "data": post_id})
     return {"message": "Post deleted successfully"}

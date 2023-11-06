@@ -71,7 +71,7 @@ export const BtnMobileProfil = ({ currentUser }: { currentUser: Session }) => {
         <Menu as="div" className="relative inline-block text-left ">
             <div>
                 <Menu.Button
-                    className='border-none hover:text-accent-foreground h-6 w-6 flex items-center justify-center border-none'
+                    className='border-none hover:text-accent-foreground h-6 w-6 flex items-center justify-center'
                 >
                     <Image
                         alt="profile_picture"
@@ -99,7 +99,7 @@ export const BtnMobileProfil = ({ currentUser }: { currentUser: Session }) => {
                 <Menu.Items className="absolute right-0 z-10 mt-2 w-56 
                     bottom-[51px] rounded-md bg-white shadow-lg ring-1 
                     dark:bg-background_dark
-                    ring-black ring-opacity-5 focus:outline-none"
+                    ring-black ring-opacity-5 focus:outline-none text-black dark:text-white"
                 >
                     <div className="py-1">
                         <Menu.Item>

@@ -12,11 +12,11 @@ const GroupePage = async ({ searchParams }: { searchParams: { [key: string]: str
   const { hobbies } = await getHobbies({ search });
 
   return (
-    <section className="min-h-screen mt-5 container">
+    <section className="min-h-screen mt-5 lg:container">
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         <Searchbar search={search} type='hobbies' />
       </div>
-      <div key={uuid()} className="mt-6  w-full">
+      <div key={uuid()} className="mt-6 w-full mb-16">
         {search ? (
           <SearchCardGroupe search={search} initialHobbies={hobbies} />
         ) : (

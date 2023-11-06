@@ -7,14 +7,18 @@ import { getChatUuid } from '@/utils/requests/_chats';
 import { ScrollArea } from '../ui/scroll-area';
 import { getUsersPaginated } from '@/utils/requests/_users_requests';
 import Searchbar from '../Searchbar';
-import { string } from 'zod';
 import { Avatar, AvatarImage } from '../ui/avatar';
+import { useToggleChat } from '@/providers/chatToogle';
+import { Button } from '../ui/button';
+import { Icons } from '../icons';
+import { headerLinks } from '../header/Hearder';
+import HeaderLinksIcons from '../header/HeaderLinksIcons';
 
 const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initialUsers: User[] }) => {
+    const { toggleIsUserListOpen, isUserListOpen } = useToggleChat();
     const [users, setUsers] = useState(initialUsers);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [isUserListOpen, setIsUserListOpen] = useState(true);
 
     useEffect(() => {
         const search = typeof searchParams.get('search') === 'string' ? searchParams.get('search') : undefined;
@@ -28,19 +32,22 @@ const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initi
     const handleStartConversation = async (user_id: number) => {
         const uuid = await getChatUuid({ user_id });
         router.push(`/conversations/${uuid}`);
+        toggleIsUserListOpen();
     }
+
+    console.log(isUserListOpen)
 
     return (
         <>
-            <button className="lg:hidden" onClick={() => setIsUserListOpen(!isUserListOpen)}>
-                {isUserListOpen ? 'Fermer la liste' : 'Ouvrir la liste'}
-            </button>
-            <aside className={`border-r border-gray-300 lg:col-span-1 ${isUserListOpen ? 'block' : 'hidden'}`}>
+            <Button className="lg:hidden bg-transparent" variant={'ghost'} onClick={toggleIsUserListOpen}>
+                {isUserListOpen ? <Icons.arrowLeft /> : <Icons.arrowRight />}
+            </Button>
+            <aside className={`border-r border-gray-300 lg:col-span-1 w-full lg:w-[35%] md:w-full h-full sm:h-[90vh] md:h-[90vh] lg:h-full relative ${isUserListOpen ? 'block' : 'hidden lg:block'}`}>
                 <div className="mx-3 my-3">
                     <Searchbar type='chat' />
                 </div>
 
-                <ScrollArea className="overflow-auto h-[75vh]">
+                <ScrollArea className={`overflow-auto h-[80vh] sm:h-[60vh] md:h-[60vh] lg:h-[85vh]`}>
                     <h2 className="my-2 mb-2 ml-2 text-lg text-gray-600">Chats</h2>
                     {users.map((user) => (
                         <button
@@ -61,6 +68,13 @@ const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initi
                         </button>
                     ))}
                 </ScrollArea>
+                <nav className="border-t border-gray-300 p-2 bottom-0 w-full absolute">
+                    <div className="flex items-center justify-between">
+                        {headerLinks.map((link, index) => (
+                            <HeaderLinksIcons key={index} link={link} />
+                        ))}
+                    </div>
+                </nav>
             </aside>
         </>
     );
