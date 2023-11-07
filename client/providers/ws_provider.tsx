@@ -9,7 +9,7 @@ export const useWebSocket = (): WebSocket | null => {
 };
 
 export const WebSocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const [socket, setSocket] = useState<WebSocket | null>(null);  
+  const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
     const newSocket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/ws/?token=${getAccessTokenFromClient()}`);
@@ -21,6 +21,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
       }
     };
   }, []);
+
 
   return <WebSocketContext.Provider value={socket}>{children}</WebSocketContext.Provider>;
 };
