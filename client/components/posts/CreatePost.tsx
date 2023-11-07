@@ -5,7 +5,6 @@ import { getUserHobbies } from '@/utils/requests/_hobbies_requests';
 import { Session } from '@/types/sessions_types';
 
 const CreatePost = async ({ session }: { session: Session }) => {
-    const user_hobbies = await getUserHobbies();
 
     return (
         <div className="p-4 bg-white dark:bg-secondary_dark rounded-lg shadow-md mt-5 flex">
@@ -13,7 +12,7 @@ const CreatePost = async ({ session }: { session: Session }) => {
                 <div className="mr-4">
                     <AvatarUser data={session} />
                 </div>
-                <InputNewPost session={session} hobbies={user_hobbies} />
+                <InputNewPost session={session} />
             </div>
         </div>
     );

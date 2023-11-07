@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from settings.database import get_session
 from dependencies.auth import get_current_active_user
 from models.schemas.userSchemas import PublicUserData
+from sockets import ws_manager
 
 router = APIRouter(
     prefix="/api", tags=["follow"], dependencies=[Depends(get_current_active_user)]
@@ -46,9 +47,30 @@ async def follow_or_unfollow_user(
                 receiver_id=user_to_follow.id,
                 content=f"{current_user.user_name} vous a follow",
             )
+            
 
             db.add_all([follower, notification])
             db.commit()
+            db.refresh(notification)
+            
+            notification_ws = {
+                "action": "notification",
+                "data": {
+                    "id": notification.id,
+                    "title": notification.title,
+                    "content": notification.content,
+                    "message_room_id": notification.message_room_id,
+                    "is_read": notification.is_read,
+                    "user": {
+                        "id": notification.sender.id,
+                        "first_name": notification.sender.firstname,
+                        "last_name": notification.sender.lastname,
+                        "profile_picture": notification.sender.profile_picture
+                    }
+                }
+            }
+            
+            await ws_manager.send_notification(notification=notification_ws, receiver_id=user_to_follow.id)
 
             return {"message": "You have followed this user."}
 

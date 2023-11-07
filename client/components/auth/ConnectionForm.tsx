@@ -11,6 +11,7 @@ import { Icons } from "../icons";
 import { useToast } from "../ui/use-toast";
 import { setAuthCookies } from "@/utils/_auth_cookies";
 import { signin } from "@/utils/requests/_auth_requests";
+import Link from "next/link";
 
 const formSchema = z.object({
     email: z.string().email({ message: 'required' }),
@@ -104,6 +105,11 @@ const ConnectionForm = () => {
                     Connexion
                 </Button>
             </form>
+            <div className="relative flex justify-center text-xs uppercase">
+                <Link href="/forgot-password" className="bg-background dark:bg-background_dark px-2 text-muted-foreground ">
+                    Mot de passe oublié ?
+                </Link>
+            </div>
             <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
@@ -116,7 +122,7 @@ const ConnectionForm = () => {
             </div>
             <div className="flex flex-col">
                 <Button variant="outline" type="button" disabled={isLoading}
-                className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
+                    className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
                     onClick={() => {
                         handleGoogleLogin();
                     }}>

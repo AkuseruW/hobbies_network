@@ -4,9 +4,14 @@ import { create } from "zustand";
 
 interface PostsState {
   posts: PostData[];
+  currentPage: number;
+  isEndOfList: boolean;
   initializePosts: (initialPosts: PostData[]) => void;
   addPost: (newPost: PostData) => void;
   addNewPosts: (newPosts: PostData[]) => void;
+  incrementCurrentPage: () => void;
+  changeIsEndOfList: () => void;
+
   deletePost: (postId: string) => void;
   likePost: (postId: string) => void;
   dislikePost: (postId: string) => void;
@@ -15,16 +20,30 @@ interface PostsState {
 }
 
 export const usePostsStore = create<PostsState>((set) => ({
-  posts: [],
+  posts: [], // Initialize the posts array.
+  currentPage: 2, // Initialize the current page to 2.
+  isEndOfList: false, // Initialize the end of list status.
+
   initializePosts: (initialPosts) => {
-    set({ posts: initialPosts });
+    set(
+      { posts: initialPosts }
+    );
   },
 
   addPost: (newPost) => {
-    const timeSincePublication = getTimeSincePublication(newPost.created_at);
-    set((state) => ({
-      posts: [{ ...newPost, timeSincePublication }, ...state.posts],
-    }));
+    set((state) => {
+      console.log(newPost);
+      return {
+        posts: [newPost, ...state.posts],
+      };
+    });
+  },
+
+  deletePost: (postId) => {
+    set((state) => {
+      const updatedPosts = state.posts.filter((post) => post.id !== postId);
+      return { posts: updatedPosts };
+    });
   },
 
   addNewPosts: (newPosts) => {
@@ -39,21 +58,26 @@ export const usePostsStore = create<PostsState>((set) => ({
     }));
   },
 
-  deletePost: (postId) => {
-    set((state) => ({
-      posts: state.posts.filter((post) => post?.id !== postId),
-    }));
+  incrementCurrentPage: () => {
+    // Increment the current page by 1.
+    set((state) => ({ currentPage: state.currentPage + 1 }));
   },
+
+  changeIsEndOfList: () => {
+    // Change the end of list status.
+    set((state) => ({ isEndOfList: state.isEndOfList ? false : true }));
+  },
+
 
   likePost: (postId) => {
     set((state) => ({
       posts: state.posts.map((post) =>
         post?.id === postId
           ? {
-              ...post,
-              total_likes: post.total_likes + 1,
-              userHasLiked: true,
-            }
+            ...post,
+            total_likes: post.total_likes + 1,
+            userHasLiked: true,
+          }
           : post
       ),
     }));
@@ -64,10 +88,10 @@ export const usePostsStore = create<PostsState>((set) => ({
       posts: state.posts.map((post) =>
         post?.id === postId
           ? {
-              ...post,
-              total_likes: post.total_likes > 0 ? post.total_likes - 1 : 0,
-              userHasLiked: false,
-            }
+            ...post,
+            total_likes: post.total_likes > 0 ? post.total_likes - 1 : 0,
+            userHasLiked: false,
+          }
           : post
       ),
     }));

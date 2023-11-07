@@ -4,10 +4,11 @@ import { PhotoIcon, FaceSmileIcon } from '@heroicons/react/24/outline';
 import Modal from '@/components/Modal';
 import FormNewPost from './FormNewPost';
 import { Session } from '@/types/sessions_types';
-import { Hobby } from '@/types/hobby_types';
+import { useUserHobbiesStore } from '@/lib/store/hobbies_store';
 
 
-const InputNewPost = ({ session, hobbies }: { session: Session, hobbies: Hobby[] }) => {
+const InputNewPost = ({ session }: { session: Session }) => {
+    const { hobbiesSelected: hobbies } = useUserHobbiesStore()
     const [inputValue, setInputValue] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);

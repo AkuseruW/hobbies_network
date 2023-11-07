@@ -6,17 +6,15 @@ import UserCard from '@/components/user/UserCard';
 
 const FriendsPage = async ({ searchParams, }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
   const search = typeof searchParams.search === 'string' ? searchParams.search : undefined
-  const {users} = await getUsersPaginated({ search });
+  const { users } = await getUsersPaginated({ search });
 
   return (
-    <section className=" min-h-screen mt-5 container" >
+    <section className="min-h-screen w-full mt-5 lg:container">
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         <Searchbar search={search} type="users" />
       </div>
-      <div key={uuid()} className="mt-6 w-full">
-        <Suspense fallback={<></>}>
-          <UserCard search={search} initialUsers={users} />
-        </Suspense>
+      <div key={uuid()} className="mt-6 w-full mb-16">
+        <UserCard search={search} initialUsers={users} />
       </div>
     </section>
   );

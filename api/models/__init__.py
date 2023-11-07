@@ -8,3 +8,4 @@ from .Reports import Report
 from .Ban import Ban
 from .Notification import Notification
 from .Subscription import Subscription, StatusChoice
+from .ResetPassword import PasswordReset

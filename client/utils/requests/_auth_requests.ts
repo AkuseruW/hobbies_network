@@ -73,3 +73,19 @@ export const me = async () => {
     throw error;
   }
 }
+
+export const passwordReset = async ({ email }: { email: string }) => {
+  try {
+    return await fetcher(apiUrl(`/api/auth/forgot_password`), "POST", {}, JSON.stringify({ email }));
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const passwordUpdate = async ({ password, token }: { password: string, token: string }) => {
+  try {
+    return await fetcher(apiUrl(`/api/auth/reset_password`), "POST", {}, JSON.stringify({ password, token }));
+  } catch (error) {
+    throw error;
+  }
+}

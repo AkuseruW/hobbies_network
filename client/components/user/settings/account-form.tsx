@@ -14,11 +14,11 @@ const accountFormSchema = z.object({
   currentPassword: z.string().min(8, 'Le mot de passe actuel doit comporter au moins 8 caractères.'),
   newPassword: z.string().min(8, 'Le nouveau mot de passe doit comporter au moins 8 caractères.'),
   confirmPassword: z.string(),
-});
-
-accountFormSchema.refine(data => data.newPassword === data.confirmPassword, {
-  message: 'Les mots de passe ne correspondent pas.',
-});
+})
+// .refine(data => data.newPassword === data.confirmPassword, {
+//   message: 'Les mots de passe ne correspondent pas.',
+//   path: ['confirmPassword'],
+// });
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
@@ -33,13 +33,13 @@ export const AccountForm = () => {
     setIsLoading(true);
 
     try {
-      await updatePassword({
+      const res = await updatePassword({
         current_password: values.currentPassword,
         new_password: values.newPassword
-      });
-
+      })
+      
       toast({
-        description: "Mot de passe mis à jour avec succès.",
+        description: res.detail,
       })
     } catch (error) {
       toast({
@@ -69,6 +69,7 @@ export const AccountForm = () => {
             </FormItem>
           )}
         />
+        
         <FormField
           control={form.control}
           name="newPassword"
@@ -80,10 +81,10 @@ export const AccountForm = () => {
                   className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
                 />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="confirmPassword"

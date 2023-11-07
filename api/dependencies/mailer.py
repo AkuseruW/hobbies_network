@@ -16,3 +16,4 @@ def send_mail(email: str, subject: str, message: str):
     }
     
     resend.Emails.send(params)
+

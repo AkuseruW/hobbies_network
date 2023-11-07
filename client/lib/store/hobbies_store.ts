@@ -3,42 +3,65 @@ import { create } from "zustand";
 
 interface HobbiesState {
   hobbies: Hobby[];
-  addOrRemoveHobby: (id: number) => void;
+  currentPage: number;
+  isEndOfList: boolean;
+  initializeHobbies: (newHobbies: Hobby[]) => void;
   setHobbies: (newHobbies: Hobby[]) => void;
-  setNewHobbies: (newHobbies: Hobby[]) => void;
+  incrementCurrentPage: () => void;
+  changeIsEndOfList: () => void;
 }
 
 export const useHobbiesStore = create<HobbiesState>((set) => ({
-  hobbies: [],
+  hobbies: [], // Initialize the hobbies array.
+  currentPage: 2, // Initialize the current page to 2.
+  isEndOfList: false, // Initialize the end of list status.
 
-  addOrRemoveHobby: (id) => {
-    set((state) => {
-      const updatedHobbies = state.hobbies.map((hobby) => {
-        if (hobby.id === id) {
-          return {
-            ...hobby,
-            added: !hobby.added,
-          };
-        }
-        return hobby;
-      });
-
-      return { hobbies: updatedHobbies };
-    });
+  initializeHobbies: (newHobbies) => {
+    set({ hobbies: newHobbies }); // Initialize hobbies with new data.
   },
 
   setHobbies: (newHobbies) => {
-    set({ hobbies: newHobbies });
+    // Set the list of hobbies by merging new hobbies with the existing list.
+    set((state) => ({ hobbies: [...state.hobbies, ...newHobbies] }));
   },
 
-  setNewHobbies: (newHobbies) => {
-    set((state) => ({
-      hobbies: [
-        ...state.hobbies,
-        ...newHobbies.map((hobby) => ({
-          ...hobby,
-        })),
-      ],
-    }));
+  incrementCurrentPage: () => {
+    // Increment the current page by 1.
+    set((state) => ({ currentPage: state.currentPage + 1 }));
   },
+
+  changeIsEndOfList: () => {
+    // Change the end of list status.
+    set((state) => ({ isEndOfList: state.isEndOfList ? false : true }));
+  }
+}));
+
+
+interface UserHobbiesState {
+  hobbiesSelected: Hobby[];
+  initializeUserHobbiesSelected: (hobbies: Hobby[]) => void;
+  toggleHobby: (id: number) => void;
+}
+
+export const useUserHobbiesStore = create<UserHobbiesState>((set) => ({
+  hobbiesSelected: [], // Initialize the selected hobbies array.
+
+  initializeUserHobbiesSelected: (hobbies) => {
+    // Initialize the selected hobbies array.
+    set({ hobbiesSelected: hobbies });
+  },
+
+  // Add or remove a hobby by its ID.
+  toggleHobby: (id) => {
+    // @ts-ignore
+    set((state) => {
+      const isAlreadySelected = state.hobbiesSelected.some((hobby) => hobby.id === id);
+      const newHobbiesSelected = isAlreadySelected
+        ? state.hobbiesSelected.filter((hobby) => hobby.id !== id)
+        : [...state.hobbiesSelected, { id }];
+
+      return { hobbiesSelected: newHobbiesSelected };
+    });
+  },
+
 }));

@@ -45,11 +45,11 @@ export const updatePassword = async ({
   new_password: string;
 }) => {
   try {
-    await fetcher(
+    return await fetcher(
       apiUrl("/api/auth/update-password"),
       "PATCH",
-      {},
-      { current_password, new_password }
+      { "Content-Type": "application/json" },
+      JSON.stringify({ current_password, new_password })
     );
   } catch (error) {
     throw error;
@@ -149,6 +149,14 @@ export const deleteAccount = async () => {
 export const updateProfilPicture = async ({ formData }: { formData: FormData }) => {
   try {
     return await fetcher(apiUrl(`/api/users/update-profile-picture`), "PATCH", {}, formData);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getUserHobbies = async () => {
+  try {
+    return await fetcher(apiUrl(`/api/user_hobbies`), "GET");
   } catch (error) {
     throw error;
   }

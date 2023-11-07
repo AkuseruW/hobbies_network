@@ -1,15 +1,16 @@
 "use client";
+import React, { useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import { Icons } from "../icons";
-import { Button } from "../ui/button";
+import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { getHobbies } from '@/utils/requests/_hobbies_requests';
 import { add_or_delete_hobby } from '@/utils/requests/_users_requests';
 import { Hobby } from '@/types/hobby_types';
 import Modal from '../Modal';
 import ProposeHobby from './ProposeHobby';
+import { useHobbiesStore, useUserHobbiesStore } from '@/lib/store/hobbies_store';
+import { Icons } from '../icons';
+import { Button } from '../ui/button';
 
 interface CardGroupeProps {
   search?: string;
@@ -17,74 +18,74 @@ interface CardGroupeProps {
 }
 
 const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
-  const [hobbies, setHobbies] = useState<Hobby[]>(initialHobbies);
-  const [isEndOfList, setIsEndOfList] = useState(false);
-  const [addedHobbies, setAddedHobbies] = useState<Record<number, boolean>>(() => {
-    const storedAddedHobbies = sessionStorage.getItem('addedHobbies');
-    return storedAddedHobbies ? JSON.parse(storedAddedHobbies) : {};
-  });
-  const [page, setPage] = useState(1);
-  const [ref, inView] = useInView();
-  const { resolvedTheme } = useTheme();
-  const isDarkTheme = resolvedTheme === "dark";
+  const {
+    hobbies,
+    initializeHobbies,
+    setHobbies,
+    currentPage,
+    incrementCurrentPage,
+    isEndOfList,
+    changeIsEndOfList
+  } = useHobbiesStore();
+  const { hobbiesSelected, toggleHobby } = useUserHobbiesStore();
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  
+  const [ref, inView] = useInView();
+  const { resolvedTheme } = useTheme();
+  const isDarkTheme = resolvedTheme === 'dark';
+
+  // Check if a hobby is selected by its ID.
+  const isHobbySelected = (id: number) => hobbiesSelected.some(
+    (selectedHobby) => selectedHobby.id === id
+  );
+
+  if (initialHobbies?.length > hobbies?.length) {
+    // Initialize hobbies if the initial list is longer.
+    initializeHobbies(initialHobbies);
+  }
+
+  // load more hobbies with pagination.
   const loadMoreHobbies = useCallback(async () => {
     if (isEndOfList) {
-      return;
+      return; // Return if the end of the list is reached.
     }
-    const next = page + 1;
-    const { hobbies: newHobbies, is_end_of_list } = await getHobbies({ search, page: next });
-    if (newHobbies?.length) {
-      setPage(next);
-      setHobbies((prev) => [
-        ...(prev?.length ? prev : []),
-        ...newHobbies,
-      ]);
-      if (is_end_of_list) {
-        setIsEndOfList(true);
-      }
+    const { hobbies: newHobbies, is_end_of_list } = await getHobbies({ search, page: currentPage });
+    setHobbies(newHobbies);
+
+    incrementCurrentPage(); // Increment the current page number.
+
+    if (is_end_of_list) {
+      changeIsEndOfList(); // Change the end of list status if needed.
     }
-  }, [page, search, isEndOfList]);
-  
+  }, [currentPage, search, isEndOfList, setHobbies, changeIsEndOfList, incrementCurrentPage]);
+
+  // Add or remove a hobby by its ID.
   const addHobbyOrRemove = async (id: number) => {
-    if (addedHobbies[id]) {
-      await add_or_delete_hobby({ id });
-      const updatedAddedHobbies = { ...addedHobbies };
-      delete updatedAddedHobbies[id];
-      setAddedHobbies(updatedAddedHobbies);
-      sessionStorage.setItem('addedHobbies', JSON.stringify(updatedAddedHobbies));
-    } else {
-      await add_or_delete_hobby({ id });
-      const updatedAddedHobbies = { ...addedHobbies, [id]: true };
-      setAddedHobbies(updatedAddedHobbies);
-      sessionStorage.setItem('addedHobbies', JSON.stringify(updatedAddedHobbies));
-    }
+    toggleHobby(id);
+    await add_or_delete_hobby({ id });
   };
-  
+
   useEffect(() => {
     if (inView && hobbies.length >= 10) {
-      loadMoreHobbies();
+      loadMoreHobbies(); // Load more hobbies when in view and conditions are met.
     }
-  }, [inView, loadMoreHobbies, hobbies.length, addedHobbies]);
-  
-  useEffect(() => setMounted(true), []);
-  
+  }, [inView, loadMoreHobbies, hobbies.length, hobbies]);
+
+  useEffect(() => setMounted(true), []); // Set the component as mounted.
+
   if (!mounted) {
-    return null;
+    return null; // Render nothing if the component is not yet mounted.
   }
-  
 
   return (
     <>
       {isOpen && (
-        <Modal title='Ajouter un hobby' size="lg:h-[35%] md:h-[35%] sm:h-[35%] lg:w-[50%] md:w-[50%] sm:w-full" close={() => setIsOpen(false)}>
+        <Modal title="Ajouter un hobby" size="lg:h-[35%] md:h-[35%] sm:h-[35%] lg:w-[50%] md:w-[50%] sm:w-full" close={() => setIsOpen(false)}>
           <ProposeHobby />
         </Modal>
       )}
 
-      <div className='min-h-full grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3'>
+      <div className="min-h-full grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         <div
           className="cursor-pointer col-span-1 flex items-center justify-center bg-white p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-secondary_dark dark:text-white"
           onClick={() => setIsOpen(true)}
@@ -101,10 +102,8 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
         {hobbies.map(({ id, name, description, slug, icone_black, icone_white }) => (
           <div
             key={id}
-            className={`${addedHobbies[id] && "dark:bg-secondary_dark dark:text-white bg-white"} col-span-1  p-4 relative w-full h-60 overflow-hidden 
-            rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500
-             dark:hover:border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out
-              dark:bg-background_dark dark:text-white `}
+            className={`${isHobbySelected(id) && 'dark:bg-secondary_dark dark:text-white bg-white'
+              } col-span-1  p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-background_dark dark:text-white`}
           >
             <div className="h-full flex flex-col justify-between">
               <div key={name} className="group relative">
@@ -116,7 +115,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
                     viewBox="0 0 650.83 572"
                     className="svg h-10 w-10"
                     fill="none"
-                    stroke={isDarkTheme ? "white" : "black"}
+                    stroke={isDarkTheme ? 'white' : 'black'}
                     strokeWidth="10"
                   >
                     <path
@@ -134,28 +133,26 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
                     />
                   </svg>
                   <Link href={`hobby/${slug}`} className="ml-4 flex-grow">
-                    <h2 className="font-medium dark:text-white text-sm">
-                      {name}
-                    </h2>
+                    <h2 className="font-medium dark:text-white text-sm">{name}</h2>
                   </Link>
                   <Button
                     type="button"
                     onClick={(e) => {
                       addHobbyOrRemove(id);
                     }}
-                    className={`h-[24px] relative bg-transparent p-0 border ${addedHobbies[id]
-                      ? "border-primary dark:border-white"
-                      : "border-secondary dark:border-gray-500"
+                    className={`h-[24px] relative bg-transparent p-0 border ${isHobbySelected(id)
+                      ? 'border-primary dark:border-white'
+                      : 'border-secondary dark:border-gray-500'
                       } hover:bg-transparent hover:border-primary dark:hover:border-white`}
                   >
                     <Icons.add
                       className="w-[24px] h-[12px] p-0 text-black dark:text-white"
-                      style={{ transform: addedHobbies[id] ? "rotate(45deg)" : "rotate(0)" }}
+                      style={{ transform: isHobbySelected(id) ? 'rotate(45deg)' : 'rotate(0)' }}
                     />
                   </Button>
                 </div>
                 <p className="mt-5 text-gray-600 dark:text-gray-400 text-sm md:text-base">
-                  {description ? description.slice(0, 100) + " ..." : "Aucune description"}
+                  {description ? description.slice(0, 100) + ' ...' : 'Aucune description'}
                 </p>
               </div>
             </div>
@@ -167,10 +164,10 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
       {!isEndOfList && hobbies.length >= 10 && (
         <div
           ref={ref}
-          className='col-span-1 mt-16 flex items-center justify-center sm:col-span-2 md:col-span-3 lg:col-span-4'
+          className="col-span-1 mt-16 flex items-center justify-center sm:col-span-2 md:col-span-3 lg:col-span-4"
         >
-          <Icons.spinner className='w-10 h-10 animate-spin' />
-          <span className='sr-only'>Loading...</span>
+          <Icons.spinner className="w-10 h-10 animate-spin" />
+          <span className="sr-only">Loading...</span>
         </div>
       )}
     </>

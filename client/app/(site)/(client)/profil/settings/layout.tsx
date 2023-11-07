@@ -33,6 +33,10 @@ const SettingsLayout = async ({ children }: SettingsLayoutProps) => {
       title: "Suppression",
       href: "/profil/settings/suppression",
     },
+    {
+      title: "Theme",
+      href: "/profil/settings/theme",
+    },
   ]
 
   return (
