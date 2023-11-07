@@ -44,6 +44,7 @@ class User(Base):
     comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
     reports = relationship("Report", back_populates="user", cascade="all, delete-orphan")
     subscriptions = relationship("Subscription", back_populates="user", cascade="all, delete-orphan")
+    password_resets = relationship("PasswordReset", back_populates="user", cascade="all, delete-orphan")
 
     sent_notifications = relationship("Notification", back_populates="sender", foreign_keys="Notification.sender_id",
                                       cascade="all, delete-orphan")

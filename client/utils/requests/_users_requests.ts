@@ -45,11 +45,11 @@ export const updatePassword = async ({
   new_password: string;
 }) => {
   try {
-    await fetcher(
+    return await fetcher(
       apiUrl("/api/auth/update-password"),
       "PATCH",
-      {},
-      { current_password, new_password }
+      { "Content-Type": "application/json" },
+      JSON.stringify({ current_password, new_password })
     );
   } catch (error) {
     throw error;

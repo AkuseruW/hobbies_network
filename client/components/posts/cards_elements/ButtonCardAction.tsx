@@ -6,7 +6,6 @@ import { PostData } from "@/types/post_types";
 import { likePost } from "@/utils/requests/_posts_requests";
 import { useLike } from "@/providers/like_provider";
 import Modal from "@/components/Modal";
-import { revalidatePath } from 'next/cache'
 import { Icons } from "@/components/icons";
 
 
@@ -21,7 +20,6 @@ const BtnAction = ({ data, handleToggleInput }: { data: PostData; handleToggleIn
             if (response) {
                 toggleLike(data.id);
                 setIsLiked(!isLiked);
-                revalidatePath('/')
             }
         } catch (error) {
             console.error("An error occurred:", error);

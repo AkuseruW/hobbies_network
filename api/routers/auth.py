@@ -1,8 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import datetime, timedelta
+import json
+import random
+import string
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from fastapi.security import OAuth2PasswordRequestForm
 import stripe
+from models.ResetPassword import PasswordReset
 
 from settings.database import get_session
 from dependencies.auth import (
@@ -149,23 +154,30 @@ async def sign_up(user_data: UserIn, session: Session = Depends(get_session)):
     }
 
 
-@router.patch("/update-password", response_model=None)
+@router.patch("/update-password")
 async def update_password(
-    password_data: UserUpdatePassword,
+    request: Request,
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_session),
 ):
+    data = await request.body()
+    data = json.loads(data)
+
+    current_password = data.get("current_password")
+    new_password = data.get("new_password")
+    
     user = db.query(User).get(current_user.id)
+    
     # Check if the current password is correct
-    if not verify_password(password_data.current_password, user.password):
-        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    if not verify_password(current_password, user.password):
+        raise HTTPException(status_code=400, detail="Mot de passe incorrect")
 
     # Update the user's password
-    hashed_password = get_password_hash(password_data.new_password)
+    hashed_password = get_password_hash(new_password)
     user.password = hashed_password
     db.commit()
 
-    return {"message": "Password updated successfully"}
+    return {"detail": "Mot de passe mis a jour"}
 
 
 @router.get("/login/github")
@@ -245,3 +257,65 @@ def delete_user_with_posts_and_likes(
 
     return {"message": "Utilisateur supprimé avec succès."}
 
+@router.post("/forgot_password", response_model=None)
+async def forgot_password(request: Request, db: Session = Depends(get_session)):
+    data = await request.body()
+    data = json.loads(data)
+    email = data.get("email")
+
+    user = db.query(User).filter_by(email=email).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    token_already_exists = db.query(PasswordReset).filter_by(email=email).first()
+    
+    if token_already_exists:
+        db.delete(token_already_exists)
+        db.commit()
+
+    # Generate a reset token and set the expiration time
+    reset_token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
+    expiration = datetime.utcnow() + timedelta(hours=1)
+    
+    # Save the reset token in the database
+    token = PasswordReset(
+        email=email,
+        token=reset_token,
+        reset_token_expiration=expiration,
+        user_id=user.id
+    )
+    
+    db.add(token)
+    db.commit()
+    
+    # Send the email
+    send_mail(email=user.email, subject="Mot de passe oublie", message=f"Cliquez sur ce lien pour reinitialiser votre mot de passe : http://localhost:3000/forgot-password/{reset_token}")
+
+    return {"message": "Password reset email sent"}
+
+@router.post("/reset_password", response_model=None)
+async def reset_password(request: Request, db: Session = Depends(get_session)):
+    data = await request.body()
+    data = json.loads(data)
+    token = data.get("token")
+    new_password = data.get("password")
+    
+    # Check if the token is valid
+    password_reset = db.query(PasswordReset).filter_by(token=token).first()
+    if not password_reset or password_reset.reset_token_expiration < datetime.utcnow() or password_reset != token:
+        raise HTTPException(status_code=400, detail="Le token est invalide ou a expiré")
+
+    user = db.query(User).filter_by(id=password_reset.user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Update the user's password
+    user.password = get_password_hash(new_password)
+
+    # Delete the password reset token
+    db.delete(password_reset)
+    db.commit()
+
+    return {"detail": "Mot de passe mis à jour avec succes"}

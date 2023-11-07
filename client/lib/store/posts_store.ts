@@ -7,16 +7,16 @@ interface PostsState {
   currentPage: number;
   isEndOfList: boolean;
   initializePosts: (initialPosts: PostData[]) => void;
-  setPost: (newPost: PostData) => void;
+  addPost: (newPost: PostData) => void;
   addNewPosts: (newPosts: PostData[]) => void;
   incrementCurrentPage: () => void;
   changeIsEndOfList: () => void;
 
   deletePost: (postId: string) => void;
-  // likePost: (postId: string) => void;
-  // dislikePost: (postId: string) => void;
+  likePost: (postId: string) => void;
+  dislikePost: (postId: string) => void;
   updatePostTimes: () => void;
-  // updateTotalComments: (postId: string) => void;
+  updateTotalComments: (postId: string) => void;
 }
 
 export const usePostsStore = create<PostsState>((set) => ({
@@ -30,7 +30,7 @@ export const usePostsStore = create<PostsState>((set) => ({
     );
   },
 
-  setPost: (newPost) => {
+  addPost: (newPost) => {
     set((state) => {
       console.log(newPost);
       return {
@@ -41,7 +41,6 @@ export const usePostsStore = create<PostsState>((set) => ({
 
   deletePost: (postId) => {
     set((state) => {
-      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
       const updatedPosts = state.posts.filter((post) => post.id !== postId);
       return { posts: updatedPosts };
     });
@@ -70,47 +69,47 @@ export const usePostsStore = create<PostsState>((set) => ({
   },
 
 
-  // likePost: (postId) => {
-  //   set((state) => ({
-  //     posts: state.posts.map((post) =>
-  //       post?.id === postId
-  //         ? {
-  //           ...post,
-  //           total_likes: post.total_likes + 1,
-  //           userHasLiked: true,
-  //         }
-  //         : post
-  //     ),
-  //   }));
-  // },
+  likePost: (postId) => {
+    set((state) => ({
+      posts: state.posts.map((post) =>
+        post?.id === postId
+          ? {
+            ...post,
+            total_likes: post.total_likes + 1,
+            userHasLiked: true,
+          }
+          : post
+      ),
+    }));
+  },
 
-  // dislikePost: (postId) => {
-  //   set((state) => ({
-  //     posts: state.posts.map((post) =>
-  //       post?.id === postId
-  //         ? {
-  //           ...post,
-  //           total_likes: post.total_likes > 0 ? post.total_likes - 1 : 0,
-  //           userHasLiked: false,
-  //         }
-  //         : post
-  //     ),
-  //   }));
-  // },
+  dislikePost: (postId) => {
+    set((state) => ({
+      posts: state.posts.map((post) =>
+        post?.id === postId
+          ? {
+            ...post,
+            total_likes: post.total_likes > 0 ? post.total_likes - 1 : 0,
+            userHasLiked: false,
+          }
+          : post
+      ),
+    }));
+  },
 
-  // updateTotalComments: (postId) => {
-  //   set((state) => ({
-  //     posts: state.posts.map((post) => {
-  //       if (post?.id === postId) {
-  //         return {
-  //           ...post,
-  //           total_comments: post.total_comments + 1,
-  //         };
-  //       }
-  //       return post;
-  //     }),
-  //   }));
-  // },
+  updateTotalComments: (postId) => {
+    set((state) => ({
+      posts: state.posts.map((post) => {
+        if (post?.id === postId) {
+          return {
+            ...post,
+            total_comments: post.total_comments + 1,
+          };
+        }
+        return post;
+      }),
+    }));
+  },
 
   updatePostTimes: () => {
     set((state) => {

@@ -14,15 +14,16 @@ export const middleware = async (request: NextRequest) => {
     const isRegisterPage = request.nextUrl.pathname === '/inscription';
     const isPrivacyPage = request.nextUrl.pathname.startsWith('/privacy');
     const isTermsPage = request.nextUrl.pathname.startsWith('/terms');
+    const isForgotPasswordPage = request.nextUrl.pathname.startsWith('/forgot-password');
 
-    if (!token && !isLoginPage && !isRegisterPage && !isPrivacyPage && !isTermsPage) {
+    if (!token && !isLoginPage && !isRegisterPage && !isPrivacyPage && !isTermsPage && !isForgotPasswordPage) {
         return NextResponse.redirect(new URL('/connexion', request.url))
     }
 
     if (token && session) {
         const user = JSON.parse(session);
         // check if the user is already logged in
-        if(isLoginPage || isRegisterPage) {
+        if (isLoginPage || isRegisterPage || isForgotPasswordPage) {
             return NextResponse.redirect(new URL('/', request.url))
         }
 
@@ -39,7 +40,7 @@ export const middleware = async (request: NextRequest) => {
         // Check if the user is an admin
         const adminPage = request.nextUrl.pathname.startsWith('/dashboard')
         if (adminPage && user.role !== 'ROLE_ADMIN') {
-            return NextResponse.redirect(new URL('/error/forbidden-access', request.url)) 
+            return NextResponse.redirect(new URL('/error/forbidden-access', request.url))
         }
     }
 

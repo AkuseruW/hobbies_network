@@ -14,7 +14,7 @@ const HomePage = async () => {
     const { posts } = await getPosts({});
 
     return (
-        <section className=" md:w-[80%] lg:w-[75%] flex">
+        <section className="flex w-full">
             <div className="w-xl md:w-[70%] mx-auto">
                 {/* Create Post Section */}
                 <CreatePost session={user} />

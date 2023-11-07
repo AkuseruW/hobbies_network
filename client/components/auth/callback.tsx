@@ -40,7 +40,7 @@ const CallbackPage = () => {
         <>
             <h1 className="text-2xl font-semibold mb-4">Connexion en cours...</h1>
             {isLoading ? (
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 mx-auto"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 mx-auto dark:border-white"></div>
             ) : (
                 <p className="text-gray-600 dark:text-white">La connexion a réussi. Redirection en cours...</p>
             )}
