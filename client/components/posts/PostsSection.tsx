@@ -8,7 +8,7 @@ import PostCard from "./PostCard";
 import { usePostsStore } from "@/lib/store/posts_store";
 
 const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
-  const { 
+  const {
     posts,
     initializePosts,
     addNewPosts,
@@ -22,9 +22,7 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
   const [ref, inView] = useInView();
 
   useEffect(() => {
-    if (posts.length === 0) {
-      initializePosts(initialPosts);
-    }
+    initializePosts(initialPosts);
   }, [initialPosts, posts]);
 
   const loadMorePosts = useCallback(async () => {
