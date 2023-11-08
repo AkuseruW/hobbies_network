@@ -1,8 +1,11 @@
+import ArrowBack from '@/components/ArrowBack'
 import React from 'react'
 
-const page = () => {
+const CookiesPrivacyPage = () => {
     return (
         <div className="container mx-auto p-4 mt-5">
+            <ArrowBack />
+
             <h1 className="text-2xl font-bold">Politique de confidentialité des cookies</h1>
 
             <p className="mt-5">
@@ -74,4 +77,4 @@ const page = () => {
     )
 }
 
-export default page
+export default CookiesPrivacyPage

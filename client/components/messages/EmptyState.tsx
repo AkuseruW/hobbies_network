@@ -9,7 +9,7 @@ const EmptyState = () => {
         >
             <div className="text-center items-center flex flex-col">
                 <h3 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">
-                    Select a chat or start a new conversation
+                    Sélectionnez un chat ou démarrez une nouvelle conversation
                 </h3>
             </div>
         </div>

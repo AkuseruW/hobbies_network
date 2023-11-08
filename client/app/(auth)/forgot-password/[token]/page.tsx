@@ -2,7 +2,7 @@ import NewPasswordForm from '@/components/auth/NewPasswordForm'
 import Link from 'next/link'
 import React from 'react'
 
-const page = ({ params }: { params: { token: string } }) => {
+const ChangeResetPassword = ({ params }: { params: { token: string } }) => {
   const { token } = params
 
   return (
@@ -32,4 +32,4 @@ const page = ({ params }: { params: { token: string } }) => {
   )
 }
 
-export default page
+export default ChangeResetPassword

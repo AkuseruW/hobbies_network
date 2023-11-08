@@ -2,7 +2,6 @@ import Header from '@/components/header/Hearder';
 import { MobileNav } from '@/components/mobile-nav';
 import { LikeProvider } from '@/providers/like_provider';
 import { currentUser } from '@/utils/_auth_informations';
-import React from 'react';
 
 const ClientLayout = async ({ children }: { children: React.ReactNode }) => {
     const user = currentUser();

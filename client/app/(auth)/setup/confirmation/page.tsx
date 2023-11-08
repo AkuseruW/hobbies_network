@@ -3,7 +3,7 @@ import React from 'react'
 import ConfirmUserInfo from '@/components/auth/setupProfile/Confirm'
 import { Hobby } from '@/types/hobby_types'
 
-const page = () => {
+const ConfirmUserInfoPage = () => {
   const cookieStore = cookies()
   const userCookie = cookieStore.get('setup_info')
   const hobbiesCookie = cookieStore.get('hobbies_info')
@@ -22,4 +22,4 @@ const page = () => {
   return <ConfirmUserInfo data={data} />
 }
 
-export default page
+export default ConfirmUserInfoPage

@@ -3,7 +3,7 @@ import LeftAside from '@/components/home/LeftAside';
 import React from 'react';
 import { v4 as uuid } from 'uuid'
 
-const ClientLayout = async ({ children }: { children: React.ReactNode }) => {
+const ClientLayoutAside = async ({ children }: { children: React.ReactNode }) => {
 
     return (
         <div className="lg:flex lg:flex-row min-h-screen mt-5 md:mt-0">
@@ -20,4 +20,4 @@ const ClientLayout = async ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-export default ClientLayout;
+export default ClientLayoutAside;

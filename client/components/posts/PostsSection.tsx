@@ -23,7 +23,7 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
 
   useEffect(() => {
     initializePosts(initialPosts);
-  }, [initialPosts, posts]);
+  }, [initialPosts, posts, initializePosts]);
 
   const loadMorePosts = useCallback(async () => {
     if (isEndOfList) {
@@ -40,7 +40,7 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
       }
     }
 
-  }, [currentPage, isEndOfList, incrementCurrentPage]);
+  }, [currentPage, isEndOfList, incrementCurrentPage, addNewPosts, changeIsEndOfList]);
 
   // Load more posts when the user scrolls into view
   useEffect(() => {

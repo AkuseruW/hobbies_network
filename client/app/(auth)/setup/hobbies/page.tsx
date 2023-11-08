@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 import Searchbar from '@/components/Searchbar';
 import { getHobbies } from '@/utils/requests/_hobbies_requests';
 
-const page = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
+const ConfirmHobbiesPage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
     const search = typeof searchParams.search === 'string' ? searchParams.search : undefined
     const { hobbies } = await getHobbies({ search });
     const cookieStore = cookies()
@@ -32,4 +32,4 @@ const page = async ({ searchParams }: { searchParams: { [key: string]: string | 
     )
 }
 
-export default page
+export default ConfirmHobbiesPage
