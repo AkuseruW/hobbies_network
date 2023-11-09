@@ -1,5 +1,5 @@
 'use client';
-import React, { KeyboardEvent, useContext, useEffect, useState } from 'react';
+import React, { KeyboardEvent, useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { sendChatMessage } from '@/utils/requests/_chats';
 import Image from 'next/image';
@@ -60,17 +60,18 @@ interface ChatInputProps {
 
 // ChatInput component is responsible for input and sending messages
 const ChatInput: React.FC<ChatInputProps> = ({ message, setMessage, handleSendMessage, handleKeyDown }) => (
-    <footer className="border-t border-gray-300 p-4 absolute bottom-0 w-full">
-        <div className="message-input mt-4 flex relative">
+    <footer className="border-t border-gray-300 p-4 w-full">
+        <div className="message-input  flex relative">
             <textarea
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-1 border border-gray-300 rounded bg-transparent"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Écrivez votre message..."
                 onKeyDown={handleKeyDown}
             />
             <button
-                className="py-2 px-4 absolute right-0 top-0 h-full flex items-center justify-center text-blue-500"
+                className="py-2 px-4 absolute right-0 top-0 h-full flex items-center justify-center text-gray-500"
+                disabled={message.trim() === ''}
                 onClick={handleSendMessage}
             >
                 <Icons.send className="w-4 h-4" />
@@ -92,6 +93,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ initialMessages, currentUser,
     const [messages, setMessages] = useState<Message[]>(initialMessages);
     const params = useParams<{ room_id: string }>();
     const socket = useContext(WebSocketContext);
+    const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+
 
     // Listen for incoming messages via WebSocket
     useEffect(() => {
@@ -107,6 +110,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ initialMessages, currentUser,
             };
         }
     }, [socket, messages, params.room_id]);
+
+    useEffect(() => {
+        // Scroll to the bottom of the chat
+        if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
 
     // Handle sending a message
     const handleSendMessage = async () => {
@@ -131,19 +141,23 @@ const ChatSection: React.FC<ChatSectionProps> = ({ initialMessages, currentUser,
     };
 
     return (
-        <div className={`flex h-[95vh] sm:h-[95vh] md:h-[95vh] lg:h-[100vh] overflow-hidden relative w-full ${isUserListOpen ? 'hidden lg:block' : 'block '}`}>
-            <div className="flex-1">
+        <div className={`flex flex-col h-[95vh] lg:h-[100vh] relative w-full ${isUserListOpen ? 'hidden lg:block' : 'block '}`}>
+            <div className="flex-1 flex-col overflow-hidden relative">
                 <ChatHeader roomName={other_user.username} room_profile_picture={other_user.profile_picture} />
-                <div className="h-screen overflow-y-auto p-4 pb-36">
-                    <ScrollArea className="messages h-[80vh] sm:h-[60vh] md:h-[60vh] lg:h-[85vh]">
+                <div className="flex-1 p-4 pb-0 overflow-y-auto">
+                    <ScrollArea className="messages h-[70vh] max-sm:h-[68vh] md:h-[68vh] lg:h-[70vh]">
                         {messages.map((message, index) => (
                             <MessageItem key={index} message={message} currentUser={currentUser} />
                         ))}
+                        <div ref={scrollAreaRef}></div>
                     </ScrollArea>
                 </div>
+            </div>
+            <div className='absolute bottom-0 w-full'>
                 <ChatInput message={message} setMessage={setMessage} handleSendMessage={handleSendMessage} handleKeyDown={handleKeyDown} />
             </div>
         </div>
+
     );
 };
 

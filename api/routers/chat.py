@@ -159,8 +159,25 @@ async def send_message(
             "sender_profile_picture": current_user.profile_picture
         }
     }
-
+    
+    notification_ws = {
+        "action": "notification",
+        "data": {
+            "id": notification.id,
+            "title": notification.title,
+            "content": notification.content,
+            "message_room_id": str(notification.message_room_id),
+            "is_read": notification.is_read,
+            "user": {
+                "id": notification.sender.id,
+                "first_name": notification.sender.firstname,
+                "last_name": notification.sender.lastname,
+                "profile_picture": notification.sender.profile_picture
+            }
+        }
+    }
     # Send the message via WebSocket to the receiver
     await ws_manager.send_personal_message(message_ws, sender.id, receiver.id)
+    await ws_manager.send_notification(notification_ws, receiver.id)
     
     return {"success": True}

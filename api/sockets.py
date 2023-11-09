@@ -125,21 +125,16 @@ class WebSocketManager:
         sender_connection = self.get_connection_by_user_id(sender_id)
         receiver_connection = self.get_connection_by_user_id(receiver_id)
 
-        if sender_connection:
+        if sender_connection and receiver_connection:
+            print(sender_connection, sender_id, "sender")
             try:
                 if not isinstance(message, str):
                     message = json.dumps(message)
                 await sender_connection.send_text(message)
-            except Exception as e:
-                print(f"Error sending message to sender {sender_id}: {e}")
-
-        if receiver_connection:
-            try:
-                if not isinstance(message, str):
-                    message = json.dumps(message)
                 await receiver_connection.send_text(message)
             except Exception as e:
-                print(f"Error sending message to receiver {receiver_id}: {e}")
+                print(f"Error sending message to sender {sender_id} and receiver {receiver_id}: {e}")
+
 
     def get_connection_by_user_id(self, user_id: int) -> WebSocket:
         # Get a WebSocket connection by user ID

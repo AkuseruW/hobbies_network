@@ -42,12 +42,12 @@ const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initi
             <Button className="lg:hidden bg-transparent" variant={'ghost'} onClick={toggleIsUserListOpen}>
                 {isUserListOpen ? <Icons.arrowLeft /> : <Icons.arrowRight />}
             </Button>
-            <aside className={`border-r border-gray-300 lg:col-span-1 w-full lg:w-[35%] md:w-full h-full sm:h-[90vh] md:h-[90vh] lg:h-full relative ${isUserListOpen ? 'block' : 'hidden lg:block'}`}>
+            <aside className={`border-r border-gray-300 lg:col-span-1 w-full lg:w-[35%] md:w-full h-full sm:h-[90vh] md:h-[94vh] lg:h-full relative ${isUserListOpen ? 'block' : 'hidden lg:block'}`}>
                 <div className="mx-3 my-3">
                     <Searchbar type='chat' />
                 </div>
 
-                <ScrollArea className={`overflow-auto h-[80vh] sm:h-[60vh] md:h-[60vh] lg:h-[85vh]`}>
+                <ScrollArea className={`h-[75vh] sm:h-[60vh] md:h-[75vh] lg:h-[80vh]`}>
                     <h2 className="my-2 mb-2 ml-2 text-lg text-gray-600">Chats</h2>
                     {users.map((user) => (
                         <button
@@ -71,7 +71,7 @@ const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initi
                 <nav className="border-t border-gray-300 p-2 bottom-0 w-full absolute">
                     <div className="flex items-center justify-between">
                         {headerLinks.map((link, index) => (
-                            <HeaderLinksIcons key={index} link={link} />
+                            <HeaderLinksIcons key={index} link={link} chat={true} />
                         ))}
                     </div>
                 </nav>

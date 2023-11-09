@@ -5,8 +5,10 @@ import { usePathname } from 'next/navigation';
 
 const HeaderLinksIcons = ({
     link,
+    chat
 }: {
     link: { icon?: JSX.Element; text: string; url: string };
+    chat?: boolean
 }) => {
     const { icon, text, url } = link;
     const pathname = usePathname()
@@ -15,16 +17,20 @@ const HeaderLinksIcons = ({
         <Link
             href={url}
             className={
-                pathname === url
+                `
+                ${pathname === url
                     ? "bg-gray-200 dark:bg-gray-700 hover:bg-muted flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md px-4 py-2"
                     : "hover:bg-transparent hover:underline flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md px-4 py-2"
+                }
+                ${chat && 'text-sm'}
+                `
             }
             aria-label={text}
             title={text}
             prefetch={false}
         >
-            {icon && <span className="w-6 h-6">{icon}</span>}
-            {text && <span className="text-text text-lg font-medium ml-3 hidden  sm:block ">{text}</span>}
+            {icon && <span className={`w-6 h-6 `}>{icon}</span>}
+            {text && <span className={`${chat && "lg:hidden md:hidden"} text-text text-lg font-medium ml-3 hidden sm:block `}>{text}</span>}
         </Link>
 
     )

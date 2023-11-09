@@ -14,18 +14,18 @@ export const ImagePostPage = ({ images }: { images: string[] }) => {
   };
 
   return (
-    <div className="grid gap-4 w-full py-2">
-      <div className='relative'>
+    <div className="grid gap-4 w-full py-2 relative">
+      <div>
         <Image
           width={600}
           height={600}
           src={selectedImage}
           alt=""
-          className="object-contain h-[100%] w-full"
+          className="object-contain h-[60%] max-sm:h-[100%] xl:h-[42%] w-full"
         />
       </div>
 
-      <div className="flex space-x-4 container mt-2 overflow-x-auto">
+      <div className="flex space-x-4 container mt-2 overflow-x-auto bottom-4 w-full lg:absolute md:absolute">
         {images.map((image, index) => (
           <div key={image}>
             <Image

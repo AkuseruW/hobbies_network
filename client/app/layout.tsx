@@ -28,7 +28,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const isApprovedCokkie = cookies().get('_cookie_settings')
   return (
     <html lang="fr" className={`min-h-screen ${inter.className}`} suppressHydrationWarning >
-      <body className=' bg-background_light dark:bg-background_dark p-0 m-0 min-h-screen'>
+      <body className=' bg-background_light dark:bg-background_dark p-0 m-0'>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           {!isApprovedCokkie && <CookieSettings />}
