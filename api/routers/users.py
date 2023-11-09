@@ -363,8 +363,9 @@ async def change_profile_picture(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Delete the old profile picture
-    await delete_image(user.public_id)
+    if user.public_id:
+        # Delete the old profile picture
+        await delete_image(user.public_id)
     # Upload the new profile picture
     file = await upload_image_to_cloudinary(
         file=profile_picture, directory="profil"

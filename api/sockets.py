@@ -127,6 +127,7 @@ class WebSocketManager:
 
         if sender_connection and receiver_connection:
             print(sender_connection, sender_id, "sender")
+            print(receiver_connection, receiver_id, "receiver")
             try:
                 if not isinstance(message, str):
                     message = json.dumps(message)
