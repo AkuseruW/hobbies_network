@@ -31,7 +31,7 @@ export const CookieSettings = () => {
                         <span className="font-normal leading-snug text-muted-foreground">
                             Nous utilisons des cookies pour vous garantir la meilleure expérience possible sur notre site Web.
                         </span>
-                        <Link href="#" className="font-normal leading-snug text-blue-500 hover:underline">Lire les politiques de cookies.</Link>
+                        <Link href="/cookies" className="font-normal leading-snug text-blue-500 hover:underline">Lire les politiques de cookies.</Link>
                     </Label>
                 </div>
             </CardContent>

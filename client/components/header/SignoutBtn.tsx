@@ -28,7 +28,7 @@ const SignoutBtn = () => {
     return (
         <Menu.Item>
             <button className='hover:bg-secondary dark:hover:bg-secondary_dark w-full bg-transparent dark:text-white p-0 m-0 flex px-4 py-2 text-sm' onClick={signOut}>
-                Sign Out
+                Déconnexion
             </button>
         </Menu.Item>
     );

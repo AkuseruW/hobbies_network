@@ -46,7 +46,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, currentUser }) => (
         {message.sender_id !== currentUser.id && (
             <Image width={40} height={40} src={message.sender_profile_picture} alt={message.sender_name} className="w-10 h-10 rounded-full" />
         )}
-        <p className={`message ${message.sender_id === currentUser.id ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} p-2 rounded-lg text-sm w-full break-words`}>
+        <p className={`message ${message.sender_id === currentUser.id ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} p-2 rounded-lg text-sm w-fit max-w-full break-words`}>
             {message.content}
         </p>
     </div>

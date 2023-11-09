@@ -45,13 +45,13 @@ const BtnProfile = ({ currentUser }: { currentUser: Session }) => {
                         </Menu.Item>
                         <Menu.Item>
                             <Link href={`/profil/settings`} className='hover:bg-secondary dark:hover:bg-secondary_dark w-full block px-4 py-2 text-sm'>
-                                settings
+                                Parametres
                             </Link>
                         </Menu.Item>
                         {currentUser?.role === 'ROLE_ADMIN' && (
                             <Menu.Item>
                                 <Link href={`/dashboard`} className='hover:bg-secondary dark:hover:bg-secondary_dark w-full block px-4 py-2 text-sm'>
-                                    Admin
+                                    Administration
                                 </Link>
                             </Menu.Item>
                         )}

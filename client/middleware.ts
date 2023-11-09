@@ -14,12 +14,13 @@ export const middleware = async (request: NextRequest) => {
     const isLoginPage = request.nextUrl.pathname.startsWith('/connexion');
     const isRegisterPage = request.nextUrl.pathname === '/inscription';
     const isPrivacyPage = request.nextUrl.pathname.startsWith('/privacy');
+    const isCookiesPage = request.nextUrl.pathname.startsWith('/cookies');
     const isTermsPage = request.nextUrl.pathname.startsWith('/terms');
     const isForgotPasswordPage = request.nextUrl.pathname.startsWith('/forgot-password');
     const isBannedPage = request.nextUrl.pathname.startsWith('/error/banned');
 
 
-    if (!token && !isLoginPage && !isRegisterPage && !isPrivacyPage && !isTermsPage && !isForgotPasswordPage) {
+    if (!token && !isLoginPage && !isRegisterPage && !isPrivacyPage && !isTermsPage && !isForgotPasswordPage && !isCookiesPage) {
         return NextResponse.redirect(new URL('/connexion', request.url))
     }
 
