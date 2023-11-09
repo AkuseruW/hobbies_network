@@ -4,6 +4,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { User } from '@/types/user_types';
 import { ScrollArea } from '../ui/scroll-area';
+import Link from 'next/link';
 
 
 const CurrentUserOnline = () => {
@@ -86,9 +87,9 @@ const CurrentUserOnline = () => {
                                     className="h-8 w-8 rounded-full"
                                 />
                             </Avatar>
-                            <span className='flex items-center '>
+                            <Link href={`/profil/${user.user_id}`} className='flex items-center '>
                                 {user.username}
-                            </span>
+                            </Link>
                         </li>
                     ))}
                 </ScrollArea>

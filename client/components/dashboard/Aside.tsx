@@ -37,7 +37,7 @@ const Aside = ({ len_reports_unread, len_notifications_unread }: { len_reports_u
                     <NavItem href="/dashboard/users" icon={<UserGroupIcon className="h-6 w-6 mr-3" />} text="Users" />
                     <NavItem href="/dashboard/hobbies" icon={<RectangleStackIcon className="h-6 w-6 mr-3" />} text="Hobbies" />
                     <NavItem href="/dashboard/reports" icon={<ExclamationCircleIcon className="h-6 w-6 mr-3" />} text="Reports" unread={len_reports_unread} />
-                    <NavItem href="/dashboard/notifications" icon={<Icons.bell className="h-6 w-6 mr-3" />} text="Notifications" unread={len_notifications_unread} />
+                    {/* <NavItem href="/dashboard/notifications" icon={<Icons.bell className="h-6 w-6 mr-3" />} text="Notifications" unread={len_notifications_unread} /> */}
                 </ul>
             </nav>
             <div className="pl-4">

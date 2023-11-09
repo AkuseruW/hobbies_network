@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
-import { DataTableRowActionsHobbies, DataTableRowActionsCustomers, DataTableRowActionsProducts, DataTableRowActionsReports, DataTableRowActionsProposedHobbies } from "./data-table-row-actions"
+import { DataTableRowActionsHobbies, DataTableRowActionsCustomers, DataTableRowActionsProducts, DataTableRowActionsReports, DataTableRowActionsProposedHobbies, DataTableRowActionsNotifications } from "./data-table-row-actions"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { Switch } from "@/components/ui/switch"
 import { format } from "date-fns"
@@ -384,7 +384,7 @@ export const columnsNotifications: ColumnDef<any>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Actions" />
         ),
-        cell: ({ row }) => <DataTableRowActionsCustomers row={row} />,
+        cell: ({ row }) => <DataTableRowActionsNotifications row={row} />,
     },
 ];
 

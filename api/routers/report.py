@@ -197,25 +197,6 @@ async def create_report(
     db.add(report)
     db.commit()
 
-    report_id_user = None
-    report_id_post = None
-    if reported_type == "USER":
-        report_id_user = reported_id
-    elif reported_type == "POST":
-        report_id_post = str(reported_id)
-
-    notification = AdminNotification(
-        sender_id=current_user.id,
-        content=reason,
-        notification_type="reports",
-        report_id=report.id,
-        report_id_post=report_id_post,
-        report_id_user=report_id_user,
-    )
-
-    db.add(notification)
-    db.commit()
-
     return {"message": "Le signalement a été enregistré avec succès."}
 
 

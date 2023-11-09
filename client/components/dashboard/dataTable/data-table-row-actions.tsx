@@ -235,3 +235,36 @@ export const DataTableRowActionsProposedHobbies = ({ row }: any) => {
         </>
     );
 }
+
+
+export const DataTableRowActionsNotifications = ({ row }: any) => {
+    const router = useRouter();
+    const handleUnban = async () => {
+        await unbanUser({ user_id: row.original.id })
+        router.refresh()
+    }
+
+    return (
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+                    >
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">Open menu</span>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[160px]">
+                    <DropdownMenuItem className="hover:bg-muted">
+                        <button className="w-full flex items-center">
+                            <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+                            View
+                        </button>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </>
+    );
+};

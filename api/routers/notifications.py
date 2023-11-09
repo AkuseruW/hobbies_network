@@ -128,3 +128,21 @@ def delete_notifications(notification_id: int, db: Session = Depends(get_session
         raise HTTPException(status_code=404, detail="Notification not found")
     # If the receiver user is not found, raise an HTTP 404 Not Found exception
     raise HTTPException(status_code=404, detail="User not found")
+
+
+@router.delete("/notifications_admin/{notification_id}")
+def delete_notifications_admin(notification_id: int, db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_active_user)):
+    
+    if current_user.user_role != "ROLE_ADMIN":
+        raise HTTPException(
+            status_code=403, detail="You are not authorized to perform this action.")
+        
+    notification = db.query(AdminNotification).filter(AdminNotification.id == notification_id).first()
+    if notification:
+        # If the notification is found, delete it and commit the changes to the database
+        db.delete(notification)
+        db.commit()
+        return {"message": "Notification marked as read"}
+    # If the notification is not found, raise an HTTP 404 Not Found exception
+    raise HTTPException(status_code=404, detail="Notification not found")
