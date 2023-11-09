@@ -16,7 +16,7 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
   const hasImages = post.post_images_urls && post.post_images_urls.length > 0;
 
   return (
-    <div className={`h-[80vh] ${!hasImages ? 'w-2/4' : 'w-full'} flex flex-col sm:flex-row gap-0 h-full bg-white dark:bg-gray-800 rounded`}>
+    <div className={`h-[80vh] ${!hasImages ? 'w-2/4' : 'w-full'} flex flex-col sm:flex-row gap-0 h-full  rounded`}>
       {/* Left Section */}
       {hasImages && (
         <div className="w-full sm:w-[75%] flex h-full border-r-2 border-gray">
