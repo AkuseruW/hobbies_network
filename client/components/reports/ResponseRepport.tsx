@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import ReportModal from './ReportModal';
-import { approve_report } from '@/utils/requests/_reports_requests';
+import { approve_report, desapprove_report } from '@/utils/requests/_reports_requests';
 
 const ResponseReport = ({ is_process, id }: { is_process: boolean, id: number }) => {
   const [isProcess, setIsProcess] = useState(is_process);
@@ -20,7 +20,7 @@ const ResponseReport = ({ is_process, id }: { is_process: boolean, id: number })
   };
 
   const onClickReject = async () => {
-    
+    desapprove_report({ report_id: id }); // Call the desapprove_report API function
   };
 
   const onCloseModal = () => {

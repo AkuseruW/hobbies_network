@@ -91,7 +91,7 @@ const ConnectionForm = () => {
                 <Button
                     type='submit'
                     disabled={isLoading}
-                    className={`bg-[#535f54] text-white inline-flex items-center
+                    className={`bg-background_dark text-white inline-flex items-center
                      justify-center rounded-md text-sm font-medium transition-colors
                       focus-visible:outline-none focus-visible:ring-1
                       dark:bg-background_light dark:text-text_light 

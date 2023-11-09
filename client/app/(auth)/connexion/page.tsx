@@ -7,7 +7,7 @@ const ConnectionPage = () => {
     <div className="container relative flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 h-screen">
       <Link
         href="/inscription"
-        className="absolute left-4 top-4 md:left-8 md:top-8 bg-[#535f54]
+        className="absolute left-4 top-4 md:left-8 md:top-8 bg-background_dark
           dark:bg-background_light dark:text-text_light text-white
           px-4 py-2 rounded-md width-6"
       >

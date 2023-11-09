@@ -81,3 +81,16 @@ export const getPinnedReports = async ({
     throw error;
   }
 };
+
+
+export const desapprove_report = async ({
+  report_id
+}: {
+  report_id: number
+}) => {
+  try {
+    return await fetcher(apiUrl(`/api/report/reject/${report_id}`), "PATCH");
+  } catch (error) {
+    throw error;
+  }
+}
