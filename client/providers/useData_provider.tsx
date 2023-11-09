@@ -2,12 +2,10 @@
 import React, { useEffect, useCallback, createContext, ReactNode } from "react";
 import { useUserHobbiesStore } from "@/lib/store/hobbies_store";
 import { getUserHobbies } from "@/utils/requests/_users_requests";
-import { Hobby } from "@/types/hobby_types";
 import { useNotificationsStore } from "@/lib/store/notifications_store";
 import { getNotifications } from "@/utils/requests/_notifications_requests";
-import { Notification } from "@/types/notifications_types";
 
-export const userContext = createContext({});
+export const userContext = createContext({}); // Create context for user data
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const { initializeUserHobbiesSelected, hobbiesSelected } =
@@ -17,17 +15,17 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const getUserInfo = useCallback(async () => {
     try {
-      const hobbiesSelected = await getUserHobbies();
-      const { notifications } = await getNotifications();
-      initializeUserHobbiesSelected(hobbiesSelected);
-      initializeNotifications(notifications);
+      const hobbiesSelected = await getUserHobbies(); // Fetch hobbies
+      const { notifications } = await getNotifications(); // Fetch notifications
+      initializeUserHobbiesSelected(hobbiesSelected); // Initialize hobbies with new data
+      initializeNotifications(notifications); // Initialize notifications with new data
     } catch (error) {
-      // Gérer les erreurs ici
+      console.error(error);
     }
   }, [initializeUserHobbiesSelected, initializeNotifications]);
 
   useEffect(() => {
-    getUserInfo();
+    getUserInfo(); // Get user info
   }, [getUserInfo]);
 
   return (

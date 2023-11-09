@@ -15,7 +15,6 @@ const UsersPageAdmin = async ({
     typeof searchParams.q === "string" ? searchParams.q : undefined;
 
   const { users, total_pages } = await getUsersAdmin({ search, page, query });
-  console.log(users);
   const url = "/dashboard/customers";
 
   return (

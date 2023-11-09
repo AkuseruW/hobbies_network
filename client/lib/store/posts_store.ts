@@ -24,21 +24,23 @@ export const usePostsStore = create<PostsState>((set) => ({
   currentPage: 2, // Initialize the current page to 2.
   isEndOfList: false, // Initialize the end of list status.
 
+  // Initialize the posts array with initial data
   initializePosts: (initialPosts) => {
     set(
       { posts: initialPosts }
     );
   },
 
+  // Add a new post to the beginning of the posts array
   addPost: (newPost) => {
     set((state) => {
-      console.log(newPost);
       return {
         posts: [newPost, ...state.posts],
       };
     });
   },
 
+  // Delete a post from the posts array by its ID
   deletePost: (postId) => {
     set((state) => {
       const updatedPosts = state.posts.filter((post) => post.id !== postId);
@@ -46,6 +48,7 @@ export const usePostsStore = create<PostsState>((set) => ({
     });
   },
 
+  // Add new posts to the end of the posts array and update their time of publication
   addNewPosts: (newPosts) => {
     set((state) => ({
       posts: [
@@ -58,17 +61,19 @@ export const usePostsStore = create<PostsState>((set) => ({
     }));
   },
 
+  // Increment the current page by 1
   incrementCurrentPage: () => {
     // Increment the current page by 1.
     set((state) => ({ currentPage: state.currentPage + 1 }));
   },
 
+  // Change the end of list status
   changeIsEndOfList: () => {
     // Change the end of list status.
     set((state) => ({ isEndOfList: state.isEndOfList ? false : true }));
   },
 
-
+  // Increment the total likes count for a specific post
   likePost: (postId) => {
     set((state) => ({
       posts: state.posts.map((post) =>
@@ -83,6 +88,7 @@ export const usePostsStore = create<PostsState>((set) => ({
     }));
   },
 
+  // Decrement the total likes count for a specific post
   dislikePost: (postId) => {
     set((state) => ({
       posts: state.posts.map((post) =>
@@ -97,6 +103,7 @@ export const usePostsStore = create<PostsState>((set) => ({
     }));
   },
 
+  // Increment the total comments count for a specific post
   updateTotalComments: (postId) => {
     set((state) => ({
       posts: state.posts.map((post) => {
@@ -111,6 +118,7 @@ export const usePostsStore = create<PostsState>((set) => ({
     }));
   },
 
+  // Update the time of publication for all posts
   updatePostTimes: () => {
     set((state) => {
       const updatedPosts = state.posts.map((post) => ({

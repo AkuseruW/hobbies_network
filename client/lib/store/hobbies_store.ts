@@ -62,6 +62,4 @@ export const useUserHobbiesStore = create<UserHobbiesState>((set) => ({
       return { hobbiesSelected: newHobbiesSelected };
     });
   },
-  
-
 }));
