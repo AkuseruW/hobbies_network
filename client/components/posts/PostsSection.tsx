@@ -6,6 +6,7 @@ import { PostData } from "@/types/post_types";
 import { getPosts } from "@/utils/requests/_posts_requests";
 import PostCard from "./PostCard";
 import { usePostsStore } from "@/lib/store/posts_store";
+import { useUserHobbiesStore } from "@/lib/store/hobbies_store";
 
 const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
   const {
@@ -18,12 +19,12 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
     currentPage,
     incrementCurrentPage,
   } = usePostsStore();
-
   const [ref, inView] = useInView();
 
   useEffect(() => {
-    // Initialize posts
-    initializePosts(initialPosts);
+    if (posts.length === 0) {
+      initializePosts(initialPosts);
+    }
   }, []);
 
   const loadMorePosts = useCallback(async () => {

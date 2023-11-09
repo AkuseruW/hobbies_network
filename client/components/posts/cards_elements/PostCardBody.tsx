@@ -40,9 +40,9 @@ const PostBody: React.FC<PostBodyProps> = ({
             <div className="flex gap-4  flex-col p-2">
                 <div className="flex px-2 mx-2 ">
                     <div className="text-blue-500 dark:text-text_dark"> {data.total_likes} Likes </div>
-                    <div className="text-blue-500 ml-auto dark:text-text_dark">
-                        {data.total_comments} commentaires
-                    </div>
+                    <Link href={`/post/${data.id}`} className="text-blue-500 ml-auto dark:text-text_dark">
+                        {data.total_comments} Commentaires
+                    </Link>
                 </div>
                 <Separator className="dark:bg-gray-500" />
                 <BtnAction data={data} handleToggleInput={handleToggleInput} />

@@ -11,6 +11,8 @@ import ProposeHobby from './ProposeHobby';
 import { useHobbiesStore, useUserHobbiesStore } from '@/lib/store/hobbies_store';
 import { Icons } from '../icons';
 import { Button } from '../ui/button';
+import { usePostsStore } from '@/lib/store/posts_store';
+import { getPosts } from '@/utils/requests/_posts_requests';
 
 interface CardGroupeProps {
   search?: string;
@@ -27,6 +29,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
     isEndOfList,
     changeIsEndOfList
   } = useHobbiesStore();
+  const { initializePosts, resetCurrentPage: resetCurrentPagePosts, resetEndOfList: resetPostsEndOfList } = usePostsStore();
   const { hobbiesSelected, toggleHobby } = useUserHobbiesStore();
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -61,8 +64,12 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
 
   // Add or remove a hobby by its ID.
   const addHobbyOrRemove = async (hobby: Hobby) => {
-    toggleHobby(hobby);
-    await add_or_delete_hobby({ id: hobby.id });
+    toggleHobby(hobby); // Toggle the hobby.
+    await add_or_delete_hobby({ id: hobby.id }); // Add or remove the hobby.
+    const { posts } = await getPosts({}); // Get the posts.
+    initializePosts(posts); // Initialize the posts.
+    resetCurrentPagePosts(); // Reset the current page.
+    resetPostsEndOfList(); // Reset the end of list status.
   };
 
   useEffect(() => {

@@ -23,7 +23,6 @@ const UserCard = ({ search, initialUsers }: { search?: string | undefined, initi
     if (isEndOfList) {
       return;
     }
-
     // Increment the page number for the next data fetch.
     const next = page + 1
     // Fetch users and related data for the next page using 'getUsersPaginated' function.

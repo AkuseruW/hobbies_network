@@ -17,6 +17,8 @@ interface PostsState {
   dislikePost: (postId: string) => void;
   updatePostTimes: () => void;
   updateTotalComments: (postId: string) => void;
+  resetCurrentPage: () => void;
+  resetEndOfList: () => void;
 }
 
 export const usePostsStore = create<PostsState>((set) => ({
@@ -128,4 +130,15 @@ export const usePostsStore = create<PostsState>((set) => ({
       return { posts: updatedPosts };
     });
   },
+
+  // Reset current page
+  resetCurrentPage: () => {
+    set((state) => ({ currentPage: 2 }));
+  },
+
+  // Reset end of list status
+  resetEndOfList: () => {
+    set((state) => ({ isEndOfList: false }));
+  }
+
 }));

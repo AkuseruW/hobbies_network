@@ -88,7 +88,7 @@ def get_conversation(room_uuid: str, db: Session = Depends(get_session), current
     db.query(Notification).filter(Notification.message_room_id == conversation.room_uuid).update({"is_read": True}, synchronize_session=False)
     db.commit()
 
-    return {"messages": messages_with_user_info, "other_user": {"username": user_correspondent.user_name, "profile_picture": user_correspondent.profile_picture}}
+    return {"messages": messages_with_user_info, "other_user": {"id": user_correspondent.id,"username": user_correspondent.user_name, "profile_picture": user_correspondent.profile_picture}}
 
 
 @router.post("/conversations/{room_uuid}/message")

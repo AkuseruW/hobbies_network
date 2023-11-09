@@ -8,6 +8,7 @@ import { Icons } from '../icons';
 import { WebSocketContext } from '@/providers/ws_provider';
 import { ScrollArea } from '../ui/scroll-area';
 import { useToggleChat } from '@/providers/chatToogle';
+import Link from 'next/link';
 
 // Define the Message type
 interface Message {
@@ -22,13 +23,14 @@ interface Message {
 interface ChatHeaderProps {
     roomName: string;
     room_profile_picture: string;
+    userid: number;
 }
 
 // ChatHeader component displays the header of the chat room
-const ChatHeader: React.FC<ChatHeaderProps> = ({ roomName, room_profile_picture }) => (
+const ChatHeader: React.FC<ChatHeaderProps> = ({ roomName, room_profile_picture, userid }) => (
     <header className="bg-white dark:bg-secondary_dark dark:text-white p-4 text-gray-700 flex items-center space-x-2">
         <Image width={40} height={40} src={room_profile_picture} alt={roomName} className="w-10 h-10 rounded-full" />
-        <h1 className="text-2xl font-semibold">{roomName}</h1>
+        <Link href={`/profil/${userid}`} className="text-2xl font-semibold">{roomName}</Link>
     </header>
 );
 
@@ -143,7 +145,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ initialMessages, currentUser,
     return (
         <div className={`flex flex-col h-[95vh] lg:h-[100vh] relative w-full ${isUserListOpen ? 'hidden lg:block' : 'block '}`}>
             <div className="flex-1 flex-col overflow-hidden relative">
-                <ChatHeader roomName={other_user.username} room_profile_picture={other_user.profile_picture} />
+                <ChatHeader roomName={other_user.username} userid={other_user.id} room_profile_picture={other_user.profile_picture} />
                 <div className="flex-1 p-4 pb-0 overflow-y-auto">
                     <ScrollArea className="messages h-[70vh] max-sm:h-[68vh] md:h-[68vh] lg:h-[70vh]">
                         {messages.map((message, index) => (

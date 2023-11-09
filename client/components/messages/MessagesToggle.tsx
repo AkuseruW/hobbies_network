@@ -25,8 +25,6 @@ const MessagesToggle = async () => {
                 <SheetHeader className="border-b">
                     <SheetTitle>Chats</SheetTitle>
                 </SheetHeader>
-
-                <ul>
                     <ScrollArea>
                         {users.map((user: User) => (
                             <li className="p-4 border-gray-200" key={user.id}>
@@ -50,7 +48,6 @@ const MessagesToggle = async () => {
                             </li>
                         ))}
                     </ScrollArea>
-                </ul>
             </SheetContent>
         </Sheet>
 

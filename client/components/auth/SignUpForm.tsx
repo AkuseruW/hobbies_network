@@ -65,7 +65,7 @@ const SignUpForm = () => {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <Input placeholder="Email ..." {...field}
+                            <Input placeholder="Email" {...field}
                                 className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
                             />
                             <FormMessage />
@@ -77,7 +77,7 @@ const SignUpForm = () => {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <Input type="password" placeholder="Password ..." {...field}
+                            <Input type="password" placeholder="Password" {...field}
                                 className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
                             />
                             <FormMessage />

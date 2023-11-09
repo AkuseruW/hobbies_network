@@ -2,9 +2,12 @@
 import { createComment } from "@/utils/requests/_comments_request";
 import React, { useState, ChangeEvent, KeyboardEvent } from "react";
 import EmojiPicker from "../EmojiPicker";
+import { useToast } from "../ui/use-toast";
 
 const InputComment = ({ post_id }: { post_id: string }): JSX.Element => {
   const [comment, setComment] = useState<string>("");
+  const { toast } = useToast()
+
 
   // Handle changes in the textarea input.
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -25,6 +28,10 @@ const InputComment = ({ post_id }: { post_id: string }): JSX.Element => {
       await createComment({ data });
       // Clear the comment input.
       setComment("");
+      // Toast the user.
+      toast({
+        description: "Commentaire publie!",
+      })
     }
   };
 

@@ -10,7 +10,7 @@ export const HobbiesCarousel = ({ hobbies }: { hobbies: Hobby[] }) => {
     const prevSlide = () => {
         setCurrentSlide((currentSlide - 1 + hobbies.length) % hobbies.length);
     };
-
+    
     const nextSlide = () => {
         setCurrentSlide((currentSlide + 1) % hobbies.length);
     };
@@ -35,7 +35,7 @@ export const HobbiesCarousel = ({ hobbies }: { hobbies: Hobby[] }) => {
                 </div>
             </div>
             <div className="flex overflow-hidden justify-between">
-                {hobbies.concat(hobbies).map((hobby, index) => (
+                {hobbies.map((hobby, index) => (
                     <div
                         key={hobby.id}
                         className={`flex flex-col items-center

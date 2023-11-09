@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Session } from '@/types/sessions_types';
 import { User } from '@/types/user_types';
@@ -13,12 +13,45 @@ import { Button } from '../ui/button';
 import { Icons } from '../icons';
 import { headerLinks } from '../header/Hearder';
 import HeaderLinksIcons from '../header/HeaderLinksIcons';
+import { useInView } from 'react-intersection-observer';
 
 const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initialUsers: User[] }) => {
     const { toggleIsUserListOpen, isUserListOpen } = useToggleChat();
     const [users, setUsers] = useState(initialUsers);
     const router = useRouter();
     const searchParams = useSearchParams();
+    const [isEndOfList, setIsEndOfList] = useState(false);
+    const [page, setPage] = useState(1)
+    const [ref, inView] = useInView()
+
+    // loading more users when triggered.
+    const loadMoreUsers = useCallback(async () => {
+        // Check if we have reached the end of the list. If so, return early.
+        if (isEndOfList) {
+            return;
+        }
+        // Increment the page number for the next data fetch.
+        const next = page + 1
+        // Fetch users and related data for the next page using 'getUsersPaginated' function.
+        const { users, is_end_of_list } = await getUsersPaginated({ page: next })
+
+        // If there are users returned, update the page state, and add new users to the existing user list.
+        if (users?.length) {
+            setPage(next)
+
+            setUsers((prev) => [...(prev?.length ? prev : []), ...users])
+            // Set 'isEndOfList' to true if there are no more users to load.
+            if (is_end_of_list) {
+                setIsEndOfList(true);
+            }
+        }
+    }, [page, isEndOfList])
+
+    useEffect(() => {
+        if (inView && users.length >= 10) {
+            loadMoreUsers()
+        }
+    }, [inView, loadMoreUsers, users.length])
 
     useEffect(() => {
         const search = typeof searchParams.get('search') === 'string' ? searchParams.get('search') : undefined;
@@ -67,6 +100,15 @@ const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initi
                             </div>
                         </button>
                     ))}
+                    {!isEndOfList && users.length >= 10 && (
+                        <div
+                            ref={ref}
+                            className='col-span-1 mt-16 flex items-center justify-center sm:col-span-2 md:col-span-3 lg:col-span-4'
+                        >
+                            <Icons.spinner className='w-10 h-10 animate-spin' />
+                            <span className='sr-only'>Loading...</span>
+                        </div>
+                    )}
                 </ScrollArea>
                 <nav className="border-t border-gray-300 p-2 bottom-0 w-full absolute">
                     <div className="flex items-center justify-between">
