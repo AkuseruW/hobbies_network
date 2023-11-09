@@ -7,8 +7,9 @@ import { getPosts } from "@/utils/requests/_posts_requests";
 import PostCard from "./PostCard";
 import { usePostsStore } from "@/lib/store/posts_store";
 import { useUserHobbiesStore } from "@/lib/store/hobbies_store";
+import { useRouter } from "next/navigation";
 
-const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
+const PostsSectionHome = ({ initialPosts }: { initialPosts: PostData[] }) => {
   const {
     posts,
     initializePosts,
@@ -22,9 +23,12 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
   const [ref, inView] = useInView();
 
   useEffect(() => {
-    initializePosts(initialPosts);
-  }, [initialPosts]);
-
+    const getInitialPosts = async () => {
+      const { posts: initialPosts } = await getPosts({});
+      initializePosts(initialPosts);
+    }
+    getInitialPosts();
+  }, []);
 
   const loadMorePosts = useCallback(async () => {
     // Check if the end of the list has been reached
@@ -58,15 +62,11 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
     return () => clearInterval(intervalId);
   }, [updatePostTimes]);
 
-
-  // Render the posts
-  const postCards = useMemo(() => posts.map((post) => (
-    <PostCard key={post.id} data={post} />
-  )), [posts]);
-
   return (
     <div>
-      {postCards}
+      {posts.map((post) => (
+        <PostCard key={post.id} data={post} />
+      ))}
 
       {!isEndOfList && posts.length >= 10 && (
         <div
@@ -80,4 +80,4 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
   );
 };
 
-export default React.memo(PostsSection);
+export default PostsSectionHome;

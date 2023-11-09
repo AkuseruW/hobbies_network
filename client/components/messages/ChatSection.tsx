@@ -46,9 +46,9 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, currentUser }) => (
         {message.sender_id !== currentUser.id && (
             <Image width={40} height={40} src={message.sender_profile_picture} alt={message.sender_name} className="w-10 h-10 rounded-full" />
         )}
-        <div className={`message ${message.sender_id === currentUser.id ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} p-2 rounded-lg text-sm`}>
+        <p className={`message ${message.sender_id === currentUser.id ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} p-2 rounded-lg text-sm w-full break-words`}>
             {message.content}
-        </div>
+        </p>
     </div>
 );
 
@@ -96,7 +96,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ initialMessages, currentUser,
     const params = useParams<{ room_id: string }>();
     const socket = useContext(WebSocketContext);
     const scrollAreaRef = useRef<HTMLDivElement | null>(null);
-
 
     // Listen for incoming messages via WebSocket
     useEffect(() => {
@@ -147,12 +146,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({ initialMessages, currentUser,
             <div className="flex-1 flex-col overflow-hidden relative">
                 <ChatHeader roomName={other_user.username} userid={other_user.id} room_profile_picture={other_user.profile_picture} />
                 <div className="flex-1 p-4 pb-0 overflow-y-auto">
-                    <ScrollArea className="messages h-[70vh] max-sm:h-[68vh] md:h-[68vh] lg:h-[70vh]">
+                    <div className=" overflow-y-auto h-[70vh] max-sm:h-[68vh] md:h-[68vh] lg:h-[70vh]">
                         {messages.map((message, index) => (
                             <MessageItem key={index} message={message} currentUser={currentUser} />
                         ))}
                         <div ref={scrollAreaRef}></div>
-                    </ScrollArea>
+                    </div>
                 </div>
             </div>
             <div className='absolute bottom-0 w-full'>
