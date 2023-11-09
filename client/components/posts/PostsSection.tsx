@@ -22,24 +22,26 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
   const [ref, inView] = useInView();
 
   useEffect(() => {
+    // Initialize posts
     initializePosts(initialPosts);
   }, []);
 
   const loadMorePosts = useCallback(async () => {
+    // Check if the end of the list has been reached
     if (isEndOfList) {
       return;
     }
+    // Load more posts
     const { posts: newPosts, is_end_of_list } = await getPosts({ page: currentPage });
 
-    if (newPosts?.length) {
-      incrementCurrentPage();
-      // Append the new posts with updated timestamps to the existing posts
-      addNewPosts(newPosts)
-      if (is_end_of_list) {
-        changeIsEndOfList();
-      }
+    // Update the current page
+    incrementCurrentPage();
+    // Append the new posts with updated timestamps to the existing posts
+    addNewPosts(newPosts)
+    if (is_end_of_list) {
+      // Set the end of the list
+      changeIsEndOfList();
     }
-
   }, [currentPage, isEndOfList, incrementCurrentPage]);
 
   // Load more posts when the user scrolls into view
@@ -56,6 +58,8 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
     return () => clearInterval(intervalId);
   }, [updatePostTimes]);
 
+
+  // Render the posts
   const postCards = useMemo(() => posts.map((post) => (
     <PostCard key={post.id} data={post} />
   )), [posts]);

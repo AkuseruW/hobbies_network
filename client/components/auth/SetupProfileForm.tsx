@@ -20,6 +20,7 @@ const SetupProfileForm = ({ initialUser }: { initialUser?: { firstname: string, 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const router = useRouter();
+    // function to handle form submission
     const form = useForm<z.infer<typeof formSchema>>({
         // @ts-ignore
         resolver: zodResolver(formSchema),

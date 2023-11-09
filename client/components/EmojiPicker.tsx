@@ -20,7 +20,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ content, setContent }) => {
 
   // Function to toggle the visibility of the emoji picker.
   const handleToggleEmojiPicker = () => {
-    setEmojiPickerVisible((prevVisibility) => !prevVisibility);
+    setEmojiPickerVisible((prevVisibility) => !prevVisibility); // Toggle the visibility
   };
 
   // Function to handle clicks outside of the emoji picker.

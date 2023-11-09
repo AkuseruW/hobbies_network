@@ -19,13 +19,12 @@ const SubscriptionPage = async () => {
             <Separator />
 
             {hasSubscription ? (
-                <div>
+                <div className='space-y-5'>
                     <p>Vous êtes abonné. Profitez de votre compte certifié.</p>
-                    
                     <PortalButton />
                 </div>
             ) : (
-                <div className="p-4 rounded-lg">
+                <div className="p-4 rounded-lg space-y-5">
                     <p className="font-semibold">
                         Tarifs : 9.99€/mois
                     </p>

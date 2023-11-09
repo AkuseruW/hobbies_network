@@ -8,7 +8,6 @@ interface Hobby {
     id: number;
     name: string;
 }
-
 interface Props {
     hobbies: Hobby[];
     selectedHobby: number | null;
@@ -19,7 +18,6 @@ interface Props {
 
 export const HobbiesSelect: React.FC<Props> = ({ hobbies, selectedHobby, handleHobbyChange, setIsValid, error }) => {
     const [hobbyVisible, setHobbyVisible] = useState(false);
-
     const emojiPickerRef = useRef<HTMLDivElement>(null);
     const [hobbySelectedName, setHobbySelectedName] = useState(
         hobbies.find((hobby) => hobby.id === selectedHobby)?.name || 'Ajouter un hobby'
@@ -40,6 +38,7 @@ export const HobbiesSelect: React.FC<Props> = ({ hobbies, selectedHobby, handleH
             setHobbySelectedName('Ajouter un hobby');
             setIsValid(false);
         }
+        // Update the selected hobby in the parent component.
         handleHobbyChange(hobbyId);
     };
 

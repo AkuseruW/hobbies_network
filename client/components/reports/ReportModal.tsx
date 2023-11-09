@@ -23,27 +23,27 @@ const ReportModal = ({
     banUser: boolean
 }) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const today = new Date();
+    const today = new Date(); // Get today's date
 
     // Calculate tomorrow's date (J+1)
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
 
     const handleDateChange = (date: Date | null) => {
-        setSelectedDate(date);
+        setSelectedDate(date); // Update the selected date state
         if (!date) {
-            return null;
+            return null; // Return null if date is null
         }
         const currentDate = new Date();
         const durationInMinutes = Math.floor(
-            (date.getTime() - currentDate.getTime()) / (60 * 1000)
+            (date.getTime() - currentDate.getTime()) / (60 * 1000) // Convert milliseconds to minutes
         );
         setDuration(durationInMinutes);
     };
 
     const handleSubmit = () => {
-        approve();
-        setModalIsOpen();
+        approve(); // Call the approve function
+        setModalIsOpen(); // Close the modal
     };
 
     return (

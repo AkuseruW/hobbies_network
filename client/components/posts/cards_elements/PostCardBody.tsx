@@ -16,6 +16,7 @@ const PostBody: React.FC<PostBodyProps> = ({
 }) => {
     const [showCommentInput, setShowCommentInput] = useState(false);
 
+    // toggle comment input, hide/show
     const handleToggleInput = async () => {
         setShowCommentInput(!showCommentInput);
     };

@@ -13,10 +13,10 @@ const Searchbar = ({ search, type }: { search?: string, type?: string }) => {
 
   useEffect(() => {
     if (initialRender.current) {
-      initialRender.current = false
+      initialRender.current = false // Set initialRender to false
       return
     }
-
+    // Query condition for routing
     if (!query) {
       if (type === 'users') {
         router.push(`/utilisateurs`)

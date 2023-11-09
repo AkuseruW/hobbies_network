@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 const PostImagesCarousel = ({ images }: { images: string[] }) => {
     const [showGallery, setShowGallery] = useState(images.length > 1);
 
-    const maxImagesToShow = 6;
-    const visibleImages = showGallery ? images.slice(0, maxImagesToShow) : images;
-    const remainingImagesCount = Math.max(images.length - maxImagesToShow, 0);
+    const maxImagesToShow = 6; // Maximum number of images to show in the carousel
+    const visibleImages = showGallery ? images.slice(0, maxImagesToShow) : images; // Show all images if showGallery is true
+    const remainingImagesCount = Math.max(images.length - maxImagesToShow, 0); // Count remaining images
 
     return (
         <div className="relative w-full">

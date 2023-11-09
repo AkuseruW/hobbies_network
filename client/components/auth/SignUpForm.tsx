@@ -36,22 +36,21 @@ const SignUpForm = () => {
             const res = await signup(values);
             if (res.status_code === 201) {
                 router.push('/connexion');
+                setIsLoading(false);
             } else {
                 toast({
                     description: res.detail,
                     variant: "destructive"
                 })
+                setIsLoading(false) 
             }
 
         } catch (error) {
             setErrorMessage("Une erreur s'est produite");
-        } finally {
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 2000);
         }
     };
 
+    // Login with Google
     const handleGoogleLogin = () => {
         setIsLoading(true);
         router.push(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login/google`);

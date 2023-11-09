@@ -11,7 +11,6 @@ const HeaderLinksIcons = ({
     const { icon, text, url } = link;
     const pathname = usePathname()
 
-
     return (
         <Link
             href={url}

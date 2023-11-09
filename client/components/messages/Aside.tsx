@@ -22,6 +22,7 @@ const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initi
 
     useEffect(() => {
         const search = typeof searchParams.get('search') === 'string' ? searchParams.get('search') : undefined;
+        // function to get search user
         const getSearchUser = async () => {
             const { users } = await getUsersPaginated({ search: search?.toString() });
             setUsers(users);
@@ -29,13 +30,12 @@ const AsideChats = ({ currentUser, initialUsers }: { currentUser: Session, initi
         getSearchUser();
     }, [searchParams]);
 
+    // function to start conversation
     const handleStartConversation = async (user_id: number) => {
-        const uuid = await getChatUuid({ user_id });
-        router.push(`/conversations/${uuid}`);
-        toggleIsUserListOpen();
+        const uuid = await getChatUuid({ user_id }); // Call the getChatUuid API function
+        router.push(`/conversations/${uuid}`); // Redirect to the conversation
+        toggleIsUserListOpen(); // Close the user list
     }
-
-    console.log(isUserListOpen)
 
     return (
         <>

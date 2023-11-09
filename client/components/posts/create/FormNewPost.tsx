@@ -84,7 +84,6 @@ const FormNewPost = ({
         formData.append("hobby_id", selectedHobby !== null ? selectedHobby.toString() : ""); // Add 'hobby_id' field to the form data
         // Add selected images to the form data
         selectedImages.forEach((image) => formData.append("images", image));
-
         if (!isValid) {
             setError(true);
             toast({

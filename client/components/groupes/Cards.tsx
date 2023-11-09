@@ -60,9 +60,9 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   }, [currentPage, search, isEndOfList, setHobbies, changeIsEndOfList, incrementCurrentPage]);
 
   // Add or remove a hobby by its ID.
-  const addHobbyOrRemove = async (id: number) => {
-    toggleHobby(id);
-    await add_or_delete_hobby({ id });
+  const addHobbyOrRemove = async (hobby: Hobby) => {
+    toggleHobby(hobby);
+    await add_or_delete_hobby({ id: hobby.id });
   };
 
   useEffect(() => {
@@ -99,14 +99,14 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
             </div>
           </div>
         </div>
-        {hobbies.map(({ id, name, description, slug, icone_black, icone_white }) => (
+        {hobbies.map((hobby) => (
           <div
-            key={id}
-            className={`${isHobbySelected(id) && 'dark:bg-secondary_dark dark:text-white bg-white'
+            key={hobby.id}
+            className={`${isHobbySelected(hobby.id) && 'dark:bg-secondary_dark dark:text-white bg-white'
               } col-span-1  p-4 relative w-full h-60 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out dark:bg-background_dark dark:text-white`}
           >
             <div className="h-full flex flex-col justify-between">
-              <div key={name} className="group relative">
+              <div className="group relative">
                 <div className="flex items-center gap-2">
                   <svg
                     id="hexa"
@@ -129,30 +129,30 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
                       y="186"
                       width="200"
                       height="200"
-                      xlinkHref={isDarkTheme ? icone_white : icone_black}
+                      xlinkHref={isDarkTheme ? hobby.icone_white : hobby.icone_black}
                     />
                   </svg>
-                  <Link href={`hobby/${slug}`} className="ml-4 flex-grow">
-                    <h2 className="font-medium dark:text-white text-sm">{name}</h2>
+                  <Link href={`hobby/${hobby.slug}`} className="ml-4 flex-grow">
+                    <h2 className="font-medium dark:text-white text-sm">{hobby.name}</h2>
                   </Link>
                   <Button
                     type="button"
                     onClick={(e) => {
-                      addHobbyOrRemove(id);
+                      addHobbyOrRemove(hobby);
                     }}
-                    className={`h-[24px] relative bg-transparent p-0 border ${isHobbySelected(id)
+                    className={`h-[24px] relative bg-transparent p-0 border ${isHobbySelected(hobby.id)
                       ? 'border-primary dark:border-white'
                       : 'border-secondary dark:border-gray-500'
                       } hover:bg-transparent hover:border-primary dark:hover:border-white`}
                   >
                     <Icons.add
                       className="w-[24px] h-[12px] p-0 text-black dark:text-white"
-                      style={{ transform: isHobbySelected(id) ? 'rotate(45deg)' : 'rotate(0)' }}
+                      style={{ transform: isHobbySelected(hobby.id) ? 'rotate(45deg)' : 'rotate(0)' }}
                     />
                   </Button>
                 </div>
                 <p className="mt-5 text-gray-600 dark:text-gray-400 text-sm md:text-base">
-                  {description ? description.slice(0, 100) + ' ...' : 'Aucune description'}
+                  {hobby.description ? hobby.description.slice(0, 100) + ' ...' : 'Aucune description'}
                 </p>
               </div>
             </div>

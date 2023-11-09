@@ -2,7 +2,7 @@
 import { Icons } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { getAccessTokenFromClient } from '@/utils/_auth_client_info'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 const PortalButton = () => {
     const [isLoading, setIsLoading] = useState(false)

@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { Hobby } from '@/types/hobby_types';
 import { getHobbies } from '@/utils/requests/_hobbies_requests';
 import { UserHobbies } from '@/utils/_setupProfileCookies';
-// import { UserHobbies } from '@/utils/_setupProfileCookies';
 
 type Props = {
     search?: string | undefined;
@@ -25,34 +24,39 @@ const CardGroupeSetup: React.FC<Props> = ({ search, initialHobbies, hobbiesCooki
     const { resolvedTheme } = useTheme();
     const isDarkTheme = resolvedTheme === "dark";
     const [mounted, setMounted] = useState<boolean>(false);
+    // State to store selected hobbies
     const [selectedHobbies, setSelectedHobbies] = useState<Hobby[]>(
         initialHobbies.filter((hobby) =>
             hobbiesCookie?.some((cookieHobby) => cookieHobby.id === hobby.id)
         )
     );
-
-
+    
+    // Function to load more hobbies
     const loadMoreHobbies = useCallback(async () => {
-        const next = page + 1;
+        const next = page + 1; // Get the next page
         const newHobbies = await getHobbies({ search, page: next });
 
         if (newHobbies?.length) {
-            setPage(next);
-            setHobbies((prev) => [...(prev?.length ? prev : []), ...newHobbies]);
+            setPage(next); // Update the page
+            setHobbies((prev) => [...(prev?.length ? prev : []), ...newHobbies]); // Append new hobbies
         }
     }, [page, search]);
 
     const handleHobbyClick = (hobby: Hobby) => {
+        // Check if the hobby is already selected
         const isHobbySelected = selectedHobbies.some(
             (selectedHobby) => selectedHobby.id === hobby.id
         );
+        // Update the selected state
         if (isHobbySelected) {
+            // Remove the hobby from the selected state
             setSelectedHobbies((prevSelectedHobbies) =>
                 prevSelectedHobbies.filter(
                     (selectedHobby) => selectedHobby.id !== hobby.id
                 )
             );
         } else {
+            // Add the hobby to the selected state
             setSelectedHobbies((prevSelectedHobbies) => [...prevSelectedHobbies, hobby]);
         }
     };

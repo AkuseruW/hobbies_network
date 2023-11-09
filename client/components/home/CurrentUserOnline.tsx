@@ -10,23 +10,25 @@ const CurrentUserOnline = () => {
     const socket = useContext(WebSocketContext);
     const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
 
+    // Function to fetch online users with the WebSocket
     const fetchOnlineUsers = useCallback(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ action: 'get_online_users' }));
+            socket.send(JSON.stringify({ action: 'get_online_users' })); // Send a message to the server
         }
     }, [socket]);
 
     useEffect(() => {
         // Add an event listener for the WebSocket's "open" event
         const handleSocketOpen = () => {
-            fetchOnlineUsers();
+            fetchOnlineUsers(); // Fetch online users when the socket opens
         };
 
         if (socket) {
             socket.addEventListener('message', (event) => {
-                const dataArray = JSON.parse(event.data);
+                const dataArray = JSON.parse(event.data); // Parse the received data
             
                 if (Array.isArray(dataArray)) {
+                    // If the received data is an array, update the onlineUsers state
                     const userInfos = dataArray.filter((data) => data.action === 'user_info');
                     setOnlineUsers((prevUsers) => [...prevUsers, ...userInfos]);
                 }

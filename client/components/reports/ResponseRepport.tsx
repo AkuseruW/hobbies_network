@@ -12,9 +12,9 @@ const ResponseReport = ({ is_process, id }: { is_process: boolean, id: number })
 
   const onClickApprove = async () => {
     if (banUser) {
-      await approve_report({ report_id: id, duration: durationInMinutes });
+      await approve_report({ report_id: id, duration: durationInMinutes }); // Call the approve_report API function
     } else {
-      await approve_report({ report_id: id, duration: 0 });
+      await approve_report({ report_id: id, duration: 0 }); // Call the approve_report API function
     }
     setIsProcess(true);
   };

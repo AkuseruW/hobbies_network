@@ -8,8 +8,8 @@ const PinReport = ({ id, is_pinned }: { id: number, is_pinned: boolean }) => {
     const [isPinned, setIsPinned] = useState(is_pinned);
 
     const onClick = async () => {
-        await pin_unpin_report({ report_id: id });
-        setIsPinned(!isPinned);
+        await pin_unpin_report({ report_id: id }); // Call the pin_unpin_report API function
+        setIsPinned(!isPinned); // Update the isPinned state
     }
 
     return (

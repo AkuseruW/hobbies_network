@@ -5,29 +5,12 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { PostData } from "@/types/post_types";
 import DropDownBtn from "./DropDownCardPost";
-import DropDownComponent from "@/components/header/DropDownComponent";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const UserInfo = ({ data }: { data: PostData }) => {
     const { resolvedTheme } = useTheme();
     const isDarkMode = resolvedTheme === "dark";
-
-    const dropMenuItems = [
-        { 'label': 'Signaler', 'href': `/profil/${data.user.user_id}` },
-    ]
-
-    const trigger = (
-        <svg
-            className="w-5 h-5 text-gray-500"
-            aria-hidden="true"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path>
-        </svg>
-    )
 
     return (
         <div className="relative p-4 items-center justify-between dark:text-white">

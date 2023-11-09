@@ -17,19 +17,19 @@ const Modal = ({ children, title, size = '', close }: ModalProps) => {
 
   const onDismiss = useCallback(() => {
     if (close) {
-      close();
+      close(); // Close the modal
     } else {
-      document.body.classList.remove('no-scroll-body');
-      document.documentElement.style.overflow = 'auto';
-      router.back();
-      router.refresh();
+      document.body.classList.remove('no-scroll-body'); // Remove the no-scroll-body class
+      document.documentElement.style.overflow = 'auto'; // Reset the overflow style
+      router.back(); // Go back
+      router.refresh(); // Refresh the page
     }
   }, [close, router]);
 
   const onClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       if (e.target === overlay.current || e.target === wrapper.current) {
-        onDismiss();
+        onDismiss(); // Close the modal when the overlay or wrapper is clicked
       }
     },
     [onDismiss]
@@ -38,19 +38,19 @@ const Modal = ({ children, title, size = '', close }: ModalProps) => {
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onDismiss();
+        onDismiss(); // Close the modal when the Escape key is pressed
       }
     },
     [onDismiss]
   );
 
   useEffect(() => {
-    document.documentElement.style.overflow = 'hidden';
-    document.addEventListener('keydown', onKeyDown);
+    document.documentElement.style.overflow = 'hidden'; // Set the overflow style
+    document.addEventListener('keydown', onKeyDown); // Add the event listener
 
     return () => {
-      document.documentElement.style.overflow = 'auto';
-      document.removeEventListener('keydown', onKeyDown);
+      document.documentElement.style.overflow = 'auto'; // Reset the overflow style
+      document.removeEventListener('keydown', onKeyDown); // Remove the event listener
     };
   }, [onKeyDown]);
 

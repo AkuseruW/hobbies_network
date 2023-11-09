@@ -19,11 +19,13 @@ const DropDownBtn = ({ postId, user_id }: { postId: string, user_id: number }) =
     const { toast } = useToast()
     const { isOpen, toggleDropdown } = useDropdown();
 
+    // Handle delete post
     const handleDelete = async (postId: string) => {
         if (deleting) {
             return;
         }
         try {
+            // Call the deletePost API function
             setDeleting(true);
             await deletePost({ postId });
         } catch (error) {
@@ -40,6 +42,7 @@ const DropDownBtn = ({ postId, user_id }: { postId: string, user_id: number }) =
     const handleSubmitReport = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            // Call the reportPost API function
             const reportData = {
                 reported_id: postId,
                 reason: selectedReason,

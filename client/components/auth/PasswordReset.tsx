@@ -29,7 +29,6 @@ const ResetPasswordForm = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsLoading(true);
-
         try {
             passwordReset(values);
             toast({

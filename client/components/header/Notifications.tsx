@@ -12,18 +12,19 @@ const Notifications = ({ client }: { client?: boolean }) => {
   const { notifications, removeNotifications } = useNotificationsStore();
   const router = useRouter();
 
+  // Delete notification
   const deleteNotification = async (
     id: number,
     title: string,
     message_room_id: string,
     user_id: number
   ) => {
-    await notification_is_read({ notification_id: id });
-    removeNotifications(id);
+    await notification_is_read({ notification_id: id }); // Call the notification_is_read API function
+    removeNotifications(id); // Remove the notification
     if (client) {
       title === "Message"
-        ? router.push(`/conversations/${message_room_id}`)
-        : router.push(`/profil/${user_id}`);
+        ? router.push(`/conversations/${message_room_id}`) // Redirect to the conversation
+        : router.push(`/profil/${user_id}`); // Redirect to the profil
     }
   };
 

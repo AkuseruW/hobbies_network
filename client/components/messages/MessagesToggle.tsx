@@ -1,7 +1,6 @@
 import {
     Sheet,
     SheetContent,
-    SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
@@ -14,7 +13,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Icons } from "../icons";
 
 const MessagesToggle = async () => {
-    const { users } = await getUsersPaginated({})
+    const { users } = await getUsersPaginated({}) // Call the getUsersPaginated API function
 
     return (
         <Sheet>

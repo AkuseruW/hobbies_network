@@ -5,7 +5,6 @@ import { getPost } from "@/utils/requests/_posts_requests";
 import InputComment from "@/components/comments/InputComment";
 import UserInfo from "@/components/posts/cards_elements/UserInfoCard";
 import BtnAction from "@/components/posts/cards_elements/ButtonCardAction";
-import PostImagesCarousel from "@/components/posts/cards_elements/PostImages";
 import CommentCard from "@/components/comments/CommentCard";
 import { ImagePostPage } from "@/components/posts/ImagePostPage";
 
@@ -13,6 +12,7 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
   const postId = typeof params.id === 'string' ? params.id : '';
   const post = await getPost({ postId });
   const comments = await getComments({ postId });
+  // check if post has images
   const hasImages = post.post_images_urls && post.post_images_urls.length > 0;
 
   return (

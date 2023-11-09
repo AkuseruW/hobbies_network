@@ -16,8 +16,10 @@ const BtnAction = ({ data, handleToggleInput }: { data: PostData; handleToggleIn
 
     const handleLikePost = async () => {
         try {
+            // Call the likePost API function
             const response = await likePost({ postId: data.id });
             if (response) {
+                // If the response is successful, update the isLiked state
                 toggleLike(data.id);
                 setIsLiked(!isLiked);
             }

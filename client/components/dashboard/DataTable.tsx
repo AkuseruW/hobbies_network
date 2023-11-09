@@ -33,8 +33,8 @@ export function DataTable<TData, TValue>({ type, columns, data, pageSize, initia
     }, [page])
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newFilterValue = event.target.value;
-        setFilterValue(newFilterValue);
+        const newFilterValue = event.target.value; // Get the new filter value
+        setFilterValue(newFilterValue); // Update the filter value
 
         if (type === 'typeHobbies') {
             table.getColumn("name")?.setFilterValue(newFilterValue);

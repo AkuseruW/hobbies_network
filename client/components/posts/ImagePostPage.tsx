@@ -7,6 +7,7 @@ export const ImagePostPage = ({ images }: { images: string[] }) => {
   const [selectedImage, setSelectedImage] = useState(images[0]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Handle thumbnail click, set the selected image and index
   const handleThumbnailClick = (image: string, index: number) => {
     setSelectedImage(image);
     setCurrentIndex(index);
@@ -20,7 +21,7 @@ export const ImagePostPage = ({ images }: { images: string[] }) => {
           height={600}
           src={selectedImage}
           alt=""
-          className="object-contain h-[660px] w-full"
+          className="object-contain h-[100%] w-full"
         />
       </div>
 

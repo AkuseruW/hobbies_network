@@ -40,7 +40,7 @@ export const useHobbiesStore = create<HobbiesState>((set) => ({
 interface UserHobbiesState {
   hobbiesSelected: Hobby[];
   initializeUserHobbiesSelected: (hobbies: Hobby[]) => void;
-  toggleHobby: (id: number) => void;
+  toggleHobby: (hobby: Hobby) => void;
 }
 
 export const useUserHobbiesStore = create<UserHobbiesState>((set) => ({
@@ -52,16 +52,16 @@ export const useUserHobbiesStore = create<UserHobbiesState>((set) => ({
   },
 
   // Add or remove a hobby by its ID.
-  toggleHobby: (id) => {
-    // @ts-ignore
+  toggleHobby: (hobby) => {
     set((state) => {
-      const isAlreadySelected = state.hobbiesSelected.some((hobby) => hobby.id === id);
+      const isAlreadySelected = state.hobbiesSelected.some((selectedHobby) => selectedHobby.id === hobby.id);
       const newHobbiesSelected = isAlreadySelected
-        ? state.hobbiesSelected.filter((hobby) => hobby.id !== id)
-        : [...state.hobbiesSelected, { id }];
-
+        ? state.hobbiesSelected.filter((selectedHobby) => selectedHobby.id !== hobby.id)
+        : [...state.hobbiesSelected, hobby];
+  
       return { hobbiesSelected: newHobbiesSelected };
     });
   },
+  
 
 }));
