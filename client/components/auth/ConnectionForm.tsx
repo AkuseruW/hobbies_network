@@ -39,15 +39,23 @@ const ConnectionForm = () => {
             if (response.success) {
                 const { token, lastname, firstname, profile_picture, id, role } = response.data;
                 await setAuthCookies(token, lastname, firstname, profile_picture, id, role);
+                setIsLoading(false);
                 router.push("/");
             } else {
                 toast({
                     description: response.data.detail,
                     variant: "destructive"
                 })
+                setIsLoading(false);
+                form.reset();
             }
-        } finally {
+        } catch (error) {
+            toast({
+                description: "Une erreur s'est produite",
+                variant: "destructive"
+            })
             setIsLoading(false);
+            form.reset();
         }
     };
 
