@@ -3,26 +3,21 @@ import Link from "next/link";
 import {
     UserGroupIcon,
     RectangleStackIcon,
-    Cog6ToothIcon,
     ChartPieIcon,
     ArrowLeftOnRectangleIcon,
     ExclamationCircleIcon
 } from '@heroicons/react/24/outline';
-import { Icons } from "@/components/icons";
 
 const NavItem = ({ href, icon, text, unread }: { href: string, icon: any, text: string, unread?: number }) => (
     <li className="pl-4 py-2 list-none flex space-x-3 items-center">
         <Link href={href} className="flex items-center text-gray-900 dark:text-white hover:text-gray-600 font-medium mr-6">
             {icon}
-            <span className="text-lg">{text}</span>
+            <span className="text-lg">{text} {unread ? `(${unread})` : ''}</span>
         </Link>
-        {unread && (
-            <p className="bg-background_dark text-white dark:bg-background_light dark:text-black text-xs w-full font-bold px-2 ml-3">{unread}</p>
-        )}
     </li>
 );
 
-const Aside = ({ len_reports_unread, len_notifications_unread }: { len_reports_unread: number, len_notifications_unread: number }) => {
+const Aside = ({ len_reports_unread, len_notifications_unread, len_proposed_hobbies }: { len_reports_unread: number, len_notifications_unread: number, len_proposed_hobbies: number }) => {
     return (
         <aside className="hidden lg:block w-1/5 bg-white dark:bg-secondary_dark shadow-md h-screen overflow-hidden">
             <header className="p-4">
@@ -35,7 +30,7 @@ const Aside = ({ len_reports_unread, len_notifications_unread }: { len_reports_u
                 <ul className="space-y-4 flex flex-col justify-between">
                     <NavItem href="/dashboard" icon={<ChartPieIcon className="h-6 w-6 mr-3" />} text="Dashboard" />
                     <NavItem href="/dashboard/users" icon={<UserGroupIcon className="h-6 w-6 mr-3" />} text="Users" />
-                    <NavItem href="/dashboard/hobbies" icon={<RectangleStackIcon className="h-6 w-6 mr-3" />} text="Hobbies" />
+                    <NavItem href="/dashboard/hobbies" icon={<RectangleStackIcon className="h-6 w-6 mr-3" />} text="Hobbies" unread={len_proposed_hobbies} />
                     <NavItem href="/dashboard/reports" icon={<ExclamationCircleIcon className="h-6 w-6 mr-3" />} text="Reports" unread={len_reports_unread} />
                     {/* <NavItem href="/dashboard/notifications" icon={<Icons.bell className="h-6 w-6 mr-3" />} text="Notifications" unread={len_notifications_unread} /> */}
                 </ul>

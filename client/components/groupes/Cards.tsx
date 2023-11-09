@@ -87,7 +87,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   return (
     <>
       {isOpen && (
-        <Modal title="Ajouter un hobby" size="w-full sm:w-[90%] lg:w-[60%] md:w-[60%] " close={() => setIsOpen(false)}>
+        <Modal title="Proposer un hobbies ?" size="w-full sm:w-[90%] lg:w-[60%] md:w-[60%] " close={() => setIsOpen(false)}>
           <ProposeHobby />
         </Modal>
       )}
@@ -101,7 +101,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
             <div className="group relative">
               <div className="flex flex-col items-center gap-2">
                 <Icons.add className="w-20 h-20" />
-                <h2 className="text-sm font-medium dark:text-white">Ajouter vos hobbies</h2>
+                <h2 className="text-sm font-medium dark:text-white">Proposer un hobbies ?</h2>
               </div>
             </div>
           </div>

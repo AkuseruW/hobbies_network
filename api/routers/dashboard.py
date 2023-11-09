@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from models.Notification import AdminNotification
 from settings.database import get_session
-from models import Hobby, Post, User, Report
+from models import Hobby, Post, User, Report, ProposedHobby
 from dependencies.auth import get_current_active_user
 
 router = APIRouter(
@@ -24,11 +24,13 @@ def dashboard(db: Session = Depends(get_session), current_user: User = Depends(g
     admin_notifications = db.query(AdminNotification).filter(AdminNotification.is_read == False).count()
     # Get the total number of unread reports
     reports = db.query(Report).filter(Report.is_read == False).count()
+    proposed_hobbies = db.query(ProposedHobby).count()
         
     return {
         "users": users,
         "posts": posts,
         "hobbies": hobbies,
         "adminNotifications": admin_notifications,
-        "reports": reports
+        "reports": reports,
+        "proposedHobbies": proposed_hobbies
     }

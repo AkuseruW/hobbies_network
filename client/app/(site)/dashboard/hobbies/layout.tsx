@@ -2,12 +2,17 @@ import Link from "next/link";
 import { PencilSquareIcon, TableCellsIcon } from "@heroicons/react/24/outline";
 import NavigationItem from "@/components/dashboard/NavigationComponent";
 import { Icons } from "@/components/icons";
+import { getDashboardDataCount } from "@/utils/requests/_dashboard_requests";
 
 export default async function HobbiesLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
+  const { proposedHobbies } = await getDashboardDataCount();
+
+
   return (
     <main className="w-full">
       <div className="container mx-auto px-6 py-6">
@@ -33,6 +38,7 @@ export default async function HobbiesLayout({
               link="/dashboard/hobbies/proposed_hobbies"
               icon={<Icons.help className="h-6 w-6 mr-3" />}
               text="Hobbies Suggest"
+              count={proposedHobbies}
             />
           </ul>
         </nav>

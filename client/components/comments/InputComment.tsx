@@ -8,7 +8,6 @@ const InputComment = ({ post_id }: { post_id: string }): JSX.Element => {
   const [comment, setComment] = useState<string>("");
   const { toast } = useToast()
 
-
   // Handle changes in the textarea input.
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setComment(event.target.value);
@@ -30,7 +29,7 @@ const InputComment = ({ post_id }: { post_id: string }): JSX.Element => {
       setComment("");
       // Toast the user.
       toast({
-        description: "Commentaire publie!",
+        description: "Commentaire publié !",
       })
     }
   };

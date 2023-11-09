@@ -26,15 +26,6 @@ const DashboardPage = async () => {
               <DashboardCard title="Hobbies" icon={<CreditCard className="h-4 w-4 text-muted-foreground" />} value={hobbies} />
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <Card className="col-span-4 dark:bg-secondary_dark dark:border-gray-400">
-                <CardHeader>
-                  <CardTitle>Overview</CardTitle>
-                </CardHeader>
-                <CardContent className="pl-2">
-                  {/* <Overview /> */}
-                </CardContent>
-              </Card>
-
               <Card className="col-span-3 dark:bg-secondary_dark dark:border-gray-400">
                 <CardHeader>
                   <CardTitle>Pin Reports</CardTitle>
