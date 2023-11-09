@@ -22,10 +22,8 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
   const [ref, inView] = useInView();
 
   useEffect(() => {
-    if (posts.length === 0) {
-      initializePosts(initialPosts);
-    }
-  }, []);
+    initializePosts(initialPosts);
+  }, [initialPosts]);
 
   const loadMorePosts = useCallback(async () => {
     // Check if the end of the list has been reached
