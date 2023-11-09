@@ -15,8 +15,8 @@ ALLOWED_DIRECTORIES = {"profil", "post", "hobby"}
 # Limit the maximum file size to 5MB (adjust as needed)
 MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024
 
-
 async def upload_image_to_cloudinary(file: UploadFile, directory: str):
+    # Check if the directory is allowed
     if directory not in ALLOWED_DIRECTORIES:
         raise ValueError("Invalid directory")
 
@@ -29,7 +29,7 @@ async def upload_image_to_cloudinary(file: UploadFile, directory: str):
     # Reset file read position after validation
     file.file.seek(0)
 
-    # Limit file size
+    # Check if the file size exceeds the maximum allowed size
     if file.size > MAX_FILE_SIZE_BYTES:
         raise HTTPException(
             status_code=413, detail="La taille de l'image ne doit pas dépasser 5 Mo.")
@@ -45,15 +45,24 @@ async def delete_image(public_id):
 
 
 async def upload_hobby_svg(white: UploadFile, black: UploadFile):
+    # Check if the file size exceeds the maximum allowed size
     if white.size > MAX_FILE_SIZE_BYTES or black.size > MAX_FILE_SIZE_BYTES:
         raise HTTPException(status_code=413, detail="File size is too large")
 
+    # Upload the white and black SVG files to Cloudinary
     response_white = cloudinary.uploader.upload(
         white.file, upload_preset="hobby")
     response_black = cloudinary.uploader.upload(
         black.file, upload_preset="hobby")
 
+    # Return the public IDs and secure URLs of the uploaded files
     return {
-        "white": {"public_id": response_white["public_id"], "secure_url": response_white["secure_url"]},
-        "black": {"public_id": response_black["public_id"], "secure_url": response_black["secure_url"]}
+        "white": {
+            "public_id": response_white["public_id"],
+            "secure_url": response_white["secure_url"]
+        },
+        "black": {
+            "public_id": response_black["public_id"],
+            "secure_url": response_black["secure_url"]
+        }
     }

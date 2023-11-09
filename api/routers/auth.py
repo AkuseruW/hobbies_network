@@ -41,6 +41,7 @@ github_secret = os.getenv("GITHUB_SECRET")
 google_client = os.getenv("GOOGLE_CLIENT")
 google_secret = os.getenv("GOOGLE_SECRET")
 STRIPE_SECRET = os.getenv("STRIPE_SECRET")
+CLIENT_URL = os.getenv("CLIENT_URL")
 
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
@@ -50,7 +51,7 @@ access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 github_client_id = github_client
 github_client_secret = github_secret
 SCOPE = "https://www.googleapis.com/auth/userinfo.email"
-REDIRECT_URI = "http://localhost:3000/connexion/callback"
+REDIRECT_URI = f"{CLIENT_URL}/connexion/callback"
 stripe.api_key = STRIPE_SECRET
 
 
@@ -59,6 +60,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     # Check if the user exists
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
+        # If the user doesn't exist, raise an HTTP 401 Unauthorized exception
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -69,6 +71,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = create_access_token(
         data={"email": user.email}, expires_delta=access_token_expires
     )
+    # Return the access token and token type as a response
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -77,19 +80,12 @@ def login_for_access_token(signin_request: SignInRequest):
     # Check if the user exists
     user = authenticate_user(signin_request.email, signin_request.password)
     if not user:
+        # If the user doesn't exist, raise an HTTP 401 Unauthorized exception
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    if user.bans:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Votre compte a été banni",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
+        )    
     # Create access token
     access_token = create_access_token(
         data={"email": user.email}, expires_delta=access_token_expires
@@ -105,9 +101,10 @@ def read_users_me(db: Session = Depends(get_session),current_user: User = Depend
     # Check if the user is banned
     if current_user.is_banned:
         raise HTTPException(status_code=401, detail="Your account is banned.")
-    
+    # Determine if the user has a subscription
     has_subscription = bool(current_user.subscriptions)
     
+    # Prepare the user session data to be returned
     user_session = {
         "id": current_user.id,
         "email": current_user.email,
@@ -125,7 +122,7 @@ def read_users_me(db: Session = Depends(get_session),current_user: User = Depend
 async def sign_up(user_data: UserIn, session: Session = Depends(get_session)):
     email = user_data.email
     password = user_data.password
-
+    # Check if the email and password are provided
     if not email or not password:
         raise HTTPException(status_code=400, detail="Email and password are required.")
 
@@ -134,11 +131,14 @@ async def sign_up(user_data: UserIn, session: Session = Depends(get_session)):
     if existing_user:
         raise HTTPException(status_code=409, detail="Email already exists.")
 
+    # Hash the password with bcrypt
     hashed_password = get_password_hash(password)
+    #  Create a new user
     new_user = User(email=email, password=hashed_password)
     # Set default role
     new_user.role = Role.ROLE_USER
 
+    # Add the new user to the database
     session.add(new_user)
     session.commit()
     session.refresh(new_user)
@@ -161,10 +161,10 @@ async def update_password(
 ):
     data = await request.body()
     data = json.loads(data)
-
+    # Get the current password and new password
     current_password = data.get("current_password")
     new_password = data.get("new_password")
-    
+    # Check if the user exists
     user = db.query(User).get(current_user.id)
     
     # Check if the current password is correct
@@ -195,6 +195,7 @@ async def google_auth():
 
 @router.get("/callback_github")
 async def login_github_callback(code: str, db: Session = Depends(get_session)):
+    
     params = {
         "client_id": github_client_id,
         "client_secret": github_client_secret,
@@ -215,6 +216,7 @@ async def login_github_callback(code: str, db: Session = Depends(get_session)):
 
 @router.get("/callback_google")
 async def login_google_callback(code: str, db: Session = Depends(get_session)):
+    # Prepare the data for the Google callback
     data = {
         "code": code,
         "client_id": google_client,
@@ -222,12 +224,13 @@ async def login_google_callback(code: str, db: Session = Depends(get_session)):
         "redirect_uri": REDIRECT_URI,
         "grant_type": "authorization_code",
     }
-
+    # Perform the Google callback to obtain user information
     user = await google_callback(data, db)
+    # Create an access token for the user
     access_token = create_access_token(
         data={"email": user.email}, expires_delta=access_token_expires
     )
-
+    # Create user info with the access token
     user_info = create_user_info(user, access_token)
     return user_info
 
@@ -261,14 +264,14 @@ async def forgot_password(request: Request, db: Session = Depends(get_session)):
     data = await request.body()
     data = json.loads(data)
     email = data.get("email")
-
+    # Check if the user exists
     user = db.query(User).filter_by(email=email).first()
-    
+    # 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
+    # Check if the token already exists in the database
     token_already_exists = db.query(PasswordReset).filter_by(email=email).first()
-    
+    # Delete the token if it already exists
     if token_already_exists:
         db.delete(token_already_exists)
         db.commit()
@@ -306,7 +309,7 @@ async def reset_password(request: Request, db: Session = Depends(get_session)):
         raise HTTPException(status_code=400, detail="Le token est invalide ou a expiré")
 
     user = db.query(User).filter_by(id=password_reset.user_id).first()
-
+    # Check if the user exists
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 

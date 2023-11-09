@@ -23,7 +23,6 @@ def get_mutually_following_users(current_user_id: int, db: Session) -> List[User
 
     return mutually_following_users
 
-
 class WebSocketManager:
     def __init__(self):
         self.active_connections: Dict[WebSocket, User] = {}
@@ -40,7 +39,6 @@ class WebSocketManager:
         for connection, user in self.active_connections.items():
             # Check if the user's ID is in the list of mutually following users
             if user != current_user.id and user in [u.id for u in mutually_following_users]:
-                print(f"Sending new user connected message to user {user}")
                 message = {
                     "action": "new_user_connected",
                     "user_info": {
@@ -92,16 +90,19 @@ class WebSocketManager:
                     await connection.send_json(message)
 
     async def send_new_comment(self, comment_dict: dict):
+        # Send a new comment to all active WebSocket connections
         for connection in list(self.active_connections):
             await connection.send_json(comment_dict)
 
     def get_active_connections(self, db: Session):
+        # Get active connections and associated user info
         return {
             websocket: User.get_user_by_id(user_id, db)
             for websocket, user_id in self.active_connections.items()
         }
 
     def get_active_user_info(self, current_user_id, db: Session):
+        # Get user info for active connections that are mutually following the current user
         active_connections = self.get_active_connections(db)
         mutually_following_users = get_mutually_following_users(current_user_id, db)
 
@@ -120,6 +121,7 @@ class WebSocketManager:
         return users
     
     async def send_personal_message(self, message, sender_id, receiver_id):
+        # Send a personal message to the sender and receiver
         sender_connection = self.get_connection_by_user_id(sender_id)
         receiver_connection = self.get_connection_by_user_id(receiver_id)
 
@@ -140,14 +142,15 @@ class WebSocketManager:
                 print(f"Error sending message to receiver {receiver_id}: {e}")
 
     def get_connection_by_user_id(self, user_id: int) -> WebSocket:
+        # Get a WebSocket connection by user ID
         for connection, user in self.active_connections.items():
             if user == user_id:
                 return connection
         return None
     
     async def send_notification(self, notification, receiver_id):
+        # Send a notification to the specified receiver's WebSocket connection
         receiver_connection = self.get_connection_by_user_id(receiver_id)
-        print(notification)
         if receiver_connection:
             try:
                 await receiver_connection.send_json(notification)

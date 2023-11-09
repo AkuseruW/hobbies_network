@@ -17,7 +17,7 @@ router = APIRouter(
 
 @router.get("/posts")
 async def read_posts(page: int = 1, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
-    posts = await get_posts(current_user, page, db)
+    posts = await get_posts(current_user, page, db) # Get posts
     return posts
 
 
@@ -39,11 +39,15 @@ async def create_post(request: Request, db: Session = Depends(get_session), curr
     images = form_data.getlist('images')
     hobby_id = form_data.get('hobby_id')
     
+    
     if not content or not hobby_id:
+        # Check if content and hobby_id are provided, and if not, raise an HTTP 400 Bad Request exception.
         raise HTTPException(status_code=400, detail="Tous les champs requis doivent être remplis.")
-
+    
+    # Create a new post and add it to the database
     new_post = await post_to_database(db, content, user_id, images, hobby_id)
-
+    
+    # Prepare data for the new post
     new_posts_data = {
         'id': str(new_post.id),
         'content': new_post.content,
@@ -63,7 +67,7 @@ async def create_post(request: Request, db: Session = Depends(get_session), curr
             'profile_picture': new_post.user_profile_picture(),
         }
     }
-
+    # Send the new post to followers using a WebSocket manager
     await ws_manager.send_new_post_to_followers(new_posts_data, hobby_id, user_id, db)
     return new_post
 
@@ -132,12 +136,15 @@ async def delete_post(post_id: str, db: Session = Depends(get_session), current_
     post = db.query(Post).filter(Post.id == post_id).first()
 
     if post is None:
+        # If the post is not found, raise an HTTP 404 Not Found exception
         raise HTTPException(status_code=404, detail="Post not found")
     if post.user_id != current_user.id and current_user.user_role != "ROLE_ADMIN":
+        # Check if the current user has permission to delete the post, if not, raise an HTTP 403 Forbidden exception
         raise HTTPException(
             status_code=403, detail="You don't have permission to delete this post")
 
     if post:
+        # If the post exists, delete associated images from Cloudinary and the database
         post_images = db.query(PostImage).filter(
             PostImage.post_id == post_id).all()
         if post_images:
@@ -154,11 +161,14 @@ async def delete_post(post_id: str, db: Session = Depends(get_session), current_
 
 @router.patch("/post/{post_id}")
 async def update_post(post_id: str, request: Request, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
+    # Retrieve the post from the database based on post_id
     post = db.query(Post).filter(Post.id == post_id).first()
 
     if post is None:
+        # If the post is not found, raise an HTTP 404 Not Found exception
         raise HTTPException(status_code=404, detail="Post not found")
     if post.user_id != current_user.id:
+        # Check if the current user has permission to update this post, if not, raise an HTTP 403 Forbidden exception
         raise HTTPException(
             status_code=403, detail="You don't have permission to update this post")
 
@@ -166,6 +176,7 @@ async def update_post(post_id: str, request: Request, db: Session = Depends(get_
     content = form_data.get("content")
     hobby_id = form_data.get("hobby_id")
 
+    # Update the post content and hobby_id if provided
     if content:
         post.content = content
     if hobby_id:

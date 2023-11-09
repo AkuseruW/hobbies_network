@@ -4,7 +4,7 @@ import stripe
 from sqlalchemy.orm import Session
 from dependencies.certification import cancel_subscription, create_subscription
 from dependencies.mailer import send_mail
-from models import Subscription, User
+from models import User
 from settings.database import get_session
 from datetime import datetime
 from fastapi.responses import RedirectResponse
@@ -15,8 +15,9 @@ import os
 
 
 load_dotenv()
-YOUR_DOMAIN = os.getenv("CLIENT_URL")
 STRIPE_SECRET = os.getenv("STRIPE_SECRET")
+CLIENT_URL = os.getenv("CLIENT_URL")
+STRIPE_WHSEC = os.getenv("STRIPE_WHSEC")
 
 router = APIRouter(prefix="/api", tags=["certification"])
 
@@ -26,14 +27,15 @@ stripe.api_key = STRIPE_SECRET
 @router.post("/certification")
 def create_certification(user_token: str = Form(...)):
     try:
+        # Get the current user from the token
         current_user = get_current_user(token=user_token)
-        
         if (not current_user):
+            # Raise an exception if the user is not found
             HTTPException(status_code=404, detail="User not found")
         
-        user_email = current_user.email
+        user_email = current_user.email 
         user_id = current_user.id 
-        
+        # Create a checkout session
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
@@ -42,22 +44,22 @@ def create_certification(user_token: str = Form(...)):
                 },
             ],
             mode="subscription",
-            success_url="http://localhost:3000/profil/settings/abonnements"+"?success=true&session_id={CHECKOUT_SESSION_ID}",
-            cancel_url="http://localhost:3000/profil/settings/abonnements"+"?canceled=true",
+            success_url=f"{CLIENT_URL}/profil/settings/abonnements"+"?success=true&session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=f"{CLIENT_URL}/profil/settings/abonnements"+"?canceled=true",
             customer_email=user_email 
         )
-        
+        # Set metadata for the checkout session
         checkout_session.metadata = {
             "user_id": str(user_id)
         }
 
+        # Configure the email field as non-editable
         checkout_session.url_options = {
             "customer_email": {
                 "editable": False
             }
         }
 
-        # return {"checkout_url": checkout_session.url}   
         return RedirectResponse(checkout_session.url, status_code=303)    
     except Exception as e:
         print(e)
@@ -66,7 +68,7 @@ def create_certification(user_token: str = Form(...)):
 
 @router.post("/webhook")
 async def webhook_received(request: Request, stripe_signature: str = Header(), db: Session = Depends(get_session)):
-    endpoint_secret = 'whsec_DxJhwmxows8xhOcCUL7aPH0XnIfRwG6L'
+    endpoint_secret = STRIPE_WHSEC
     payload  = await request.body()
     try:
         event = stripe.Webhook.construct_event(
@@ -128,7 +130,13 @@ async def webhook_received(request: Request, stripe_signature: str = Header(), d
 
 
 @router.post('/create-portal-session')
-def create_portal_session(db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
+def create_portal_session(db: Session = Depends(get_session), user_token: str = Form(...)):
+    # Get the current user from the token
+    current_user = get_current_user(token=user_token)
+    if (not current_user):
+        # Raise an exception if the user is not found
+        HTTPException(status_code=404, detail="User not found")
+        
     user = db.query(User).filter(User.id == current_user.id).first()
 
     if not user.subscriptions:
@@ -141,11 +149,10 @@ def create_portal_session(db: Session = Depends(get_session), current_user: User
     # Retrieve the Checkout Session associated with the subscription
     checkout_session = stripe.Subscription.retrieve(subscription_id)
 
-    return_url = YOUR_DOMAIN
-
     portalSession = stripe.billing_portal.Session.create(
         customer=checkout_session.customer,
-        return_url=return_url,
+        return_url=CLIENT_URL,
     )
-    print("\t", portalSession.url)
-    return {"url": portalSession.url}
+    
+    return RedirectResponse(portalSession.url, status_code=303)    
+    # return {"url": portalSession.url}

@@ -128,9 +128,11 @@ async def get_user_by_id(
         db: Session = Depends(get_session),
         current_user: User = Depends(get_current_active_user),
 ):
+    # Retrieve the user from the database based on user_id
     user = db.query(User).filter(User.id == user_id).first()
 
     if user is None:
+        # If the user is not found, raise an HTTP 404 Not Found exception
         raise HTTPException(status_code=404, detail="User not found")
 
     # Check if the current user is following the user
@@ -155,14 +157,15 @@ async def get_user_by_id(
         .slice(offset, offset + per_page)
         .all()
     )
-
+    # Determine which posts the user has liked
     liked_post_ids = {post.id for post in user.liked_posts}
-
+    # Extract the user's hobbies and related counts
     hobbies = [hobby.hobby for hobby in user.hobbies]
     count_hobbies = len(hobbies)
     count_followers = len(user.followers_list)
     count_following = len(user.following_list)
-
+    
+    # Prepare user information with posts
     user_with_posts = {
         "user": UserRead(**jsonable_encoder(user)),
         "is_following": is_following,
@@ -216,6 +219,7 @@ async def ban_user(
         current_user: User = Depends(get_current_active_user),
 ):
     if current_user.user_role != "ROLE_ADMIN":
+        # Check if the user is an admin
         raise HTTPException(
             status_code=403, detail="Vous n'êtes pas autorisé à effectuer cette action."
         )
@@ -243,7 +247,7 @@ async def ban_user(
         .filter(Ban.user_id == user_id, Ban.expires_at > datetime.utcnow())
         .first()
     )
-
+    # Create a new ban or update an existing one
     ban_duration_days = duration // 1440
 
     message = f"{user.firstname} {user.lastname} a été banni pour {ban_reason}. Votre compte sera désactivé pour une durée de {ban_duration_days} jours."
@@ -274,6 +278,7 @@ async def setup_user_profile(
         db: Session = Depends(get_session),
         current_user: User = Depends(get_current_active_user),
 ):
+    # Get the form data and extract the first name, last name, bio, and profile picture
     form_data = await request.form()
     first_name = form_data.get("firstName")
     last_name = form_data.get("lastName")
@@ -288,9 +293,10 @@ async def setup_user_profile(
         "hobbies": hobbies,
         "profile_picture": profile_picture,
     }
-
+    # Update the user's profile
     user_updated = await set_up_profile(user_data, current_user, db)
 
+    # Update the user's hobbies
     user_hobbies = [
         UserToHobby(user_id=user_updated.id, hobby_id=int(hobby_id))
         for hobby_id in hobbies
@@ -351,14 +357,15 @@ async def change_profile_picture(
 ):
     form_data = await request.form()
     profile_picture = form_data.get("file")
-
+    
+    #  Check if the user exists
     user = db.query(User).filter(User.id == current_user.id).first()
-
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
+    
+    # Delete the old profile picture
     await delete_image(user.public_id)
-
+    # Upload the new profile picture
     file = await upload_image_to_cloudinary(
         file=profile_picture, directory="profil"
     )
@@ -391,14 +398,13 @@ async def unban_user(
 
     db.delete(ban)
     db.commit()
-
     messageUnban = "Vous avez été débanni. Bienvenue de nouveau !"
     send_mail(email=ban.user.email, subject="Unban", message=messageUnban)
 
     return {"message": "Utilisateur unban"}
 
-
-scheduler = BackgroundScheduler()
+#  Define a scheduler to schedule the unban process
+scheduler = BackgroundScheduler() 
 scheduler.start()
 
 

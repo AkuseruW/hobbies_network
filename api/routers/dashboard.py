@@ -16,11 +16,13 @@ def dashboard(db: Session = Depends(get_session), current_user: User = Depends(g
         HTTPException(
             status_code=403, detail="You are not authorized to perform this action."
         )
- 
-    users = db.query(User).count()
-    posts = db.query(Post).count()
-    hobbies = db.query(Hobby).count()
+    
+    users = db.query(User).count() # Get the total number of users
+    posts = db.query(Post).count() # Get the total number of posts
+    hobbies = db.query(Hobby).count() # Get the total number of hobbies
+    # Get the total number of unread admin notifications
     admin_notifications = db.query(AdminNotification).filter(AdminNotification.is_read == False).count()
+    # Get the total number of unread reports
     reports = db.query(Report).filter(Report.is_read == False).count()
         
     return {

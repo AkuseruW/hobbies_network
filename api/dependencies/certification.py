@@ -9,6 +9,7 @@ def create_subscription(
     current_period_start,
     current_period_end
 ):
+    # Create a new Subscription object with the provided details
     subscription = Subscription(
         user_id=user_id,
         subscription_id=subscription_id,
@@ -16,7 +17,7 @@ def create_subscription(
         current_period_start=current_period_start,
         current_period_end=current_period_end
     )
-    
+    # Add the new subscription to the database
     db.add(subscription)
     db.commit()
     db.refresh(subscription)
@@ -26,7 +27,10 @@ def cancel_subscription(
     db: Session,
     subscription_id: str
 ):
+    # Query the subscription by its subscription_id
     subscription = db.query(Subscription).filter(Subscription.subscription_id == subscription_id).first()
+    # Update the subscription status to "canceled"
     subscription.status = StatusChoice.canceled
+    # Commit the changes to the database
     db.commit()
     return subscription

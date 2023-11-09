@@ -83,6 +83,7 @@ async def post_to_database(db, content, user_id, images, hobby_id):
             new_image = PostImage(public_id=file["public_id"],
                                   url=file["secure_url"], width=file["width"],
                                   height=file["height"])
+            # Add the new image to the post's list of images
             new_post.post_images.append(new_image)
 
     # Add the new_post to the database
@@ -94,15 +95,16 @@ async def post_to_database(db, content, user_id, images, hobby_id):
 
 
 async def get_post_by_hobby(current_user: User, hobby_id: int, db: Session = Depends(get_session)):
+    # Query for posts with the specified hobby_id, ordered by creation date
     posts = db.query(Post).filter(Post.hobby_id == hobby_id).order_by(
         desc(Post.created_at)).all()
 
     user = db.query(User).get(current_user.id)  # Get the user by ID
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
+    # Create a set of liked post IDs for the current user
     liked_post_ids = {post.id for post in user.liked_posts}
-
+    # Generate post data for each post, including whether the user has liked each post
     posts_data = [create_post_info_dict(
         post, liked_post_ids) for post in posts]
 

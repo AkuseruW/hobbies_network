@@ -47,7 +47,6 @@ async def follow_or_unfollow_user(
                 receiver_id=user_to_follow.id,
                 content=f"{current_user.user_name} vous a follow",
             )
-            
 
             db.add_all([follower, notification])
             db.commit()
@@ -69,7 +68,7 @@ async def follow_or_unfollow_user(
                     }
                 }
             }
-            
+            # Send a notification using WebSockets
             await ws_manager.send_notification(notification=notification_ws, receiver_id=user_to_follow.id)
 
             return {"message": "You have followed this user."}

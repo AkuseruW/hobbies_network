@@ -69,7 +69,7 @@ for router in routers:
     app.include_router(router)
 
 
-
+# Add middleware
 app.add_middleware(
     SessionMiddleware,
     secret_key="d0f75c01f47d53050dad60158c9f98840b6e22f3dce028a9a1d1e229286a236a",

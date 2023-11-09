@@ -46,6 +46,7 @@ def read_admin_notifications(
     admin_notifications = db.query(AdminNotification).filter_by(is_read=False).offset(offset).limit(
         params.per_page).all()
 
+    # Prepare data for the admin notifications
     admin_notifications_data = []
     for notification in admin_notifications:
         admin_notification_data = {
@@ -80,7 +81,8 @@ def read_notifications(params: ReportsQueryParams = Depends(), db: Session = Dep
         params.page = 1
     elif params.page > total_pages:
         return {"notifications": [], "totalPages": total_pages}
-
+    
+    #  Count the number of new notifications
     count_new_notifications = db.query(Notification).filter_by(receiver_id=current_user.id, is_read=False).count()
 
     # Query for admin notifications that are not marked as read
@@ -112,15 +114,17 @@ def read_notifications(params: ReportsQueryParams = Depends(), db: Session = Dep
 @router.delete("/notification_is_read/{notification_id}")
 def delete_notifications(notification_id: int, db: Session = Depends(get_session),
                          current_user: User = Depends(get_current_active_user)):
-
+    # Retrieve the receiver user from the database based on the current user's ID
     receiver = db.query(User).filter(User.id == current_user.id).first()
     if receiver:
+        # If the receiver user is found, attempt to retrieve the notification by its ID
         notification = db.query(Notification).filter(Notification.id == notification_id).first()
         if notification:
+            # If the notification is found, delete it and commit the changes to the database
             db.delete(notification)
             db.commit()
             return {"message": "Notification marked as read"}
-
+        # If the notification is not found, raise an HTTP 404 Not Found exception
         raise HTTPException(status_code=404, detail="Notification not found")
-
+    # If the receiver user is not found, raise an HTTP 404 Not Found exception
     raise HTTPException(status_code=404, detail="User not found")

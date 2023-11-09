@@ -24,10 +24,11 @@ class HobbyQueryParams:
         search: str = Query(None, description="search"),
         q: str = Query(None, description="q"),
     ):
-        self.page = page
-        self.per_page = per_page
-        self.search = search
-        self.q = q
+        # Initialize the object with default query parameters
+        self.page = page  # Page number (default: 1)
+        self.per_page = per_page # Items per page (default: 10)
+        self.search = search # Search query parameter (default: None)
+        self.q = q # Another query parameter (default: None)
 
 
 @router.get("/all_hobbies", response_model=dict)
@@ -46,9 +47,11 @@ def get_hobbies(
     user_hobbies = [user_to_hobby.hobby.id for user_to_hobby in user.hobbies]
     hobbies_query = db.query(Hobby)
 
+    # Filter hobbies by search
     if params.search:
         hobbies_query = hobbies_query.filter(Hobby.name.ilike(f"%{params.search}%"))
 
+    # Filter hobbies by query
     hobbies = hobbies_query.offset(offset).limit(params.per_page).all()
 
     hobbies_data = []
@@ -77,19 +80,24 @@ def get_proposed_hobbies(
     current_user: User = Depends(get_current_active_user),
 ):
     if current_user.user_role != "ROLE_ADMIN":
+        # Check if the current user has admin privileges, and if not, raise an HTTP 403 Forbidden exception
         raise HTTPException(
             status_code=403, 
             detail="You are not authorized to perform this action."
         )
-    
+    # Calculate the offset based on pagination parameters
     offset = (params.page - 1) * params.per_page
+    # Count the total number of proposed hobbies in the database
     total_hobbies = db.query(Hobby).count()
+    # Calculate the total number of pages based on the total hobbies and items per page
     total_pages = (total_hobbies + params.per_page - 1) // params.per_page
+    # Query the proposed hobbies from the database
     hobbies_query = db.query(ProposedHobby)
 
     if params.search:
+        # If a search query is provided, filter the proposed hobbies by name using a case-insensitive search
         hobbies_query = hobbies_query.filter(ProposedHobby.name.ilike(f"%{params.search}%"))        
-    
+    # Retrieve a list of proposed hobbies based on the pagination parameters
     hobbies = hobbies_query.offset(offset).limit(params.per_page).all()
     
     return {"hobbies": hobbies, "totalPages": total_pages}
@@ -174,6 +182,7 @@ async def update_hobby(
         uploaded_banner = await upload_image_to_cloudinary(
             file=banner, directory="hobby"
         )
+        
         hobby.public_id = uploaded_banner["public_id"]
         hobby.url = (uploaded_banner["secure_url"],)
         hobby.width = (uploaded_banner["width"],)
