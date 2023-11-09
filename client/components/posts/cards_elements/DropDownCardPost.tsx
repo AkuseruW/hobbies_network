@@ -60,8 +60,10 @@ const DropDownBtn = ({ postId, user_id }: { postId: string, user_id: number }) =
     return (
         <>
             {showModal && (
-                <Modal title="Signaler le contenu" size="w-1/2 md:w-1/3 lg:w-2/4">
-                    <div ref={modalRef} className="p-4">
+                <Modal title="Signaler le contenu" size="w-[90%] h-[50%] max-sm:h-[55%] sm:w-[60%] md:w-[60%] md:h-[55%]
+                 lg:w-[40%] lg:h-[50%]
+                 " close={() => setShowModal(false)}>
+                    <div  className="p-4">
                         <h2 className="text-lg font-semibold mb-4">Signaler le contenu</h2>
                         <ReportModalForm
                             isOpen={showModal}

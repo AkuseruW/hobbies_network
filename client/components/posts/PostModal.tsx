@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 import { PostData } from "@/types/post_types";
 import { PostComment } from "@/types/comments_types";
-import PostImagesCarousel from "./cards_elements/PostImages";
 import UserInfo from "./cards_elements/UserInfoCard";
 import BtnAction from "./cards_elements/ButtonCardAction";
 import InputComment from "../comments/InputComment";
@@ -21,7 +20,6 @@ const PostModalComponent = ({ post, comments }: { post: PostData; comments: Post
           <div className="w-full sm:w-[75%] flex h-full border-r-2 border-gray">
             {/* <PostImagesCarousel images={post.post_images_urls} /> */}
             <ImagePostPage images={post.post_images_urls} />
-
           </div>
         )}
 

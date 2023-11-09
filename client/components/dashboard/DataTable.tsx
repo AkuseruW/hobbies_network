@@ -1,7 +1,7 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { DataTablePagination } from "./dataTable/data-table-pagination"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, flexRender, getCoreRowModel, getFilteredRowModel, getSortedRowModel, useReactTable, HeaderGroup, Row } from "@tanstack/react-table"
@@ -18,12 +18,19 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({ type, columns, data, pageSize, initialPage, paginationUrl }: DataTableProps<TData, TValue>) {
     const router = useRouter();
     const searchParams = useSearchParams();
-
+    const page = usePathname();
     const [rowSelection, setRowSelection] = useState({})
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [filterValue, setFilterValue] = useState(searchParams.get('search') || "");
+    const [disableSearch, setDisableSearch] = useState(false);
+
+    useEffect(() => {
+        if (page === "/dashboard/notifications" || page === "/dashboard/reports") {
+            setDisableSearch(true)
+        }
+    }, [page])
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newFilterValue = event.target.value;
@@ -62,14 +69,16 @@ export function DataTable<TData, TValue>({ type, columns, data, pageSize, initia
 
     return (
         <div className="space-y-4 ">
-            <div className="flex items-center py-4">
-                <Input
-                    placeholder="Filter..."
-                    value={filterValue}
-                    onChange={handleInputChange}
-                    className="max-w-sm dark:bg-secondary_dark dark:border-gray-400"
-                />
-            </div>
+            {!disableSearch && (
+                <div className="flex items-center py-4">
+                    <Input
+                        placeholder="Filter..."
+                        value={filterValue}
+                        onChange={handleInputChange}
+                        className="max-w-sm dark:bg-secondary_dark dark:border-gray-400"
+                    />
+                </div>
+            )}
             <div className="rounded-md border bg-white dark:bg-secondary_dark dark:border-gray-400">
                 <Table>
                     <TableHeader >

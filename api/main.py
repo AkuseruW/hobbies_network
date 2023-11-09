@@ -29,7 +29,8 @@ from routers import (
     country,
     notifications,
     certification,
-    seed
+    seed,
+    dashboard
 )
 from settings.database import engine, get_session
 from sockets import ws_manager
@@ -60,7 +61,8 @@ routers = [
     country.router,
     notifications.router,
     certification.router,
-    seed.router
+    dashboard.router,
+    seed.router,
 ]
 # Include all routers
 for router in routers:

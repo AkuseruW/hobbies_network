@@ -93,14 +93,17 @@ export const follow_or_unfollow_user = async ({
 export const getUsersAdmin = async ({
   page = "1",
   search,
+  query
 }: {
   page?: string;
   search?: string;
+  query?: string
 }) => {
   try {
     const searchParam = search ? `&search=${search}` : "";
+    const queryParam = query ? `&query=${query}` : "";
     return await fetcher(
-      apiUrl(`/api/all-users?page=${parseInt(page)}${searchParam}`),
+      apiUrl(`/api/all-users?page=${parseInt(page)}${searchParam}${queryParam}`),
       "GET"
     );
   } catch (error) {

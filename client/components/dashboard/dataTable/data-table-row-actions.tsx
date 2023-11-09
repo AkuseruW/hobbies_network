@@ -8,6 +8,7 @@ import ModalValidation from "../ModalValidation";
 import { deleteHobby, deleteHobbySuggest } from "@/utils/requests/_hobbies_requests";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
+import { unbanUser } from "@/utils/requests/_users_requests";
 
 
 export function DataTableRowActionsProducts({ row }: any) {
@@ -141,6 +142,11 @@ export const DataTableRowActionsHobbies = ({ row }: any) => {
 }
 
 export const DataTableRowActionsCustomers = ({ row }: any) => {
+    const router = useRouter();
+    const handleUnban = async () => {
+        await unbanUser({ user_id: row.original.id })
+        router.refresh()
+    }
 
     return (
         <>
@@ -161,9 +167,14 @@ export const DataTableRowActionsCustomers = ({ row }: any) => {
                             View
                         </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="hover:bg-muted">
-
-                    </DropdownMenuItem>
+                    {row.original.is_banned && (
+                        <DropdownMenuItem className="hover:bg-muted">
+                            <Button variant={"link"} onClick={handleUnban} className="w-full flex justify-start m-0 p-0 h-auto">
+                                <Ban className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+                                Unban
+                            </Button>
+                        </DropdownMenuItem>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
         </>
@@ -215,7 +226,7 @@ export const DataTableRowActionsProposedHobbies = ({ row }: any) => {
                         </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => { setModalIsOpen(true); }}>
+                    <DropdownMenuItem  onClick={() => { setModalIsOpen(true); }}>
                         <Icons.x className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         Reject
                     </DropdownMenuItem>

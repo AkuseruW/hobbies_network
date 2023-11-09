@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server'
+import { me } from './utils/requests/_auth_requests'
 
 export const middleware = async (request: NextRequest) => {
     // Exclude requests for static files
@@ -15,6 +16,8 @@ export const middleware = async (request: NextRequest) => {
     const isPrivacyPage = request.nextUrl.pathname.startsWith('/privacy');
     const isTermsPage = request.nextUrl.pathname.startsWith('/terms');
     const isForgotPasswordPage = request.nextUrl.pathname.startsWith('/forgot-password');
+    const isBannedPage = request.nextUrl.pathname.startsWith('/error/banned');
+
 
     if (!token && !isLoginPage && !isRegisterPage && !isPrivacyPage && !isTermsPage && !isForgotPasswordPage) {
         return NextResponse.redirect(new URL('/connexion', request.url))
@@ -44,5 +47,10 @@ export const middleware = async (request: NextRequest) => {
         }
     }
 
+    const isUserValid = await me()
+
+    if (isUserValid.detail === 'Your account is banned.' && !isBannedPage) {
+        return NextResponse.redirect(new URL('/error/banned', request.url))
+    }
 
 }

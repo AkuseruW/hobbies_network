@@ -3,7 +3,7 @@ import { PencilSquareIcon, TableCellsIcon } from "@heroicons/react/24/outline";
 import NavigationItem from "@/components/dashboard/NavigationComponent";
 import { Icons } from "@/components/icons";
 
-export default async function ProductLayout({
+export default async function HobbiesLayout({
   children,
 }: {
   children: React.ReactNode;

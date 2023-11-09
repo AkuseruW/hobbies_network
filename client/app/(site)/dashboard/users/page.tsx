@@ -5,14 +5,17 @@ import { getUsersAdmin } from "@/utils/requests/_users_requests";
 const UsersPageAdmin = async ({
   searchParams,
 }: {
-  searchParams: { search?: string; page?: string };
+  searchParams: { search?: string; page?: string; q?: string };
 }) => {
   const search =
     typeof searchParams.search === "string" ? searchParams.search : undefined;
   const page =
     typeof searchParams.page === "string" ? searchParams.page : undefined;
+  const query =
+    typeof searchParams.q === "string" ? searchParams.q : undefined;
 
-  const { users, total_pages } = await getUsersAdmin({ search, page });
+  const { users, total_pages } = await getUsersAdmin({ search, page, query });
+  console.log(users);
   const url = "/dashboard/customers";
 
   return (

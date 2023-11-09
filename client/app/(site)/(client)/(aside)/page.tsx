@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import { v4 as uuid } from 'uuid'
 import CreatePost from '@/components/posts/CreatePost';
 import PostsSection from '@/components/posts/PostsSection';
@@ -20,11 +20,6 @@ const HomePage = async () => {
                 <CreatePost session={user} />
 
                 <div className='mt-5'>
-                    {/* Stories Section */}
-                    {/* <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
-                        <StoriesSection session={user} />
-                    </div> */}
-
                     {/* Posts Section */}
                     <div key={uuid()} className="sm:col-span-2 lg:col-span-3 xl:col-span-4 mt-5">
                         <PostsSection initialPosts={posts} />

@@ -80,7 +80,7 @@ const CardGroupe: React.FC<CardGroupeProps> = ({ search, initialHobbies }) => {
   return (
     <>
       {isOpen && (
-        <Modal title="Ajouter un hobby" size="lg:h-[35%] md:h-[35%] sm:h-[35%] lg:w-[50%] md:w-[50%] sm:w-full" close={() => setIsOpen(false)}>
+        <Modal title="Ajouter un hobby" size="w-full sm:w-[90%] lg:w-[60%] md:w-[60%] " close={() => setIsOpen(false)}>
           <ProposeHobby />
         </Modal>
       )}

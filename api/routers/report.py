@@ -7,7 +7,7 @@ from dependencies.report import delete_notifications_report, delete_other_report
 from models.Notification import AdminNotification
 from models.schemas.reportSchemas import PinnedReportSchema
 from settings.database import get_session
-from models import User, Report
+from models import Post, User, Report
 from dependencies.auth import get_current_active_user
 from dotenv import load_dotenv
 import os
@@ -182,7 +182,6 @@ async def create_report(
     reported_id = data["reported_id"]
     reason = data["reason"]
     reported_type = data["reported_type"]
-    print(reported_id)
     if reported_type not in {"POST", "USER"}:
         raise HTTPException(
             status_code=400,
@@ -300,6 +299,12 @@ async def approve_report(
 
     report = db.query(Report).filter_by(id=report_id).first()
     user = db.query(User).filter_by(id=report.user_id).first()
+    
+    report_type = report.reported_type.value
+    
+    if report_type == "POST":
+        post = db.query(Post).filter_by(id=str(report.reported_id)).first()
+        post_user_id = post.user_id
 
     if report.is_process == True:
         raise HTTPException(
@@ -313,7 +318,7 @@ async def approve_report(
 
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                f"{api_url}/api/ban_user/{user.id}/{duration}",
+                f"{api_url}/api/ban_user/{post_user_id}/{duration}",
                 json=data,
                 headers={"Authorization": access_token},
             )

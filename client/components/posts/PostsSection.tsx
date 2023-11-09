@@ -23,7 +23,7 @@ const PostsSection = ({ initialPosts }: { initialPosts: PostData[] }) => {
 
   useEffect(() => {
     initializePosts(initialPosts);
-  }, [initialPosts, posts]);
+  }, []);
 
   const loadMorePosts = useCallback(async () => {
     if (isEndOfList) {

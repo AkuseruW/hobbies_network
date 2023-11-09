@@ -107,7 +107,6 @@ def read_users_me(db: Session = Depends(get_session),current_user: User = Depend
         raise HTTPException(status_code=401, detail="Your account is banned.")
     
     has_subscription = bool(current_user.subscriptions)
-    print(has_subscription)
     
     user_session = {
         "id": current_user.id,

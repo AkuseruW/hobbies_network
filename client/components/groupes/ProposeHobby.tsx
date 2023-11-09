@@ -56,7 +56,9 @@ const ProposeHobby = () => {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input placeholder="Nom du hobby" autoComplete='off' {...field} />
+                                <Input placeholder="Nom du hobby" autoComplete='off' {...field}
+                                    className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
+                                />
                             </FormControl>
 
                             <FormMessage />
@@ -69,7 +71,9 @@ const ProposeHobby = () => {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Textarea placeholder="Description du hobby (facultatif)" autoComplete="off" {...field} />
+                                <Textarea placeholder="Description du hobby (facultatif)" autoComplete="off" {...field}
+                                    className="dark:bg-background_dark dark:text-text_dark dark:border-gray-600"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -77,7 +81,7 @@ const ProposeHobby = () => {
                 />
 
                 <Button type="submit" disabled={isLoading}>
-                    {isLoading ? <Icons.spinner className="w-4 h-4 animate-spin" /> : "Proposer"}
+                    {isLoading ? <Icons.spinner className="w-4 h-4 animate-spin" /> : "Proposer un hobby"}
                 </Button>
             </form>
         </Form>

@@ -5,10 +5,8 @@ from dependencies.uploads import upload_image_to_cloudinary, delete_image
 from models import User, UserToHobby, Post, Follower, Ban
 from models.schemas.userSchemas import (
     ReadAllUsersResponse,
-    UserListResponse,
     UserProfileSetupResponse,
     UserRead,
-    UpdateProfile,
     PublicUserData,
     PrivateUserData,
 )
@@ -43,7 +41,6 @@ def read_users(
 ):
     per_page = 10
     skip = (page - 1) * per_page
-
     query = db.query(User).filter(User.id != current_user.id)
     query = filter_query_by_search(query, search)
 
@@ -75,14 +72,24 @@ def read_users(
 def read_all_users(
         page: int = Query(1, description="Page number"),
         search: str = Query(None, description="search"),
+        query: str = Query(None, description="q"),
         db: Session = Depends(get_session),
         current_user: User = Depends(get_current_active_user),
 ):
     limit = 10
     skip = (page - 1) * limit
-
+    query_filter = query
+    
     query = db.query(User)
     query = filter_query_by_search(query, search)
+    
+    if query_filter and current_user.role.value == "ROLE_ADMIN":
+        if query_filter == "certified":
+            query = query.filter(User.is_certified == True)
+        elif query_filter == "banned":
+            query = query.filter(User.bans.any())
+    else:
+        HTTPException(status_code=403, detail="You are not authorized to perform this action.")
 
     total_users = query.count()
     total_pages = (total_users + limit - 1) // limit
@@ -342,7 +349,6 @@ async def change_profile_picture(
         request: Request, db: Session = Depends(get_session),
         current_user: User = Depends(get_current_active_user),
 ):
-    print(current_user)
     form_data = await request.form()
     profile_picture = form_data.get("file")
 

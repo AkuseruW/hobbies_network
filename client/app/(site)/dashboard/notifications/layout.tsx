@@ -4,6 +4,8 @@ export default async function NotificationLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+
   return (
     <main className="w-full">
       <div className="container mx-auto px-6 py-6">

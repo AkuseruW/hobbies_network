@@ -3,13 +3,12 @@ import { NotificationResponse } from '@/types/notifications_types';
 import { Session } from '@/types/sessions_types';
 import Image from 'next/image';
 import React from 'react';
-import Notifications from '../header/Notifications';
 
-const HeaderAdmin = ({ currentUser, notifications }: { currentUser: Session, notifications: NotificationResponse }) => {
+const HeaderAdmin = ({ currentUser}: { currentUser: Session }) => {
 
     return (
         <nav className="relative fixed flex w-full items-center justify-between text-neutral-200 shadow-lg lg:flex-wrap lg:justify-start lg:py-4 h-20 dark:bg-neutral-900">
-            <div className="flex w-full items-center justify-between px-3 flex-row w-full">
+            <div className="flex w-full items-center justify-between px-3 flex-row">
                 <div className="flex w-full justify-start h-full">
                     <button
                         className="block border-0 px-2 text-neutral-600 dark:text-neutral-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 lg:hidden"
@@ -37,7 +36,6 @@ const HeaderAdmin = ({ currentUser, notifications }: { currentUser: Session, not
                     </button>
                 </div>
                 <div className="flex flex-wrap w-full items-center space-x-2 flex-0 w-fit justify-end">
-                    <Notifications />
                     <Button variant="outline" size="icon">
                         <Image
                             width={100}
