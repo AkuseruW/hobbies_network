@@ -11,6 +11,8 @@ from models import Post, User, Report
 from dependencies.auth import get_current_active_user
 from dotenv import load_dotenv
 import os
+from sqlalchemy import desc
+
 
 load_dotenv()
 api_url = os.getenv("API_URL")
@@ -67,7 +69,7 @@ async def read_reports(
         return {"reports": [], "totalPages": total_pages}
 
     # Retrieve paginated reports from the database
-    reports = db.query(Report).offset(offset).limit(params.per_page).all()
+    reports = db.query(Report).order_by(desc(Report.is_read == False)).offset(offset).limit(params.per_page).all()
 
     return {"reports": reports, "totalPages": total_pages}
 
@@ -182,6 +184,8 @@ async def create_report(
     reported_id = data["reported_id"]
     reason = data["reason"]
     reported_type = data["reported_type"]
+    report_content = data["details"]
+
     if reported_type not in {"POST", "USER"}:
         raise HTTPException(
             status_code=400,
@@ -191,6 +195,7 @@ async def create_report(
     report = Report(
         reported_id=str(reported_id),
         reason=reason,
+        content = report_content,
         reported_type=reported_type,
         user_id=current_user.id,
     )
